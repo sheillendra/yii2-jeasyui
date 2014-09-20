@@ -1,0 +1,21 @@
+{
+	"name": "sheillendra/yii2-jeasyui",
+	"description": "Implement jQuery EasyUI GPL Edition on Yii2",
+	"keywords": ["jeasyui", "sheillendra", "yii2","yii"],
+	"type": "yii2-extension",
+	"authors": [
+		{
+			"name": "Sheillendra",
+			"email": "sheillendra@yahoo.com"
+		}
+	],
+	"require": {
+		"yiisoft/yii2": "*",
+		"sheillendra/yii2-theme": "*"
+	},
+	"autoload": {
+		"psr-4": {
+			"sheillendra\\jeasyui\\": ""
+		}
+	}
+}
