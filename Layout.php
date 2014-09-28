@@ -15,7 +15,7 @@ class Layout extends Widget
     
     public function run()
     {
-        $this->registerAsset('layout');
+        $this->registerScript('layout');
         foreach($this->regions as $region=>$clientOptions){
             $clientOptions['region']=$region;
             LayoutRegion::widget(['target'=>$this->target,'method'=>'add','clientOptions'=>$clientOptions]);

@@ -17,23 +17,27 @@ class Widget extends \yii\base\Widget
     public $method;
     public $options = [];
     public $clientOptions = [];
+    public $beforeRegister='';
+    public $afterRegister='';
+    
     public function init()
     {
         parent::init();
-        
+        if (!isset($this->clientOptions['id'])) {
+            $this->clientOptions['id'] = $this->getId();
+        }
     }
     
-    protected function registerAsset($name)
+    protected function registerScript($plugin)
     {
         $view = $this->getView();
-        JEasyUIAsset::register($view);
-        $view->registerJs(
-            ($this->theme?'easyloader.theme="'.$this->theme.'";':'')
-            . 'using("'.$name.'",function(){'
-            .'$("'.$this->target.'").'.$name
+        $view->params['jEasyUI']['theme']=$this->theme?$this->theme:'default';
+        $view->params['jEasyUI']['plugin'][]=$plugin;
+        $view->params['jEasyUI']['command'][]=
+            $this->beforeRegister
+            .'$("'.$this->target.'").'.$plugin
             .($this->method?'("'.$this->method.'",'.Json::encode($this->clientOptions).');':
                 '('.Json::encode($this->clientOptions).');')
-            . '});'
-        );
+            . $this->afterRegister;
     }
 }
