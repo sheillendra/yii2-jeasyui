@@ -1,19 +1,19 @@
 <?php
 namespace sheillendra\jeasyui;
 
-class Tabs extends Widget
+class Accordion extends Widget
 {
     public $parent;
-    private $content=[];
+    private $items=[];
     /**
      * Initializes the widget.
      */
     public function init()
     {
         parent::init();
-        if(isset($this->clientOptions['content']) && is_array($this->clientOptions['content'])){
-            $this->content = $this->clientOptions['content'];
-            $this->clientOptions['content']=null;
+        if(isset($this->clientOptions['items']) && is_array($this->clientOptions['items'])){
+            $this->items = $this->clientOptions['items'];
+            $this->clientOptions['items']=null;
         }
         if(isset($this->clientOptions['id'])){
             $this->target='#'.$this->clientOptions['id'];
@@ -25,9 +25,9 @@ class Tabs extends Widget
     
     public function run()
     {
-        $this->registerScript('tabs');
-        foreach($this->content as $clientOptions){
-            TabsContent::widget(['target'=>$this->target,'method'=>'add','clientOptions'=>$clientOptions]);
+        $this->registerScript('accordion');
+        foreach($this->items as $clientOptions){
+            AccordionItem::widget(['target'=>$this->target,'method'=>'add','clientOptions'=>$clientOptions]);
         }
     }
 }

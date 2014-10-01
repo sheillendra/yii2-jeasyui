@@ -1,8 +1,9 @@
 <?php
 namespace sheillendra\jeasyui;
 
-class LayoutRegion extends Widget
+class AccordionItem extends Widget
 {
+    public $parent;
     private $content=[];
     /**
      * Initializes the widget.
@@ -18,11 +19,9 @@ class LayoutRegion extends Widget
     
     public function run()
     {
-        $this->registerScript('layout');
+        $this->registerScript('accordion');
         foreach($this->content as $plugin=>$clientOptions){
-            call_user_func_array([parent::pluginMap($plugin),'widget'],[
-                ['parent'=>$this->clientOptions['id'],'clientOptions'=>$clientOptions]
-            ]);
+            call_user_func_array([parent::pluginMap($plugin),'widget'],[['parent'=>$this->clientOptions['id'],'clientOptions'=>$clientOptions]]);
         }
     }
 }

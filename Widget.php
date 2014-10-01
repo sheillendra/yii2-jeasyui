@@ -40,4 +40,13 @@ class Widget extends \yii\base\Widget
                 '('.Json::encode($this->clientOptions).');')
             . $this->afterRegister;
     }
+    
+    public function pluginMap($key){
+        $pluginArr=[
+            'accordion'=>'Accordion'
+            ,'datagrid'=>'DataGrid'
+            ,'linkbutton'=>'LinkButton'
+            ,'tabs'=>'Tabs'];
+        return 'sheillendra\jeasyui\\'.$pluginArr[strtolower($key)];
+    }
 }

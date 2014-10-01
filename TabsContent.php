@@ -1,7 +1,7 @@
 <?php
 namespace sheillendra\jeasyui;
 
-class Tabs extends Widget
+class TabsContent extends Widget
 {
     public $parent;
     private $content=[];
@@ -15,19 +15,13 @@ class Tabs extends Widget
             $this->content = $this->clientOptions['content'];
             $this->clientOptions['content']=null;
         }
-        if(isset($this->clientOptions['id'])){
-            $this->target='#'.$this->clientOptions['id'];
-            $this->beforeRegister='$("#'.$this->parent.'").append(\'<div id="'.$this->clientOptions['id'].'"></div>\');';
-            
-            unset($this->clientOptions['id']);
-        }
     }
     
     public function run()
     {
         $this->registerScript('tabs');
-        foreach($this->content as $clientOptions){
-            TabsContent::widget(['target'=>$this->target,'method'=>'add','clientOptions'=>$clientOptions]);
+        foreach($this->content as $plugin=>$clientOptions){
+            call_user_func_array([parent::pluginMap($plugin),'widget'],[['clientOptions'=>$clientOptions]]);
         }
     }
 }
