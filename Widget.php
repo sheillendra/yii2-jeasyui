@@ -1,52 +1,88 @@
 <?php
+
 namespace sheillendra\jeasyui;
 
 use yii\helpers\Json;
+use yii\web\JsExpression;
 
-class Widget extends \yii\base\Widget
-{
+class Widget extends \yii\base\Widget {
+
     /**
      * @var string
      */
+    public $contents=[];
     public $target;
+    public $parent;
+    /**
+     *
+     * @var string plugin name of jeasyui,
+     * if for contents, if plugin not set, automatically same with parent plugin 
+     */
+    public $plugin;
     /**
      * @var string
      */
-    public $tagName;
-    public $theme;
     public $method;
-    public $options = [];
+    /**
+     * clientOptions akan menjadi parameter plugin jeasyui
+     * @var array 
+     */
     public $clientOptions = [];
-    public $beforeRegister='';
-    public $afterRegister='';
+    /**
+     * Script yang akan ditempatkan sebelum pemanggilan fungsi plugin jEasyUI
+     * @var string 
+     */
+    public $beforeRegister = '';
+    /**
+     * Script yang akan ditempatkan setelah pemanggilan fungsi plugin jEasyUI
+     * @var string 
+     */
+    public $afterRegister = '';
     
-    public function init()
-    {
+    public $url= 'javascript:void(0)';
+
+    public function init() {
         parent::init();
-        if (!isset($this->clientOptions['id'])) {
+        if (!isset($this->clientOptions['id'])&&$this->target!=='body') {
             $this->clientOptions['id'] = $this->getId();
+        }
+        $this->eventNormalize();
+    }
+
+    protected function registerScript() {
+        $view = $this->getView();
+        $view->params['jEasyUI']['plugin'][] = $this->plugin;
+        $view->params['jEasyUI']['command'][] = $this->beforeRegister
+                . '$("' . $this->target . '").' . $this->plugin
+                . ($this->method ? '("' . $this->method . '",' . Json::encode($this->clientOptions) . ');' :
+                        '(' . Json::encode($this->clientOptions) . ');')
+                . $this->afterRegister;
+    }
+
+    public function appendTargetToParent(){
+        if(isset($this->parent)){
+            $this->target='#'.$this->clientOptions['id'];
+            $this->beforeRegister='$("#'.$this->parent.'").append(\'<div id="'.$this->clientOptions['id'].'"></div>\');';
+        }
+    }
+
+    public function appendLinkToParent() {
+        if (isset($this->parent)) {
+            $this->target = '#' . $this->clientOptions['id'];
+            $this->beforeRegister = '$("#' . $this->parent . '").append(\'<a id="'
+                    . $this->clientOptions['id']
+                    . '" href="' . $this->url . '">'
+                    . $this->clientOptions['title']
+                    . '</a>\');';
         }
     }
     
-    protected function registerScript($plugin)
-    {
-        $view = $this->getView();
-        $view->params['jEasyUI']['theme']=$this->theme?$this->theme:'default';
-        $view->params['jEasyUI']['plugin'][]=$plugin;
-        $view->params['jEasyUI']['command'][]=
-            $this->beforeRegister
-            .'$("'.$this->target.'").'.$plugin
-            .($this->method?'("'.$this->method.'",'.Json::encode($this->clientOptions).');':
-                '('.Json::encode($this->clientOptions).');')
-            . $this->afterRegister;
+    protected function eventNormalize(){
+        foreach($this->clientOptions as $k=>$v){
+            if(gettype($v)==='string' && strpos($v, 'function')===0){
+                $this->clientOptions[$k]=new JsExpression($v);
+            }
+        }
     }
-    
-    public function pluginMap($key){
-        $pluginArr=[
-            'accordion'=>'Accordion'
-            ,'datagrid'=>'DataGrid'
-            ,'linkbutton'=>'LinkButton'
-            ,'tabs'=>'Tabs'];
-        return 'sheillendra\jeasyui\\'.$pluginArr[strtolower($key)];
-    }
+
 }

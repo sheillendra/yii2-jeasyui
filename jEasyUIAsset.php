@@ -13,18 +13,6 @@ class jEasyUIAsset extends AssetBundle {
     ];
     public $js = ['easyloader.js'];
     public $depends = [
-        'yii\web\YiiAsset',
+        'yii\web\YiiAsset'
     ];
-    
-    public static function register($view)
-    {
-        $view->registerJs('
-            easyloader.theme="'.(isset(Yii::$app->params['jEasyUI']['theme'])?Yii::$app->params['jEasyUI']['theme']:'default').'";
-            using(["'.implode('","',  array_unique($view->params['jEasyUI']['plugin'])).'"],function(){
-            '.implode(';',$view->params['jEasyUI']['command']).';
-            });
-        ',$view::POS_READY
-        );
-        return $view->registerAssetBundle(get_called_class());
-    }
 }

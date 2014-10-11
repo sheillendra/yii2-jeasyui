@@ -7,6 +7,24 @@ and open the template in the editor.
     Created on : 30 Sep 14, 22:50:07
     Author     : sheillendra
 */
+a:focus{
+    outline: none
+}
 .tabs-icon{
     line-height: 16px;
+}
+
+.accordion-body > .l-btn,
+.accordion-body > .l-btn:hover{
+    background: none;
+    border:none;
+    display: table;
+}
+
+.accordion-body > .l-btn:hover > span > span.l-btn-text{
+    text-decoration: underline;
+}
+
+.l-btn-icon {
+    font-size: unset !important;
 }
