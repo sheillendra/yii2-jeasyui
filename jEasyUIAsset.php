@@ -1,4 +1,11 @@
 <?php
+/**
+ * Implement jQuery EasyUI v.1.4 GPL Edition on Yii2
+ * since  : v.0.0.1
+ * author   : sheillendra
+ * date     : 2014-10-04
+ * website  : demo.dodeso.com
+ */
 
 namespace sheillendra\jeasyui;
 
