@@ -31,7 +31,7 @@ class CustomAsset extends AssetBundle {
     public static function register($view)
     {
         $view->registerJs('
-            yii.jeasyui.appendToParent('.Json::encode(Easy::$appendToParent).');
+            yii.jeasyui.appendToParents('.Json::encode(Easy::$appendToParents).');
             yii.jeasyui.addContentMethod('.Json::encode(Easy::$addContentMethod).');
             easyloader.theme="'.(isset(Yii::$app->params['jEasyUI']['theme'])?Yii::$app->params['jEasyUI']['theme']:'default').'";
             using(["'.implode('","',  array_unique($view->params['jEasyUI']['plugin'])).'"],function(){

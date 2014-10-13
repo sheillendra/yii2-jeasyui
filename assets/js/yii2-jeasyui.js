@@ -19,7 +19,7 @@ yii.jeasyui = (function($) {
                 return res;
             }
     , addContentMethod = {}
-    , appendToParent = {}
+    , appendToParents = {}
     , appendTagToParent = function(parent, id, tag) {
         tag = tag || 'div';
         parent.append('<' + tag + ' id="' + id + '"></' + tag + '>');
@@ -27,7 +27,7 @@ yii.jeasyui = (function($) {
     , Easy = function(options) {
         var depedencyPlugin=[];
         if (typeof options.parent !== 'undefined') {
-            yii.jeasyui[appendToParent[options.plugin]](options.parent, options.clientOptions.id,options.clientOptions.title,options.clientOptions.menu);
+            yii.jeasyui[options.appendToParent||appendToParents[options.plugin]](options.parent, options.clientOptions.id,options.clientOptions.title,options.clientOptions.menu);
         }
         if (typeof options.target === 'undefined') {
             options.target = $('#' + options.clientOptions.id);
@@ -44,8 +44,8 @@ yii.jeasyui = (function($) {
             } else {
                 options.target[options.plugin](options.clientOptions);
             }
-            
-            if (typeof options.contents !== 'undefined' && typeof addContentMethod[options.plugin] !== 'undefined' ) {
+            console.log(options.plugin);
+            if (typeof options.contents !== 'undefined') {
                 var keys = Object.keys(options.contents), i;
                 for (i = 0; i < keys.length; i++) {
                     options.contents[keys[i]]['clientOptions']['id'] = keys[i];
@@ -55,6 +55,10 @@ yii.jeasyui = (function($) {
                     }
 
                     if (options.contents[keys[i]]['plugin'] === options.plugin) {
+                        if(typeof addContentMethod[options.plugin] === 'undefined'){
+                            console.log(options.plugin);
+                            continue;
+                        }
                         options.contents[keys[i]]['method'] = addContentMethod[options.plugin];
                     } else {
                         options.contents[keys[i]]['parent'] = $('#' + options.clientOptions.id);
@@ -105,8 +109,8 @@ yii.jeasyui = (function($) {
         , addContentMethod: function(a) {
             addContentMethod = a;
         }
-        , appendToParent: function(a) {
-            appendToParent = a;
+        , appendToParents: function(a) {
+            appendToParents = a;
         }
         ,appendDivToParent : function(parent,id){appendTagToParent(parent,id);}
         , appendUlToParent : function(parent,id){appendTagToParent(parent,id,'ul');}

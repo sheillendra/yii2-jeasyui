@@ -112,7 +112,7 @@ class Widget extends \yii\base\Widget {
             $this->target = '#' . $this->clientOptions['id'];
             $this->beforeRegister = '$("#' . $this->parent . '").append(\'<input id="'
                     . $this->clientOptions['id']
-                    . '" />);';
+                    . '" />\');';
         }
     }
 }
