@@ -9,10 +9,15 @@
 a:focus{
     outline: none
 }
-.tabs-icon{
-    line-height: 16px;
+.tabs-icon,
+.panel-icon,
+.textbox-icon{
+    line-height: 18px;
 }
 
+.textbox-icon{
+    text-align: center;
+}
 .accordion-body > .l-btn,
 .accordion-body > .l-btn:hover{
     background: none;
