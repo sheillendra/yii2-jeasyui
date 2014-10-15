@@ -7,67 +7,12 @@
  */
 
 yii.jeasyui = (function($) {
-    var generateIdPrefix = 'w'
-            , generateIdCounter = 0
-            , generateId = function() {
-                var e, res;
-                do {
-                    res = generateIdPrefix + generateIdCounter;
-                    e = document.getElementById(res);
-                    generateIdCounter++;
-                } while (e);
-                return res;
-            }
-    , addContentMethod = {}
+    var 
+    addContentMethod = {}
     , appendToParents = {}
     , appendTagToParent = function(parent, id, tag) {
         tag = tag || 'div';
         parent.append('<' + tag + ' id="' + id + '"></' + tag + '>');
-    }
-    , Easy = function(options) {
-        var depedencyPlugin=[];
-        if (typeof options.parent !== 'undefined') {
-            yii.jeasyui[options.appendToParent||appendToParents[options.plugin]](options.parent, options.clientOptions.id,options.clientOptions.title,options.clientOptions.menu);
-        }
-        if (typeof options.target === 'undefined') {
-            options.target = $('#' + options.clientOptions.id);
-        }
-        options.clientOptions = eventNormalizer(options.clientOptions);
-        
-        if(typeof options.depedencyPlugin !=='undefined'){
-            depedencyPlugin=options.depedencyPlugin;
-        }
-        depedencyPlugin.push(options.plugin);
-        using(depedencyPlugin, function() {
-            if (typeof options.method !== 'undefined') {
-                options.target[options.plugin](options.method, options.clientOptions);
-            } else {
-                options.target[options.plugin](options.clientOptions);
-            }
-            console.log(options.plugin);
-            if (typeof options.contents !== 'undefined') {
-                var keys = Object.keys(options.contents), i;
-                for (i = 0; i < keys.length; i++) {
-                    options.contents[keys[i]]['clientOptions']['id'] = keys[i];
-                    if (typeof options.contents[keys[i]]['plugin'] === 'undefined') {
-                        options.contents[keys[i]]['plugin'] = options.plugin;
-                        options.contents[keys[i]]['target'] = options.target;
-                    }
-
-                    if (options.contents[keys[i]]['plugin'] === options.plugin) {
-                        if(typeof addContentMethod[options.plugin] === 'undefined'){
-                            console.log(options.plugin);
-                            continue;
-                        }
-                        options.contents[keys[i]]['method'] = addContentMethod[options.plugin];
-                    } else {
-                        options.contents[keys[i]]['parent'] = $('#' + options.clientOptions.id);
-                    }
-                    
-                    Easy(options.contents[keys[i]]);
-                }
-            }
-        });
     }
     , eventNormalizer = function(a) {
         if (typeof a === 'object') {
@@ -84,25 +29,47 @@ yii.jeasyui = (function($) {
     },
     pub = {
         isActive: true
-        , init: function() {
+        ,Easy : function(options) {
+            var depedencyPlugin=[];
+            if (typeof options.parent !== 'undefined') {
+                yii.jeasyui[options.appendToParent||appendToParents[options.plugin]](options.parent, options.clientOptions.id,options.clientOptions.title,options.clientOptions.menu);
+            }
+            if (typeof options.target === 'undefined') {
+                options.target = $('#' + options.clientOptions.id);
+            }
+            options.clientOptions = eventNormalizer(options.clientOptions);
 
-        }
-        , parser: function(parent, id, title, url) {
-            $.ajax({
-                url: url,
-                dataType: 'json',
-                success: function(r) {
-                    var keys = Object.keys(r);
-                    for (var i = 0; i < keys.length; i++) {
-                        if (document.getElementById(keys[i])) {
-                            r[keys[i]].clientOptions.id = generateId();
-                        } else {
-                            r[keys[i]].clientOptions.id = keys[i];
+            if(typeof options.depedencyPlugin !=='undefined'){
+                depedencyPlugin=options.depedencyPlugin;
+            }
+            depedencyPlugin.push(options.plugin);
+            using(depedencyPlugin, function() {
+                if (typeof options.method !== 'undefined') {
+                    options.target[options.plugin](options.method, options.clientOptions);
+                } else {
+                    options.target[options.plugin](options.clientOptions);
+                }
+                if (typeof options.contents !== 'undefined') {
+                    var keys = Object.keys(options.contents), i;
+                    for (i = 0; i < keys.length; i++) {
+                        options.contents[keys[i]]['clientOptions']['id'] = keys[i];
+                        if (typeof options.contents[keys[i]]['plugin'] === 'undefined') {
+                            options.contents[keys[i]]['plugin'] = options.plugin;
+                            options.contents[keys[i]]['target'] = options.target;
                         }
-                        r[keys[i]].parent = parent;
-                        Easy(r[keys[i]]);
+
+                        if (options.contents[keys[i]]['plugin'] === options.plugin) {
+                            if(typeof addContentMethod[options.plugin] === 'undefined'){
+                                console.log(options.plugin);
+                                continue;
+                            }
+                            options.contents[keys[i]]['method'] = addContentMethod[options.plugin];
+                        } else {
+                            options.contents[keys[i]]['parent'] = $('#' + options.clientOptions.id);
+                        }
+
+                        yii.jeasyui.Easy(options.contents[keys[i]]);
                     }
-                    ;
                 }
             });
         }
