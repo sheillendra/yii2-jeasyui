@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Implement jQuery EasyUI v.1.4 GPL Edition on Yii2
  * since  : v.0.0.1
@@ -9,19 +10,20 @@
 
 namespace sheillendra\jeasyui;
 
-use Yii;
 use yii\web\AssetBundle;
 
 class jEasyUIAsset extends AssetBundle {
 
-    public $sourcePath = '@sheillendra/jeasyui/assets/jquery-easyui-1.4';
+    public $sourcePath = '@sheillendra/jeasyui/assets/jquery-easyui-1.4.2';
     public $css = [
         'themes/icon.css',
         'themes/color.css'
     ];
-    public $js = ['easyloader.js'];
-    public $depends = [
-        'yii\web\YiiAsset'
+    public $js = [
+        'easyloader.js'
     ];
-    //public $publishOptions=['forceCopy'=>YII_DEBUG];
+    public $depends = [
+        'yii\web\JqueryAsset'
+    ];
+    public $publishOptions=['forceCopy'=>YII_DEBUG];
 }
