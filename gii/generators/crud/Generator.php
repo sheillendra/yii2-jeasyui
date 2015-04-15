@@ -181,7 +181,38 @@ class Generator extends \yii\gii\Generator
             }
         }
         
-        require ("$viewPath/layouts/_nav-item.php");
+        $layoutsPath = Yii::getAlias('@app/views/layouts');
+        $layoutsTemplatePath = $this->getTemplatePath() . '/views/layouts';
+        
+        if(file_exists("$layoutsPath/_nav-item.php")){
+            require ("$layoutsPath/_nav-item.php");
+        }  else {
+            foreach (scandir($layoutsTemplatePath) as $file) {
+                if (is_file($layoutsTemplatePath . '/' . $file) && pathinfo($file, PATHINFO_EXTENSION) === 'php' && $file!=='_nav-item.php') {
+                    $files[] = new CodeFile("$layoutsPath/$file", $this->render("views/layouts/$file"));
+                }
+            }
+            
+            $navItemUrl = [
+                'dashboard' =>[
+                    'dashboard' => 'Url::to("/", true)'
+                ]
+            ];
+
+            $navItem = [
+                'dashboard'=>[
+                    'title'=>'Dashboard',
+                    'iconCls'=>'ia-icon-dashboard',
+                    'content'=>"<<<HTML\n".'                        <a id="nav-dashboard" class="nav-btn" data-icon="ia-icon-dashboard" data-url="{$navItemUrl[\'dashboard\'][\'dashboard\']}" data-tabtitle="Dashboard">Dashboard</a>'."\nHTML"
+                ]
+            ];
+                
+        }
+        
+        $files[] = new CodeFile("$layoutsPath/_nav-item.php", $this->render("views/layouts/_nav-item.php",[
+            'navItemUrl'=>$navItemUrl,
+            'navItem'=>$navItem])
+        );
         
         return $files;
     }
