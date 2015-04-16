@@ -186,34 +186,32 @@ class Generator extends \yii\gii\Generator
         
         if(file_exists("$layoutsPath/_nav-item.php")){
             require ("$layoutsPath/_nav-item.php");
+            $oldFileAsText = file_get_contents("$layoutsPath/_nav-item.php");
         }  else {
             foreach (scandir($layoutsTemplatePath) as $file) {
-                if (is_file($layoutsTemplatePath . '/' . $file) && pathinfo($file, PATHINFO_EXTENSION) === 'php' && $file!=='_nav-item.php') {
+                if (is_file($layoutsTemplatePath . '/' . $file) && 
+                        pathinfo($file, PATHINFO_EXTENSION) === 'php' &&
+                        $file!=='_nav-item.php' &&
+                        $file!=='_nav-item-def.php' &&
+                        $file!=='appjs.php' ) {
                     $files[] = new CodeFile("$layoutsPath/$file", $this->render("views/layouts/$file"));
                 }
             }
-            
-            $navItemUrl = [
-                'dashboard' =>[
-                    'dashboard' => 'Url::to("/", true)'
-                ]
-            ];
-
-            $navItem = [
-                'dashboard'=>[
-                    'title'=>'Dashboard',
-                    'iconCls'=>'ia-icon-dashboard',
-                    'content'=>"<<<HTML\n".'                        <a id="nav-dashboard" class="nav-btn" data-icon="ia-icon-dashboard" data-url="{$navItemUrl[\'dashboard\'][\'dashboard\']}" data-tabtitle="Dashboard">Dashboard</a>'."\nHTML"
-                ]
-            ];
-                
+            require ("$layoutsTemplatePath/_nav-item-def.php");
+            $oldFileAsText = file_get_contents("$layoutsTemplatePath/_nav-item-def.php");
         }
         
-        $files[] = new CodeFile("$layoutsPath/_nav-item.php", $this->render("views/layouts/_nav-item.php",[
-            'navItemUrl'=>$navItemUrl,
-            'navItem'=>$navItem])
+        $files[] = new CodeFile(
+            "$layoutsPath/_nav-item.php", 
+            $this->render("views/layouts/_nav-item.php",[
+                'navItemUrl'=>$navItemUrl,
+                'navItem'=>$navItem,
+                'oldFileAsText'=>$oldFileAsText
+            ])
         );
         
+        $webPath = Yii::getAlias('@app/web');
+        $files[] = new CodeFile("$webPath/js/app.js",$this->render("views/layouts/appjs.php"));
         return $files;
     }
 
