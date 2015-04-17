@@ -32,7 +32,7 @@ if(!isset($navItemUrl[$lowModelClassName])){
     $navItemText .= "        'iconCls' =>'icon-tip',\n";
     $navItemText .= "        'content' =><<<HTML\n";
     $navItemText .= '            <a id="nav-'.$lowModelClassName.'-list" class="nav-btn" data-icon="icon-help" data-url="{$navItemUrl[\''.$lowModelClassName.'\'][\'list\']}" data-tabtitle="'.$modelClassName.' List">List</a>'."\n";
-    $navItemText .= '            <a id="nav-'.$lowModelClassName.'-new" class="nav-btn" data-icon="icon-help" data-url="{$navItemUrl[\''.$lowModelClassName.'\'][\'list\']}" data-tabtitle="'.$modelClassName.' List">New</a>'."\n";
+    $navItemText .= '            <a id="nav-'.$lowModelClassName.'-new" class="nav-btn" data-icon="icon-help" data-url="{$navItemUrl[\''.$lowModelClassName.'\'][\'new\']}" data-tabtitle="'.$modelClassName.' New">New</a>'."\n";
     $navItemText .= "HTML\n";
     $navItemText .= "    ]\n";
     $navItemText .= "];\n";

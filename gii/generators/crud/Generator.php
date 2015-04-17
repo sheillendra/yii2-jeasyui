@@ -199,6 +199,9 @@ class Generator extends \yii\gii\Generator
             }
             require ("$layoutsTemplatePath/_nav-item-def.php");
             $oldFileAsText = file_get_contents("$layoutsTemplatePath/_nav-item-def.php");
+            
+            $webPath = Yii::getAlias('@app/web');
+            $files[] = new CodeFile("$webPath/js/app.js",$this->render("views/layouts/appjs.php"));
         }
         
         $files[] = new CodeFile(
@@ -209,9 +212,6 @@ class Generator extends \yii\gii\Generator
                 'oldFileAsText'=>$oldFileAsText
             ])
         );
-        
-        $webPath = Yii::getAlias('@app/web');
-        $files[] = new CodeFile("$webPath/js/app.js",$this->render("views/layouts/appjs.php"));
         return $files;
     }
 
