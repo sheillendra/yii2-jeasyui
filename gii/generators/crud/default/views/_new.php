@@ -39,7 +39,7 @@ use app\views\<?=$lowModelClassName?>\assets\<?=$modelClassName?>NewAsset;
 <div class="easyui-layout" fit="true">
     <div region="north" border="false">
         <div class="toolbar">
-            <a id="<?=$lowModelClassName?>-save-btn" class="easyui-linkbutton" icon="icon-disk" plain="true">Save</a>
+            <a id="<?=$lowModelClassName?>-save-btn" class="easyui-linkbutton" icon="icon-save" plain="true">Save</a>
             <a id="<?=$lowModelClassName?>-clear-btn" class="easyui-linkbutton" icon="icon-cancel" plain="true">Clear</a>
         </div>
     </div>
@@ -48,7 +48,7 @@ use app\views\<?=$lowModelClassName?>\assets\<?=$modelClassName?>NewAsset;
         <table width="100%">
             <tbody>
                 <tr>
-                	<td>
+                    <td>
                     <?php
                     $field = [];
                     foreach ($generator->getColumnNames() as $attribute) {

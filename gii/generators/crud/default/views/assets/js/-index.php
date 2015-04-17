@@ -24,7 +24,7 @@ yii.<?=$lowModelName?>Index = (function($) {
                 });
                 $('#<?=$lowModelName?>-index-del-btn').linkbutton({
                     text:'Delete',
-                    iconCls:'icon-cross',
+                    iconCls:'icon-remove',
                     plain:!0,
                     onClick:function(){
                         var checked =  $('#<?=$lowModelName?>-index-dg').datagrid('getChecked'),

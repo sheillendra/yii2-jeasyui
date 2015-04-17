@@ -14,7 +14,7 @@ echo "<?php\n";
 
 namespace app\views\<?=$lowModelName?>\assets;
 
-use app\components\AssetBundle;
+use yii\web\AssetBundle;
 
 /**
  * @author Qiang Xue <qiang.xue@gmail.com>

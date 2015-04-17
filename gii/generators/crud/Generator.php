@@ -192,8 +192,7 @@ class Generator extends \yii\gii\Generator
                 if (is_file($layoutsTemplatePath . '/' . $file) && 
                         pathinfo($file, PATHINFO_EXTENSION) === 'php' &&
                         $file!=='_nav-item.php' &&
-                        $file!=='_nav-item-def.php' &&
-                        $file!=='appjs.php' ) {
+                        $file!=='_nav-item-def.php' ) {
                     $files[] = new CodeFile("$layoutsPath/$file", $this->render("views/layouts/$file"));
                 }
             }
@@ -201,7 +200,43 @@ class Generator extends \yii\gii\Generator
             $oldFileAsText = file_get_contents("$layoutsTemplatePath/_nav-item-def.php");
             
             $webPath = Yii::getAlias('@app/web');
-            $files[] = new CodeFile("$webPath/js/app.js",$this->render("views/layouts/appjs.php"));
+            $files[] = new CodeFile("$webPath/js/app.js",$this->render("app.js"));
+            $files[] = new CodeFile("$webPath/css/site.css",$this->render("site.css"));
+            
+            $controllersPath = Yii::getAlias('@app/controllers');
+            $files[] = new CodeFile("$controllersPath/SiteController.php",$this->render("SiteController.php"));
+            
+            $sitePath = Yii::getAlias('@app/views/site');
+            $siteTemplatePath = $this->getTemplatePath() . '/views/site';
+            foreach (scandir($siteTemplatePath) as $file) {
+                if (is_file($siteTemplatePath . '/' . $file)){
+                    $files[] = new CodeFile("$sitePath/$file", $this->render("views/site/$file"));
+                }
+            }
+            
+            foreach (scandir($siteTemplatePath.'/assets') as $file) {
+                if (is_file($siteTemplatePath . '/assets/' . $file)){
+                    $files[] = new CodeFile("$sitePath/assets/$file", $this->render("views/site/assets/$file"));
+                }
+            }
+            
+            foreach (scandir($siteTemplatePath.'/assets/css') as $file) {
+                if (is_file($siteTemplatePath . '/assets/css/' . $file)){
+                    $files[] = new CodeFile("$sitePath/assets/css/$file", $this->render("views/site/assets/css/$file"));
+                }
+            }
+            
+            foreach (scandir($siteTemplatePath.'/assets/js') as $file) {
+                if (is_file($siteTemplatePath . '/assets/js/' . $file)){
+                    $files[] = new CodeFile("$sitePath/assets/js/$file", $this->render("views/site/assets/js/$file"));
+                }
+            }
+            
+            $assetsPath = Yii::getAlias('@app/assets');
+            $files[] = new CodeFile("$assetsPath/AppAsset.php",$this->render("AppAsset.php"));
+            
+            $componentsPath = Yii::getAlias('@app/components');
+            $files[] = new CodeFile("$componentsPath/helpers/Regex.php",$this->render("Regex.php"));
         }
         
         $files[] = new CodeFile(
@@ -269,6 +304,8 @@ class Generator extends \yii\gii\Generator
         }
         $column = $tableSchema->columns[$attribute];
         $require = $column->allowNull?'false':'true';
+        $size = $column->size?$column->size:0;
+        $size = $size > 200?200:$size;
         if ($column->phpType === 'boolean') {
             return "\Html::activeCheckbox(\$model, '$attribute')";
         } elseif ($column->type === 'text') {
@@ -279,10 +316,8 @@ class Generator extends \yii\gii\Generator
             return "Html::activeTextInput(\$model, '$attribute',['class' =>'easyui-datetimebox','data-options'=>'required:$require'])";
         } elseif ($column->type === 'double'|| $column->type === 'integer') {
             return "Html::activeTextInput(\$model, '$attribute',['class' =>'easyui-numberbox','data-options'=>'required:$require'])";
-        } elseif ($column->type === 'string') {
-            return "Html::activeTextInput(\$model, '$attribute',['class' =>'easyui-textbox','data-options'=>'required:$require','size'=>$column->size])";
         } else {
-        	return print_r($column);
+            return "Html::activeTextInput(\$model, '$attribute',['class' =>'easyui-textbox','data-options'=>'required:$require','size'=>$size])";
         }
     }
 
