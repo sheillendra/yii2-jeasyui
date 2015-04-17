@@ -35,7 +35,7 @@ AppAsset::register($this);
 
 <?= "<?php\n" ?>
 $username = Yii::$app->user->identity->username;
-$logoutUrl = Url::to('/user/logout',true);
+$logoutUrl = Url::to('/site/logout',true);
 $northContent = preg_replace(Regex::htmlMinified, ' ', $this->render('_north-content'));
 $centerContent = '<div id="maintab"></div>';
 $westContent = preg_replace(Regex::htmlMinified, ' ', $this->render('_west-content'));
