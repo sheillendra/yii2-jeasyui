@@ -12,7 +12,7 @@ echo "<?php\n";
  * @license http://www.yiiframework.com/license/
  */
 
-namespace app\views\<?=$lowModelName?>\assets;
+namespace app\assets;
 
 use yii\web\AssetBundle;
 
@@ -20,14 +20,14 @@ use yii\web\AssetBundle;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class <?=$modelName?>NewAsset extends AssetBundle
+class <?=$modelName?>IndexAsset extends AssetBundle
 {
     public $sourcePath = '@app/views/<?=$lowModelName?>/assets';
     public $css = [
-        'css/<?=$lowModelName?>-new.css',
+        'css/<?=$lowModelName?>-index.css',
     ];
     public $js = [
-        'js/<?=$lowModelName?>-new.js'
+        'js/<?=$lowModelName?>-index.js'
     ];
     public $depends = [];
     public $publishOptions=['forceCopy'=>YII_DEBUG];

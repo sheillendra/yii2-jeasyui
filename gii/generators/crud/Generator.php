@@ -156,12 +156,13 @@ class Generator extends \yii\gii\Generator
         }
 
         
-        $assetsPath = $this->getTemplatePath() . '/views/assets';
+        $assetsPath = Yii::getAlias('@app/assets');
+        $assetsTemplatePath = $this->getTemplatePath() . '/assets';
         
         $modelName = StringHelper::basename($this->modelClass);
-        foreach (scandir($assetsPath) as $file) {
-            if (is_file($assetsPath . '/' . $file) && pathinfo($file, PATHINFO_EXTENSION) === 'php') {
-                $files[] = new CodeFile("$viewPath/assets/{$modelName}$file", $this->render("views/assets/$file"));
+        foreach (scandir($assetsTemplatePath) as $file) {
+            if (is_file($assetsTemplatePath . '/' . $file) && pathinfo($file, PATHINFO_EXTENSION) === 'php') {
+                $files[] = new CodeFile("$assetsPath/{$modelName}$file", $this->render("assets/$file"));
             }
         }
         $lowerModelName = strtolower($modelName);
@@ -232,7 +233,6 @@ class Generator extends \yii\gii\Generator
                 }
             }
             
-            $assetsPath = Yii::getAlias('@app/assets');
             $files[] = new CodeFile("$assetsPath/AppAsset.php",$this->render("AppAsset.php"));
             
             $componentsPath = Yii::getAlias('@app/components');

@@ -20,6 +20,11 @@ yii.app = (function($) {
         southContent:'',
         init: function() {
             
+            $.ajaxSetup({
+                error:function(e){
+                    yii.app.showError(e);
+                }
+            });
             using(['accordion','layout','menu','menubutton','linkbutton','tabs','messager'],function(){
                 $('body').layout({
                     fit: true,
@@ -156,6 +161,16 @@ yii.app = (function($) {
             }else{
                 vc.children('div.datagrid-empty').remove();
             }
+        },
+        showError:function(e){
+            using(['dialog'],function(){
+                $('#global-error').dialog({
+                    title:'Error',
+                    width:window.innerWidth - 50,
+                    height:window.innerHeight - 50,
+                    content:e.responseText
+                }); 
+            });
         }
     };
 })(jQuery);

@@ -2,8 +2,10 @@
 use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
 
-$modelClassName=StringHelper::basename($generator->modelClass);
-$lowModelClassName=  strtolower($modelClassName);
+$modelClassName = StringHelper::basename($generator->modelClass);
+$idModelClassName = Inflector::camel2id($modelClassName);
+$varModelClassName = Inflector::variablize($modelClassName);
+
 $glue = <<<EOD
                     </td>
                 </tr>
@@ -27,7 +29,7 @@ echo "<?php\n";
 use yii\helpers\Html;
 use yii\helpers\Json;
 use yii\web\View;
-use app\views\<?=$lowModelClassName?>\assets\<?=$modelClassName?>NewAsset;
+use app\assets\<?=$modelClassName?>NewAsset;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\<?=$modelClassName?> */
@@ -39,12 +41,12 @@ use app\views\<?=$lowModelClassName?>\assets\<?=$modelClassName?>NewAsset;
 <div class="easyui-layout" fit="true">
     <div region="north" border="false">
         <div class="toolbar">
-            <a id="<?=$lowModelClassName?>-save-btn" class="easyui-linkbutton" icon="icon-save" plain="true">Save</a>
-            <a id="<?=$lowModelClassName?>-clear-btn" class="easyui-linkbutton" icon="icon-cancel" plain="true">Clear</a>
+            <a id="<?=$idModelClassName?>-save-btn" class="easyui-linkbutton" icon="icon-save" plain="true">Save</a>
+            <a id="<?=$idModelClassName?>-clear-btn" class="easyui-linkbutton" icon="icon-cancel" plain="true">Clear</a>
         </div>
     </div>
     <div region="center" border="false" style="padding:5px;">
-        <?="<?=Html::beginForm('/{$lowModelClassName}/new','',['id'=>'{$lowModelClassName}-new-form'])?>\n"?>
+        <?="<?=Html::beginForm('/{$idModelClassName}/new','',['id'=>'{$idModelClassName}-new-form'])?>\n"?>
         <table width="100%">
             <tbody>
                 <tr>
@@ -69,9 +71,8 @@ use app\views\<?=$lowModelClassName?>\assets\<?=$modelClassName?>NewAsset;
 <?= '<?php $this->endBody(); ?>'."\n" ?>
 <?= '<?php $this->endPage(); ?>'."\n" ?>
 <?= "<?php\n" ?>
-
-<?= '$this->registerJs(<<<EOD'."\n" ?>
-<?= '        yii.' . $lowModelClassName . "New.init();\n" ?>
-<?= "EOD\n" ?>
-<?= "        , View::POS_END);\n" ?>
+$this->registerJs(<<<EOD
+    yii.<?= $varModelClassName ?>New.init();
+EOD
+    , View::POS_END);
 <?= $modelClassName . 'NewAsset::register($this);' ?>
