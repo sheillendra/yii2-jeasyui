@@ -21,8 +21,8 @@ $navItemText = substr($oldFileAsText, $navItemStart,$navItemEnd - $navItemStart 
 if(!isset($navItemUrl[$lowModelClassName])){
     $navItemUrlText = str_replace("];",'',$navItemUrlText);
     $navItemUrlText .= "    ,'$lowModelClassName' =>[\n";
-    $navItemUrlText .= "        'list' =>Url::to('/$lowModelClassName',true),\n";
-    $navItemUrlText .= "        'new' =>Url::to('/$lowModelClassName/new',true)\n";
+    $navItemUrlText .= "        'list' =>Url::to(['$lowModelClassName/index'],true),\n";
+    $navItemUrlText .= "        'new' =>Url::to(['$lowModelClassName/new'],true)\n";
     $navItemUrlText .= "    ]\n";
     $navItemUrlText .= "];\n";
     
