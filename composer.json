@@ -11,7 +11,7 @@
 	],
 	"require": {
 		"yiisoft/yii2": "*",
-		"sheillendra/yii2-theme": "*"
+		"sheillendra/yii2-theme": "dev-master"
 	},
 	"autoload": {
 		"psr-4": {
