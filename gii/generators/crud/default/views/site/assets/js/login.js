@@ -1,5 +1,4 @@
 yii.login = (function ($) {
-
     return {
         isActive: false,
         init: function () {
@@ -18,18 +17,34 @@ yii.login = (function ($) {
                     iconCls: 'icon-lock',
                     buttons: '#login-btn'
                 });
-
-                $('#loginform-username').textbox({
+                
+                var elUsername = $('#loginform-username'),
+                    elPassword = $('#loginform-password'),
+                    elForm = $('#login-form');
+                    
+                elUsername.textbox({
                     prompt: 'Username',
                     required: 1
+                }).textbox('textbox').bind('keydown',function(e){
+                    if (e.keyCode == 13){
+                        elUsername.textbox('setValue', $(this).val());
+                        elForm.form('submit');
+                    }
+                    e.stopPropagation();
                 });
-
-                $('#loginform-password').textbox({
+                
+                elPassword.textbox({
                     prompt: 'Password',
                     required: 1
+                }).textbox('textbox').bind('keydown',function(e){
+                    if (e.keyCode == 13){
+                        elPassword.textbox('setValue', $(this).val());
+                        elForm.form('submit');
+                    }
+                    e.stopPropagation();
                 });
 
-                $('#login-form').form({
+                elForm.form({
                     url: yii.login.url,
                     novalidate: true,
                     onSubmit: function () {
@@ -56,6 +71,7 @@ yii.login = (function ($) {
                                         });
                                     }
                                 });
+                                elUsername.textbox('textbox').focus();
                                 return;
                             }
                         } catch (e) {
@@ -74,7 +90,7 @@ yii.login = (function ($) {
                     iconCls: 'icon-ok',
                     text: 'Login',
                     onClick: function () {
-                        $('#login-form').form('submit');
+                        elForm.form('submit');
                     }
                 });
 
@@ -82,15 +98,15 @@ yii.login = (function ($) {
                     iconCls: 'icon-cancel',
                     text: 'Reset',
                     onClick: function () {
-                        $('#login-form').form('clear');
+                        elForm.form('clear');
                     }
                 });
 
-                $('#loginform-username').textbox('clear').textbox('textbox').focus();
+                elUsername.textbox('clear').textbox('textbox').focus();
                 $(document).on('click', '#login-signup-btn', function (e) {
                     if (!document.getElementById('signup-dialog')) {
                         $.ajax({
-                            url: '/user/signup',
+                            url: yii.login.signupUrl,
                             success: function (r) {
                                 $('body').append(r);
                                 yii.signup.init();

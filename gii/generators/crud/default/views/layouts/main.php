@@ -48,14 +48,14 @@ $this->params['selectedNavAccordion'] = isset($this->params['selectedNavAccordio
 
 $navItem[$this->params['selectedNavAccordion']]['selected'] = true;
 
-$navItem = Json::encode($navItem);
+$navItemJson = Json::encode($navItem);
 
 $this->registerJs(<<<EOD
     yii.app.logoutUrl = '{$logoutUrl}';
     yii.app.northContent = '{$northContent}';
     yii.app.centerContent = '{$centerContent}';
     yii.app.westContent = '{$westContent}';
-    yii.app.navItem = {$navItem};
+    yii.app.navItem = {$navItemJson};
     yii.app.selectedNav = '{$this->params['selectedNav']}';
     yii.app.init();
 EOD

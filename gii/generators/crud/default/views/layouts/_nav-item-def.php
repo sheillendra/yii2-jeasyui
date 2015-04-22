@@ -3,7 +3,7 @@ use yii\helpers\Url;
 
 $navItemUrl = [
     'dashboard' =>[
-        'dashboard' => Url::to([''], true)
+        'dashboard' => Url::to(['site/index'], true)
     ]
 ];
 

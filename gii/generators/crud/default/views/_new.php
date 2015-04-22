@@ -46,7 +46,7 @@ use app\assets\<?=$modelClassName?>NewAsset;
         </div>
     </div>
     <div region="center" border="false" style="padding:5px;">
-        <?="<?=Html::beginForm('/{$idModelClassName}/new','',['id'=>'{$idModelClassName}-new-form'])?>\n"?>
+        <?="<?=Html::beginForm(['{$idModelClassName}/new'],'',['id'=>'{$idModelClassName}-new-form'])?>\n"?>
         <table width="100%">
             <tbody>
                 <tr>

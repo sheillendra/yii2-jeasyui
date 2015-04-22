@@ -78,10 +78,7 @@ yii.app = (function($) {
                 });
                 
                 $.each(yii.app.navItem,function(k,v){
-                    v.selected = false;
-                    if(k===yii.app.selectedNavAccordion){
-                        v.selected = true;
-                    }
+                    v.selected = v.selected || false;
                     $('#navigation').accordion('add',v);
                 });
                 
@@ -126,7 +123,7 @@ yii.app = (function($) {
                     if(typeof navSelected!=='undefined'){
                         yii.app.createTab(navSelected.dataset.tabtitle,navSelected.dataset.url,navSelected.dataset.icon,yii.app.selectedNav);
                     }else{
-                        $.messager.alert('Error Navigasi','tidak ada Navigasi untuk :'+yii.app.selectedNav,'error');
+                        $.messager.alert('Error','Navigation not found','error');
                     }
                 }
                 

@@ -1,8 +1,10 @@
 <?php
 use yii\helpers\StringHelper;
+use yii\helpers\Inflector;
 
-$modelName = StringHelper::basename($generator->modelClass);
-$lowModelName = strtolower($modelName);
+$modelClassName = StringHelper::basename($generator->modelClass);
+$idModelClassName = Inflector::camel2id($modelClassName);
+$varModelClassName = Inflector::variablize($modelClassName);
 
 echo "<?php\n";
 ?>
@@ -20,14 +22,14 @@ use yii\web\AssetBundle;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class <?=$modelName?>NewAsset extends AssetBundle
+class <?=$modelClassName?>NewAsset extends AssetBundle
 {
-    public $sourcePath = '@app/views/<?=$lowModelName?>/assets';
+    public $sourcePath = '@app/views/<?=$idModelClassName?>/assets';
     public $css = [
-        'css/<?=$lowModelName?>-new.css',
+        'css/<?=$idModelClassName?>-new.css',
     ];
     public $js = [
-        'js/<?=$lowModelName?>-new.js'
+        'js/<?=$idModelClassName?>-new.js'
     ];
     public $depends = [];
     public $publishOptions=['forceCopy'=>YII_DEBUG];

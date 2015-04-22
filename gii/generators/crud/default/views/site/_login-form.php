@@ -5,7 +5,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
 ?>
-<?= "<?=Html::beginForm('/user/login','',['id'=>'login-form'])?>\n" ?>
+<?= "<?=Html::beginForm(['site/login'],'',['id'=>'login-form'])?>\n" ?>
     <table width="100%">
         <tbody>
             <tr>
@@ -26,11 +26,11 @@ use yii\helpers\Url;
                 <td></td>
                 <?= '<td><?= Html::activeCheckbox($model, \'rememberMe\') ?></td>'."\n" ?>
             </tr>
-            <tr>
+            <!--<tr>
                 <td colspan="3">
                     <a id="login-forgot-btn" href="javascript:void(0);">Forgot Password</a>, or 
                     <a id="login-signup-btn" href="javascript:void(0);">SignUp</a></td>
-            </tr>
+            </tr>-->
         </tbody>
     </table>
 <?= '<?=Html::endForm()?>'."\n" ?>

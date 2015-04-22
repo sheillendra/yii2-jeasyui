@@ -13,7 +13,7 @@ $this->title = 'Dashboard';
 <?= '<?php $this->head();?>'."\n" ?>
 <?= '<?php $this->beginBody();?>'."\n" ?>
 <div id="dashboard-index">
-    
+    <?="This is dashboard page, change file at path <?=__FILE__?> for customize\n"?>
 </div>
 <?= '<?php $this->endBody();?>'."\n" ?>
 <?= '<?php $this->endPage();?>'."\n" ?>
@@ -22,7 +22,7 @@ $this->title = 'Dashboard';
 $url = Url::to('/',true);
 $this->registerJs(<<<EOD
         if(typeof yii.app !== undefined ){
-            //yii.workorderIndex.init();
+            //yii.siteIndex.init();
         }else{
             window.location = '{$url}';
         }

@@ -159,18 +159,22 @@ class Generator extends \yii\gii\Generator
         $assetsPath = Yii::getAlias('@app/assets');
         $assetsTemplatePath = $this->getTemplatePath() . '/assets';
         
-        $modelName = StringHelper::basename($this->modelClass);
+        
+        $modelClassName = StringHelper::basename($this->modelClass);
+        $idModelClassName = Inflector::camel2id($modelClassName);
+        $varModelClassName = Inflector::variablize($modelClassName);
+        
         foreach (scandir($assetsTemplatePath) as $file) {
             if (is_file($assetsTemplatePath . '/' . $file) && pathinfo($file, PATHINFO_EXTENSION) === 'php') {
-                $files[] = new CodeFile("$assetsPath/{$modelName}$file", $this->render("assets/$file"));
+                $files[] = new CodeFile("$assetsPath/{$modelClassName}$file", $this->render("assets/$file"));
             }
         }
-        $lowerModelName = strtolower($modelName);
+        
         $cssPath = $this->getTemplatePath() . '/views/assets/css';
         foreach (scandir($cssPath) as $file) {
             if (is_file($cssPath . '/' . $file) && pathinfo($file, PATHINFO_EXTENSION) === 'php') {
                 $file_path_as = str_replace('.php', '.css',$file);
-                $files[] = new CodeFile("$viewPath/assets/css/{$lowerModelName}$file_path_as", $this->render("views/assets/css/$file"));
+                $files[] = new CodeFile("$viewPath/assets/css/{$idModelClassName}$file_path_as", $this->render("views/assets/css/$file"));
             }
         }
         
@@ -178,7 +182,7 @@ class Generator extends \yii\gii\Generator
         foreach (scandir($jsPath) as $file) {
             if (is_file($jsPath . '/' . $file) && pathinfo($file, PATHINFO_EXTENSION) === 'php') {
                 $file_path_as = str_replace('.php', '.js',$file);
-                $files[] = new CodeFile("$viewPath/assets/js/{$lowerModelName}$file_path_as", $this->render("views/assets/js/$file"));
+                $files[] = new CodeFile("$viewPath/assets/js/{$idModelClassName}$file_path_as", $this->render("views/assets/js/$file"));
             }
         }
         

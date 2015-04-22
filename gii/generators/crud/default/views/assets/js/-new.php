@@ -1,29 +1,27 @@
 <?php
 use yii\helpers\StringHelper;
+use yii\helpers\Inflector;
 
-$modelName = StringHelper::basename($generator->modelClass);
-$lowModelName = strtolower($modelName);
-
-$model = new $generator->modelClass();
-$safeAttributes = $model->safeAttributes();
-$labels = $model->attributeLabels();
+$modelClassName = StringHelper::basename($generator->modelClass);
+$idModelClassName = Inflector::camel2id($modelClassName);
+$varModelClassName = Inflector::variablize($modelClassName);
 
 ?>
-yii.<?=$lowModelName?>New = (function($) {
+yii.<?=$varModelClassName?>New = (function($) {
     return {
         isActive: false,
         init : function(){
-            using(['form','combobox','linkbutton','combogrid'],function(){
+            using(['form','combobox','linkbutton','combogrid','dialog'],function(){
             	
-                $('#<?=$lowModelName?>-new-form').form({
+                $('#<?=$idModelClassName?>-new-form').form({
                     success: function (data) {
                         try {
                             data = eval('(' + data + ')');
-                            $('#<?=$lowModelName?>-new-form').form('clear');
-                            var listNav = document.getElementById('nav-<?=$lowModelName?>-list');
+                            $('#<?=$idModelClassName?>-new-form').form('clear');
+                            var listNav = document.getElementById('nav-<?=$idModelClassName?>-list');
                             if($('#maintab').tabs('exists',listNav.dataset.tabtitle)){
                                 $('#maintab').tabs('select',listNav.dataset.tabtitle);
-                                $('#<?=$lowModelName?>-index-dg').datagrid('reload');
+                                $('#<?=$idModelClassName?>-index-dg').datagrid('reload');
                                 yii.refreshCsrfToken();
                             }
                         } catch (e) {
@@ -41,14 +39,14 @@ yii.<?=$lowModelName?>New = (function($) {
                     }
                 });
                 
-                $('#<?=$lowModelName?>-save-btn').linkbutton({
+                $('#<?=$idModelClassName?>-save-btn').linkbutton({
             		onClick:function(){
-            			$('#<?=$lowModelName?>-new-form').form('submit');
+            			$('#<?=$idModelClassName?>-new-form').form('submit');
             		}
             	});
-            	 $('#<?=$lowModelName?>-clear-btn').linkbutton({
+            	 $('#<?=$idModelClassName?>-clear-btn').linkbutton({
             		onClick:function(){
-            			$('#<?=$lowModelName?>-new-form').form('clear');
+            			$('#<?=$idModelClassName?>-new-form').form('clear');
             		}
             	});
             });
