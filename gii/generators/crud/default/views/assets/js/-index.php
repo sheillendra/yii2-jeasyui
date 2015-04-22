@@ -96,18 +96,21 @@ yii.<?=$varModelClassName?>Index = (function($) {
                     onSelect:function(i,row){
                         $('#<?=$idModelClassName?>-index-pg').propertygrid({
                             data:[
-                                {
-                                    name:'No.',
-                                    value:row.asset_no,
-                                    group:'Asset',
-                                    editor:''
-                                },
-                                {
-                                    name:'Note',
-                                    value:row.asset_note,
-                                    group:'Asset',
-                                    editor:''
-                                }
+                                <?php
+                                    $text=[];
+                                    $count = 0;
+                                    if (($tableSchema = $generator->getTableSchema()) !== false) {
+                                        foreach ($tableSchema->columns as $column) {
+                                            if($count > 10){
+                                                $text[]="//{name:'".$labels[$column->name]."',value:row.".$column->name.",group:'Detail Group',editor:''}";
+                                            }else{
+                                                $text[]="{name:'".$labels[$column->name]."',value:row.".$column->name.",group:'Detail Group',editor:''}";
+                                            }
+                                            $count++;
+                                        }
+                                    }
+                                    echo implode(",\n                                ",$text)."\n";
+                                ?>
                             ]
                         });
                     },
