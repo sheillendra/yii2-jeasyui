@@ -19,6 +19,9 @@ to the require section of your composer.json file.
 
 USAGE 
 ---
+
+Gii
+---
 This extension come with gii for JEasyUi and You can see usage via this Gii.
 Once the extension is installed, simply modify your application configuration as follows:
 ```
