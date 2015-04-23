@@ -94,25 +94,27 @@ yii.<?=$varModelClassName?>Index = (function($) {
                         ?>
                     ]],
                     onSelect:function(i,row){
-                        $('#<?=$idModelClassName?>-index-pg').propertygrid({
-                            data:[
-                                <?php
-                                    $text=[];
-                                    $count = 0;
-                                    if (($tableSchema = $generator->getTableSchema()) !== false) {
-                                        foreach ($tableSchema->columns as $column) {
-                                            if($count > 10){
-                                                $text[]="//{name:'".$labels[$column->name]."',value:row.".$column->name.",group:'Detail Group',editor:''}";
-                                            }else{
-                                                $text[]="{name:'".$labels[$column->name]."',value:row.".$column->name.",group:'Detail Group',editor:''}";
+                        if(typeof row!=='undefined'){
+                            $('#<?=$idModelClassName?>-index-pg').propertygrid({
+                                data:[
+                                    <?php
+                                        $text=[];
+                                        $count = 0;
+                                        if (($tableSchema = $generator->getTableSchema()) !== false) {
+                                            foreach ($tableSchema->columns as $column) {
+                                                if($count > 10){
+                                                    $text[]="//{name:'".$labels[$column->name]."',value:row.".$column->name.",group:'Detail Group',editor:''}";
+                                                }else{
+                                                    $text[]="{name:'".$labels[$column->name]."',value:row.".$column->name.",group:'Detail Group',editor:''}";
+                                                }
+                                                $count++;
                                             }
-                                            $count++;
                                         }
-                                    }
-                                    echo implode(",\n                                ",$text)."\n";
-                                ?>
-                            ]
-                        });
+                                        echo implode(",\n                                ",$text)."\n";
+                                    ?>
+                                ]
+                            });
+                        }
                     },
                     onLoadSuccess:function(data){
                         yii.app.showGridMsg(this,data);
