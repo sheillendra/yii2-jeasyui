@@ -39,3 +39,5 @@ if (!YII_ENV_TEST) {
 }
 
 ```
+**Attention!!**
+Recommended to use this GII for a new project only, because the generator will overwrite some important files such as /layout/main.php and /controllers/SiteController.php
