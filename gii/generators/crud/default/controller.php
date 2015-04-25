@@ -109,10 +109,15 @@ class <?=$controllerClass?> extends Controller
      */
     public function actionDelete()
     {
-       
+        <?php 
+            $tempPk = [];
+            foreach ($pks as $pk){
+                $tempPk[] = '$ids["'.$pk.'"]';
+            }
+        ?>
         $arrPost = Yii::$app->request->post('ids');
-        foreach($arrPost as <?= $actionParams ?>){
-            $this->findModel(<?= $actionParams ?>)->delete();
+        foreach($arrPost as $ids){
+            $this->findModel(<?=implode(', ',$tempPk)?>)->delete();
         }
 
         echo Json::encode(['status' => 'success']);

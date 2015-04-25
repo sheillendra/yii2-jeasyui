@@ -12,11 +12,13 @@ $labels = $model->attributeLabels();
 
 $class = $generator->modelClass;
 $pks = $class::primaryKey();
-if(count($pks)){
+/*if(count($pks)){
     $pks = $pks[0];
 }else{
     $pks = 'id';
 }
+ * 
+ */
 ?>
 yii.<?=$varModelClassName?>Index = (function($) {
     return {
@@ -31,31 +33,41 @@ yii.<?=$varModelClassName?>Index = (function($) {
                         yii.app.createTab('<?=$modelClassName?> New',yii.<?=$varModelClassName?>Index.newUrl,'ia-icon-form','nav-<?=$idModelClassName?>-new')
                     }
                 });
-                $('#<?=$idModelClassName?>-index-del-btn').linkbutton({
-                    text:'Delete',
-                    iconCls:'icon-remove',
-                    plain:!0,
-                    onClick:function(){
-                        var checked =  $('#<?=$idModelClassName?>-index-dg').datagrid('getChecked'),
-                            ids=[];
-                    
-                        if(!checked.length){
-                            $.messager.alert('Error','Pilih data yang akan di hapus','error');
-                            return;
-                        }
-                        $.each(checked,function(k,v){
-                            ids.push(v.<?=$pks?>);
-                        });
-                        $.ajax({
-                            url:yii.<?=$varModelClassName?>Index.deleteUrl,
-                            type:'post',
-                            data:{ids:ids},
-                            success:function(r){
-                                $('#<?=$idModelClassName?>-index-dg').datagrid('reload');
+                
+                <?php if(count($pks)){ ?>
+                    $('#<?=$idModelClassName?>-index-del-btn').linkbutton({
+                        text:'Delete',
+                        iconCls:'icon-remove',
+                        plain:!0,
+                        onClick:function(){
+                            var checked =  $('#<?=$idModelClassName?>-index-dg').datagrid('getChecked'),
+                                ids=[];
+
+                            if(!checked.length){
+                                $.messager.alert('Error','Pilih data yang akan di hapus','error');
+                                return;
                             }
-                        });
-                    }
-                });
+
+                            $.each(checked,function(k,v){
+                                <?php 
+                                $tempPk = [];
+                                foreach($pks as $pk){
+                                    $tempPk[]= "$pk:v.$pk";
+                                }?>
+                                ids.push({<?=implode(", ",$tempPk)?>});
+                            });
+
+                            $.ajax({
+                                url:yii.<?=$varModelClassName?>Index.deleteUrl,
+                                type:'post',
+                                data:{ids:ids},
+                                success:function(r){
+                                    $('#<?=$idModelClassName?>-index-dg').datagrid('reload');
+                                }
+                            });
+                        }
+                    });
+                <?php } ?>
                 
                 $('#<?=$idModelClassName?>-index-dg').datagrid({
                     border:!1,
