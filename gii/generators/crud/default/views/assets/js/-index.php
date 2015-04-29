@@ -131,6 +131,9 @@ yii.<?=$varModelClassName?>Index = (function($) {
                     onLoadSuccess:function(data){
                         yii.app.showGridMsg(this,data);
                         $(this).datagrid('selectRow',0);
+                    },
+                    onLoadError:function(e){
+                        yii.app.showError(e);
                     }
                 });
                 
