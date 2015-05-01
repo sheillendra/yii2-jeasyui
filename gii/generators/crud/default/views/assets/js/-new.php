@@ -22,7 +22,6 @@ yii.<?=$varModelClassName?>New = (function($) {
                             if($('#maintab').tabs('exists',listNav.dataset.tabtitle)){
                                 $('#maintab').tabs('select',listNav.dataset.tabtitle);
                                 $('#<?=$idModelClassName?>-index-dg').datagrid('reload');
-                                yii.refreshCsrfToken();
                             }
                         } catch (e) {
                             if(typeof data !== 'string'){
@@ -36,6 +35,7 @@ yii.<?=$varModelClassName?>New = (function($) {
                                 content: data
                             });
                         }
+                        yii.refreshCsrfToken();
                     }
                 });
                 
