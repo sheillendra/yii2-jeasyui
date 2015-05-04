@@ -55,7 +55,7 @@ use app\assets\<?=$modelClassName?>NewAsset;
                     $field = [];
                     foreach ($generator->getColumnNames() as $attribute) {
                         if (in_array($attribute, $safeAttributes)) {
-                        	$field[] = "    " . $labels[$attribute] . "\n";
+                        	$field[] = '    <?= Html::activeLabel($model, \''.$attribute.'\')?>' . "\n";
                             $field[] = "    <?= " . $generator->generateField($attribute) . " ?>\n";
                         }
                     }
