@@ -104,7 +104,7 @@ yii.app = (function($) {
                     fit:true,
                     border:!1,
                     onSelect:function(t,i){
-                        var tab = maintab.tabs('getSelected'),
+                        var tab = maintab.tabs('getTab',t),
                             options = tab.panel('options'),
                             nav = document.getElementById(options.data.nav);
                             window.history.pushState('','',options.data.url);
