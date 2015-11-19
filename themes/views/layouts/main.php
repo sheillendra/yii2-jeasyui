@@ -38,11 +38,24 @@ $northContent = preg_replace(Regex::htmlMinified, ' ', $this->render('_north-con
 $centerContent = '<div id="maintab"></div>';
 $westContent = preg_replace(Regex::htmlMinified, ' ', $this->render('_west-content'));
 
-$params = $this->params;
+$this->params['selectedNav'] = isset($this->params['selectedNav']) ? $this->params['selectedNav'] :'nav-dashboard';
 
 require(__DIR__ . '/_nav-item.php');
 
-$this->params['selectedNav'] = isset($this->params['selectedNav']) ? $this->params['selectedNav'] :'nav-dashboard';
+$modules = Yii::$app->getModules();
+foreach( $modules as $module){
+    if(is_array($module)){
+        if(method_exists($module['class'], 'setEasyuiNavigation')){
+            $navItemFromModule = $module['class']::setEasyuiNavigation();
+            $navItem = array_merge($navItem,$navItemFromModule);
+        }
+    }elseif(is_object($module)){
+        if(method_exists($module, 'setEasyuiNavigation')){
+            $navItemFromModule = $module::setEasyuiNavigation();
+            $navItem = array_merge($navItem,$navItemFromModule);
+        }
+    }
+}
 
 $navItemJson = Json::encode($navItem);
 

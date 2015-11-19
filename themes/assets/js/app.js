@@ -153,7 +153,7 @@ yii.app = (function ($) {
                     delete yii.app.tabOptions;
                 } else {
                     navSelected = document.getElementById(yii.app.selectedNav);
-                    if (typeof navSelected !== 'undefined') {
+                    if (typeof navSelected !== 'undefined' && navSelected) {
                         yii.app.createTab(navSelected.dataset.tabtitle, navSelected.dataset.url, navSelected.dataset.icon, yii.app.selectedNav);
                     } else {
                         $.messager.alert('Error', 'Navigation not found', 'error');
