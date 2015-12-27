@@ -22,6 +22,9 @@ AppAsset::register($this);
         <?php $this->head() ?>
     </head>
     <body>
+        <div id="main-mask" style="display: none">
+            <div>Processing, please wait ...</div>
+        </div>
         <div id="global-error"></div>
         <?php $this->beginBody() ?>
 
@@ -84,6 +87,7 @@ $this->registerJs(<<<EOD
     yii.app.myRoles = {$myRoles};
     yii.app.reference.roles = {$roles};
     {$errors}
+    yii.app.showMainMask();
     yii.app.init();
 EOD
 );?>

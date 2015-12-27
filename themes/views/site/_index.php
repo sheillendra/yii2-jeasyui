@@ -24,6 +24,7 @@ $this->registerJs(<<<EOD
         }else{
             window.location = '{$url}';
         }
+        yii.app.hideMainMask();
 EOD
     , View::POS_END );
 

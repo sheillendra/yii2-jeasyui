@@ -1,33 +1,25 @@
+var yii = yii || {};
 yii.app = (function ($) {
-    var generateIdPrefix = 'w'
-            , generateIdCounter = 0
-            , ajaxDialogForm = {}
-    , generateId = function () {
-        var e, res;
-        do {
-            res = generateIdPrefix + generateIdCounter;
-            e = document.getElementById(res);
-            generateIdCounter++;
-        } while (e);
-        return res;
-    }
-    , maintab = {}
-    , doIfReferenceExists = function (arrReference, callback, param) {
-        var newArrReference = [], i = 1;
-        $.each(arrReference, function (k, v) {
-            if (i) {
-                i = 0;
+    var ajaxDialogForm = {}
+        , maintab = {}
+        , mainMask = $('#main-mask')
+        , mainMaskTask = 0
+        , doIfReferenceExists = function (arrReference, callback, param) {
+            var newArrReference = [], i = 1;
+            $.each(arrReference, function (k, v) {
+                if (i) {
+                    i = 0;
+                } else {
+                    newArrReference.push(v);
+                }
+            });
+            if (newArrReference.length) {
+                yii.app.doIfReferenceExists(newArrReference, callback, param);
             } else {
-                newArrReference.push(v);
+                callback(param);
             }
-        });
-        if (newArrReference.length) {
-            yii.app.doIfReferenceExists(newArrReference, callback, param);
-        } else {
-            callback(param);
         }
-    }
-    , globalError = $('#global-error')
+        , globalError = $('#global-error')
     ;
 
     return {
@@ -53,7 +45,7 @@ yii.app = (function ($) {
             });
 
             using(['accordion', 'layout', 'menu', 'menubutton', 'linkbutton', 'tabs', 'messager'], function () {
-
+                
                 $('body').layout({
                     fit: true,
                     border: !1
@@ -67,7 +59,14 @@ yii.app = (function ($) {
                     iconCls: 'icon-compass',
                     split: !0,
                     width: 200,
-                    content: yii.app.westContent
+                    content: yii.app.westContent,
+                    hideCollapsedContent : false,
+                    onCollapse : function(){
+                        yii.app.cookie.set('west-collapsed',1);
+                    },
+                    onExpand : function(){
+                        yii.app.cookie.set('west-collapsed',0);
+                    }
                 }).layout('add', {
                     region: 'south',
                     content: yii.app.southContent
@@ -82,6 +81,11 @@ yii.app = (function ($) {
                 delete yii.app.southContent;
                 delete yii.app.centerContent;
 
+                var westCollapsed = ~~(yii.app.cookie.get('west-collapsed'));
+                if(westCollapsed){
+                    $('body').layout('collapse','west');
+                }
+                
                 $('#north-user-menu-item').menu({
                 }).menu('appendItem', {
                     text: 'Profile',
@@ -125,6 +129,7 @@ yii.app = (function ($) {
                         group: 'g1',
                         iconCls: v.dataset.icon,
                         onClick: function () {
+                            yii.app.showMainMask();
                             yii.app.createTab(v.dataset.tabtitle, v.dataset.url, v.dataset.icon, v.id);
                         }
                     });
@@ -135,12 +140,12 @@ yii.app = (function ($) {
                     fit: true,
                     border: !1,
                     onSelect: function (t, i) {
-                        var tab = maintab.tabs('getTab', t),
+                        var tab = maintab.tabs('getSelected'),
                                 options = tab.panel('options'),
                                 nav = document.getElementById(options.data.nav);
                         window.history.pushState('', '', options.data.url);
                         document.title = t;
-                        if (typeof nav !== 'undefined' && !nav.classList.contains('l-btn-selected')) {
+                        if (typeof nav !== 'undefined' && nav && !nav.classList.contains('l-btn-selected')) {
                             navigation.find('.l-btn-selected').removeClass('l-btn-selected');
                             nav.classList.add('l-btn-selected');
                             navigation.accordion('select', nav.dataset.accordion);
@@ -171,6 +176,8 @@ yii.app = (function ($) {
         },
         createTab: function (title, url, icon, nav) {
             if (maintab.tabs('exists', title)) {
+                //hide dari click accordion
+                yii.app.hideMainMask();
                 maintab.tabs('select', title);
             } else {
                 maintab.tabs('add', {
@@ -262,7 +269,6 @@ yii.app = (function ($) {
          * @param {string} formName
          * @param {object} dialogOptions
          * @param {object} formOptions
-         * @param {object} doBeforeOpen
          * @returns {boolean}
          */
         createAjaxDialogForm: function ( moduleName, formName, dialogOptions, formOptions ) {
@@ -330,30 +336,54 @@ yii.app = (function ($) {
             return !0;
         },
         deleteHandler: function (dg, url, pk, arrPk, callbacks) {
-            pk = pk || 'id';
-            arrPk = arrPk || 'ids';
-            callbacks = callbacks || {};
-            var idCheked = dg.datagrid('getChecked'),
-                    data = {};
+            var idCheked = dg.datagrid('getChecked');
             if (idCheked.length) {
-                data[arrPk] = [];
+                using('messager',function(){
+                    $.messager.confirm(
+                        'Delete Confirmation',
+                        'Are you sure to delete the checked rows?',
+                        function(response){
+                            if(response){
+                                pk = pk || 'id';
+                                arrPk = arrPk || 'ids';
+                                callbacks = callbacks || {};
+                                callbacks.doAfterDelete = callbacks.doAfterDelete || function(ajaxResponse){
+                                    if(typeof ajaxResponse.list !== 'undefined'){
+                                        dg.datagrid('loadData',ajaxResponse.list);
+                                    }else{
+                                        dg.datagrid('reload');
+                                    }
+                                };
 
-                $.each(idCheked, function (k, v) {
-                    data[arrPk].push(v[pk]);
-                });
+                                var data = {},
+                                    options = dg.datagrid('options');
 
-                $.ajax({
-                    url: url,
-                    type: 'post',
-                    dataType: 'json',
-                    data: data,
-                    success: function (r) {
-                        dg.datagrid('reload');
-                        yii.refreshCsrfToken();
-                        if(typeof callbacks.doAfterDelete !=='undefined'){
-                            callbacks.doAfterDelete(r);
+                                data.rows = options.pageSize;
+                                data.page = options.pageNumber;
+
+                                data[arrPk] = [];
+
+                                $.each(idCheked, function (k, v) {
+                                    data[arrPk].push(v[pk]);
+                                });
+
+                                if(typeof callbacks.doBeforeDelete !=='undefined'){
+                                    callbacks.doBeforeDelete(data);
+                                }
+
+                                $.ajax({
+                                    url: url,
+                                    type: 'post',
+                                    dataType: 'json',
+                                    data: data,
+                                    success: function (r) {
+                                        yii.refreshCsrfToken();
+                                        callbacks.doAfterDelete(r);
+                                    }
+                                });
+                            }
                         }
-                    }
+                    );
                 });
             } else {
                 $.messager.alert('Attention', 'Must checked the record will be delete', 'warning');
@@ -378,7 +408,7 @@ yii.app = (function ($) {
                         if (typeof $.fn.validatebox.defaults.rules.equals === 'undefined') {
                             $.fn.validatebox.defaults.rules.equals = {
                                 validator: function (value, param) {
-                                    return value == $(param[0]).val();
+                                    return value === $(param[0]).val();
                                 },
                                 message: 'Field do not match.'
                             };
@@ -394,6 +424,11 @@ yii.app = (function ($) {
                     }
                     using('pagination', function () {
                         $.fn.pagination.defaults.displayMsg = msg;
+                    });
+                },
+                last : function(){
+                    using('pagination', function () {
+                        $.fn.pagination.defaults.last = {};
                     });
                 }
             }
@@ -413,6 +448,46 @@ yii.app = (function ($) {
             singleSelect: !0,
             onLoadError: function (e) {
                 yii.app.showError(e);
+            }
+        },
+        showMainMask: function () {
+            mainMaskTask++;
+            if (mainMaskTask === 1) {
+                mainMask.css('display', 'block');
+            }
+        },
+        hideMainMask: function () {
+            if (mainMaskTask > 0) {
+                mainMaskTask--;
+            }
+            if (mainMaskTask === 0) {
+                mainMask.css('display', 'none');
+            }
+        },
+        cookie : {
+            set : function(name,value,days,path) {
+                days = days || 1;
+                path = path ||'';
+                var expires='';
+                if (days) {
+                    var date = new Date();
+                    date.setTime(date.getTime()+(days*24*60*60*1000));
+                    expires = "; expires="+date.toGMTString();
+                }
+                document.cookie = name+"="+value+expires+"; path=/"+path;
+            },
+            get : function(name) {
+                var nameEQ = name + "=";
+                var ca = document.cookie.split(';');
+                for(var i=0;i < ca.length;i++) {
+                    var c = ca[i];
+                    while (c.charAt(0)===' ') c = c.substring(1,c.length);
+                    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length,c.length);
+                }
+                return null;
+            },
+            delete : function(name,path) {
+                yii.app.cookie.set(name,"",-1,path);
             }
         }
     };
