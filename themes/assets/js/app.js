@@ -2,7 +2,7 @@ var yii = yii || {};
 yii.app = (function ($) {
     var ajaxDialogForm = {}
         , maintab = {}
-        , mainMask = $('#main-mask')
+        , mainMask = $('.main-mask')
         , mainMaskTask = 0
         , doIfReferenceExists = function (arrReference, callback, param) {
             var newArrReference = [], i = 1;
@@ -47,30 +47,35 @@ yii.app = (function ($) {
             using(['accordion', 'layout', 'menu', 'menubutton', 'linkbutton', 'tabs', 'messager'], function () {
                 
                 $('body').layout({
-                    fit: true,
+                    fit: !0,
                     border: !1
-                }).layout('add', {
+                })
+                .layout('add', {
                     region: 'north',
                     content: yii.app.northContent,
+                    collapsible : !1,
                     height: 40
-                }).layout('add', {
+                })
+                .layout('add', {
                     title: 'Navigation',
                     region: 'west',
                     iconCls: 'icon-compass',
                     split: !0,
                     width: 200,
                     content: yii.app.westContent,
-                    hideCollapsedContent : false,
+                    hideCollapsedContent : !1,
                     onCollapse : function(){
                         yii.app.cookie.set('west-collapsed',1);
                     },
                     onExpand : function(){
                         yii.app.cookie.set('west-collapsed',0);
                     }
-                }).layout('add', {
+                })
+                .layout('add', {
                     region: 'south',
                     content: yii.app.southContent
-                }).layout('add', {
+                })
+                .layout('add', {
                     region: 'center',
                     content: yii.app.centerContent
 

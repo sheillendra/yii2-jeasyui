@@ -38,7 +38,7 @@ body {
     font-size: unset;
 }
 
-#main-mask {
+.main-mask.overlay {
     opacity: 0.4;
     overflow: hidden;
     position: relative;
@@ -48,10 +48,9 @@ body {
     z-index: 150000;
     width: 100%;
     height: 100%;
-    font-size: 12px;
 }
 
-#main-mask > div {
+.main-mask.loader {
     background: #fff url("images/loading.gif") no-repeat scroll 10px 10px;
     border: 2px solid #95b8e7;
     width: 150px;
@@ -61,6 +60,8 @@ body {
     top: 50%;
     right: 50%;
     transform: translate(50%,-50%);
+    z-index: 150001;
+    font-size: 12px;
 }
 
 .numberbox .textbox-text{

@@ -22,12 +22,11 @@ AppAsset::register($this);
         <?php $this->head() ?>
     </head>
     <body>
-        <div id="main-mask" style="display: none">
-            <div>Processing, please wait ...</div>
-        </div>
+        
+        <div class="main-mask overlay" style="display: none"></div>
+        <div class="main-mask loader" style="display: none">Processing, please wait ...</div>
         <div id="global-error"></div>
         <?php $this->beginBody() ?>
-
         <?php $this->endBody() ?>
     </body>
 </html>
