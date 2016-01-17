@@ -8,14 +8,14 @@
  * website  : demo.dodeso.com
  */
 
-namespace sheillendra\jeasyui;
+namespace sheillendra\jeasyui\assets;
 
 use yii\web\AssetBundle;
 
 class jEasyUIAsset extends AssetBundle {
 
     //public $sourcePath = '@sheillendra/jeasyui/assets/jquery-easyui-1.4.3';
-	public $sourcePath = '@sheillendra/jeasyui/assets/jquery-easyui-1.4.4';
+    public $sourcePath = '@sheillendra/jeasyui/assets/jquery-easyui-1.4.4';
     public $css = [
         'themes/icon.css',
         'themes/color.css'

@@ -21,12 +21,12 @@ class AppAsset extends AssetBundle
         'css/icon.css'
     ];
     public $js = [
-        //'js/app.js'
-        'js/app.min.js'
+        'js/app.js'
+        //'js/app.min.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',
-        'sheillendra\jeasyui\jEasyUIAsset'
+        'sheillendra\jeasyui\assets\jEasyUIAsset'
     ];
     public $publishOptions=['forceCopy'=>YII_DEBUG];
 }

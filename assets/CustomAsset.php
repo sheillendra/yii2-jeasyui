@@ -7,7 +7,7 @@
  * website  : demo.dodeso.com
  */
 
-namespace sheillendra\jeasyui;
+namespace sheillendra\jeasyui\assets;
 
 use Yii;
 use yii\web\AssetBundle;
@@ -15,7 +15,7 @@ use yii\helpers\Json;
 
 class CustomAsset extends AssetBundle {
 
-    public $sourcePath = '@sheillendra/jeasyui/assets';
+    public $sourcePath = '@sheillendra/jeasyui/assets/custom';
     public $css = [
         'css/yii2-jeasyui.css'
     ];

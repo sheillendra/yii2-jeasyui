@@ -22,7 +22,6 @@ AppAsset::register($this);
         <?php $this->head() ?>
     </head>
     <body>
-        
         <div class="main-mask overlay" style="display: none"></div>
         <div class="main-mask loader" style="display: none">Processing, please wait ...</div>
         <div id="global-error"></div>
@@ -75,6 +74,7 @@ $roles = Json::encode($arrRoles);
 $errors = isset($this->params['error'])?"yii.app.errors = '". implode(', ', $this->params['error'] ) ."';":'';
         
 $this->registerJs(<<<EOD
+    yii.app.username = '{$username}';
     yii.app.logoutUrl = '{$logoutUrl}';
     yii.app.profileUrl = '{$profileUrl}';
     yii.app.getReferenceUrl = '{$getReferenceUrl}';
