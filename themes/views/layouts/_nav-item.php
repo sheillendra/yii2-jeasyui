@@ -8,7 +8,7 @@ $navItemUrl = [
 ];
 
 $navItem = [
-    'dashboard'=>[
+     '01' =>[
         'title'=>'Home',
         'iconCls'=>'icon-house',
         'content'=><<<HTML

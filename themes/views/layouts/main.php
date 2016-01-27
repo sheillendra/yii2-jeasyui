@@ -57,8 +57,8 @@ foreach( $modules as $module){
         }
     }
 }
-
-$navItemJson = Json::encode($navItem);
+ksort($navItem);
+$navItem = Json::encode($navItem);
 
 $myRoles = Json::encode(Yii::$app->authManager->getRolesByUser(Yii::$app->user->identity->id));
 
@@ -71,7 +71,7 @@ foreach($allRoles as $k=>$v){
 }
 $roles = Json::encode($arrRoles);
 
-$errors = isset($this->params['error'])?"yii.app.errors = '". implode(', ', $this->params['error'] ) ."';":'';
+$errors = isset($this->params['error'])?"yii.app.errors = ". Json::encode($this->params['error'] ) .";":'';
         
 $this->registerJs(<<<EOD
     yii.app.username = '{$username}';
@@ -81,7 +81,7 @@ $this->registerJs(<<<EOD
     yii.app.northContent = '{$northContent}';
     yii.app.centerContent = '{$centerContent}';
     yii.app.westContent = '{$westContent}';
-    yii.app.navItem = {$navItemJson};
+    yii.app.navItem = {$navItem};
     yii.app.selectedNav = '{$this->params['selectedNav']}';
     yii.app.myRoles = {$myRoles};
     yii.app.reference.roles = {$roles};

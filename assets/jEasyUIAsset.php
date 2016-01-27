@@ -27,5 +27,5 @@ class jEasyUIAsset extends AssetBundle {
         'yii\web\JqueryAsset',
         'sheillendra\theme\assets\FontAwesomeAsset'
     ];
-    public $publishOptions=['forceCopy'=>YII_DEBUG];
+    //public $publishOptions=['forceCopy'=>YII_DEBUG];
 }
