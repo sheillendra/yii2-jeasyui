@@ -6,6 +6,7 @@ use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\Json;
+use yii\web\NotFoundHttpException;
 
 class Controller extends \yii\web\Controller {
 
@@ -13,14 +14,29 @@ class Controller extends \yii\web\Controller {
      *
      * @var string
      */
-    public $modelName = '';
+    public $modelClass;
 
     /**
      *
      * @var array
      */
-    public $redirectUrl = ['/'];
+    public $redirectUrl;
 
+    /**
+     * @inheritdoc
+     */
+    public function init()
+    {
+        parent::init();
+        if ($this->modelClass === null) {
+            throw new InvalidConfigException('The "modelClass" property must be set.');
+        }
+        
+        if ($this->redirectUrl === null) {
+            throw new InvalidConfigException('The "redirectUrl" property must be set.');
+        }
+    }
+    
     /**
      * @inheritdoc
      */
@@ -69,24 +85,15 @@ class Controller extends \yii\web\Controller {
     protected function getList($returnWithPageRows = false) {
         $page = intval(Yii::$app->request->get('page', 1));
         $rows = intval(Yii::$app->request->get('rows', Yii::$app->params['defaultRows']));
-        $list = $this->getListFromModel($page, $rows);
+        $modelClass = $this->modelClass;
+        $list = $modelClass::getList($page, $rows);
         if ($returnWithPageRows) {
             return ['page' => $page, 'rows' => $rows, 'list' => $list];
         } else {
             return $list;
         }
     }
-
-    /**
-     * As abstract method, must override
-     * @param integer $page page position of datagrid
-     * @param integer $rows rows amount of datagrid per page
-     * @return array row data from model
-     */
-    protected function getListFromModel() {
-        return [];
-    }
-
+    
     /**
      * Get form, type request is GET
      * @return String Html form
@@ -148,4 +155,31 @@ class Controller extends \yii\web\Controller {
         Yii::$app->end();
     }
 
+    /**
+     * 
+     * @param type $id
+     * @return object model new if id is null or model find result if id is not null
+     */
+    protected function getModel($id = null) {
+        if ($id) {
+            return $this->findModel($id);
+        }
+        $modelClass = $this->modelClass;
+        return new $modelClass();
+    }
+    
+    /**
+     * 
+     * @param int $id 
+     * @return object model find result
+     * @throws NotFoundHttpException
+     */
+    protected function findModel($id) {
+        $modelClass = $this->modelClass;
+        if (($model = $modelClass::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
 }
