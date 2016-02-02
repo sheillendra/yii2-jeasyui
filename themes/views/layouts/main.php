@@ -46,12 +46,12 @@ require(__DIR__ . '/_nav-item.php');
 $modules = Yii::$app->getModules();
 foreach( $modules as $module){
     if(is_array($module)){
-        if(method_exists($module['class'], 'setEasyuiNavigation')){
+        if( isset($module['menuNumber']) && method_exists($module['class'], 'setEasyuiNavigation')){
             $navItemFromModule = $module['class']::setEasyuiNavigation($module['menuNumber']);
             $navItem = array_merge($navItem,$navItemFromModule);
         }
     }elseif(is_object($module)){
-        if(method_exists($module, 'setEasyuiNavigation')){
+        if(property_exists($module,'menuNumber') && method_exists($module, 'setEasyuiNavigation')){
             $navItemFromModule = $module::setEasyuiNavigation($module->menuNumber);
             $navItem = array_merge($navItem,$navItemFromModule);
         }

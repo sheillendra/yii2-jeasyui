@@ -7,6 +7,7 @@ use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\Json;
 use yii\web\NotFoundHttpException;
+use yii\base\InvalidConfigException;
 
 class Controller extends \yii\web\Controller {
 
@@ -111,8 +112,16 @@ class Controller extends \yii\web\Controller {
      * @return string json contain list will implement to datagrid
      */
     public function actionSave() {
+        $this->save();
+    }
+    
+    /**
+     * 
+     */
+    public function save(){
         $post = Yii::$app->request->post();
-        $model = $this->getModel($post[$this->modelName]['id']);
+        $reflector = new \ReflectionClass($this->modelClass);
+        $model = $this->getModel($post[$reflector->getShortName()]['id']);
         if ($model->load($post)) {
             $result = [];
             if ($model->save(true)) {

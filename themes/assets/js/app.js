@@ -29,13 +29,6 @@ yii.app = (function ($) {
         centerContent: '',
         southContent: '',
         reference: {},
-        getDialogForm: function (module, formName) {
-            if (typeof ajaxDialogForm[module] !== 'undefined' && typeof ajaxDialogForm[module][formName] !== 'undefined') {
-                return ajaxDialogForm[module][formName];
-            } else {
-                return $('#blank');
-            }
-        },
         init: function () {
 
             $.ajaxSetup({
@@ -348,6 +341,19 @@ yii.app = (function ($) {
             ajaxDialogForm[moduleName][formName].dialog('open');
 
             return !0;
+        },
+        getDialogForm: function (module, formName) {
+            if (typeof ajaxDialogForm[module] !== 'undefined' && typeof ajaxDialogForm[module][formName] !== 'undefined') {
+                return ajaxDialogForm[module][formName];
+            } else {
+                return $('#blank');
+            }
+        },
+        destroyDialogForm : function(module, formName){
+            if (typeof ajaxDialogForm[module] !== 'undefined' && typeof ajaxDialogForm[module][formName] !== 'undefined') {
+                yii.app.getDialogForm(module, formName).dialog('destroy');
+                delete ajaxDialogForm[module][formName];
+            }
         },
         deleteHandler: function (dg, url, pk, arrPk, callbacks) {
             var idCheked = dg.datagrid('getChecked');

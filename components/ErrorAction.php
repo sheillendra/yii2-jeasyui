@@ -111,7 +111,8 @@ class ErrorAction extends Action {
             'message' => $message,
             'exception' => $exception
         ];
-        if (Yii::$app->getRequest()->getIsAjax()) {
+        //do not reverse
+        if (Yii::$app->getRequest()->getIsAjax() || Yii::$app->getRequest()->getMethod() !== 'GET') {
             return Json::encode($result);
         } else {
             return $this->controller->render($this->view ? : $this->id, ['error' => $result]);
