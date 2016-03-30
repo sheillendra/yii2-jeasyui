@@ -11,6 +11,7 @@
     ],
     "require": {
         "yiisoft/yii2": "*",
+        "bower-asset/font-awesome": "*",
         "sheillendra/yii2-helpers": "*"
     },
     "autoload": {
