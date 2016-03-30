@@ -14,7 +14,7 @@ php composer.phar require sheillendra/yii2-jeasyui "dev-master"
 or add
 ```
 "sheillendra/yii2-jeasyui": "dev-master"
-``
+```
 to the require section of your composer.json file.
 
 USAGE 
