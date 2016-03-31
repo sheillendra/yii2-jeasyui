@@ -27,11 +27,6 @@ class Module extends \yii\base\Module
             'class' => 'yii\i18n\PhpMessageSource',
             'basePath' => $modulePathAlias.'/messages',
         ];
-        
-        if (isset(Yii::$app->view->theme->active)) {
-            Yii::$app->view->theme->pathMap[Yii::$app->view->theme->active][$modulePathAlias.'/views'] = 
-                [$modulePathAlias.'/themes/' . Yii::$app->view->theme->active . '/views'];
-        }
     }
     
     public function behaviors()
