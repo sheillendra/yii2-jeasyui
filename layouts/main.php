@@ -41,7 +41,7 @@ $westContent = preg_replace(Regex::htmlMinified, ' ', $this->render('@app/views/
 
 $this->params['selectedNav'] = isset($this->params['selectedNav']) ? $this->params['selectedNav'] :'nav-dashboard';
 
-require(__DIR__ . '/_nav-item.php');
+include(Yii::$app->view->theme->applyTo(Yii::getAlias('@app/views/layouts/_nav-item.php')));
 
 $modules = Yii::$app->getModules();
 foreach( $modules as $module){
