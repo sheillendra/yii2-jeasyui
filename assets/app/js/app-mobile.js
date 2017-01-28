@@ -37,7 +37,7 @@ yii.app = (function ($) {
                 }
             });
 
-            using(['accordion', 'layout', 'menu', 'menubutton', 'linkbutton', 'tabs', 'messager'], function () {
+            using(['mobile','accordion', 'layout', 'menu', 'menubutton', 'linkbutton', 'tabs', 'messager'], function () {
 
                 $('body').layout({
                     fit: !0,
@@ -349,7 +349,7 @@ yii.app = (function ($) {
                 return $('#blank');
             }
         },
-        destroyDialogForm: function (module, formName) {
+        destroyDialogForm : function(module, formName){
             if (typeof ajaxDialogForm[module] !== 'undefined' && typeof ajaxDialogForm[module][formName] !== 'undefined') {
                 yii.app.getDialogForm(module, formName).dialog('destroy');
                 delete ajaxDialogForm[module][formName];
@@ -502,7 +502,7 @@ yii.app = (function ($) {
                 var expires = '';
                 if (days) {
                     var date = new Date();
-                    date.setTime(date.getTime() + (days * 86400000)); //24 * 60 * 60 * 1000
+                    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
                     expires = "; expires=" + date.toGMTString();
                 }
                 document.cookie = name + "=" + value + expires + "; path=/" + path;

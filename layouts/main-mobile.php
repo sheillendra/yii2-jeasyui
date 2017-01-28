@@ -1,6 +1,6 @@
 <?php
 
-use sheillendra\jeasyui\assets\AppAsset;
+use sheillendra\jeasyui\assets\AppMobileAsset;
 use yii\helpers\Html;
 use sheillendra\helpers\Regex;
 use yii\helpers\Url;
@@ -9,7 +9,7 @@ use yii\helpers\Json;
 /* @var $this \yii\web\View */
 /* @var $content string */
 
-AppAsset::register($this);
+AppMobileAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -41,7 +41,7 @@ $westContent = preg_replace(Regex::htmlMinified, ' ', $this->render('@app/views/
 
 $this->params['selectedNav'] = isset($this->params['selectedNav']) ? $this->params['selectedNav'] :'nav-dashboard';
 
-require(__DIR__ . '/_nav-item.php');
+include(Yii::$app->view->theme->applyTo(Yii::getAlias('@app/views/layouts/_nav-item.php')));
 
 $modules = Yii::$app->getModules();
 foreach( $modules as $module){

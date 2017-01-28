@@ -21,7 +21,7 @@ class AppAsset extends AssetBundle
         'css/icon.css'
     ];
     public $js = [
-        'js/app.js'
+        'js/app-mobile.js'
         //'js/app.min.js'
     ];
     public $depends = [
