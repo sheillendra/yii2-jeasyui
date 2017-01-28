@@ -13,7 +13,7 @@ namespace sheillendra\jeasyui\assets;
 use yii\web\AssetBundle;
 
 class jEasyUIAsset extends AssetBundle {
-    public $sourcePath = '@sheillendra/jeasyui/assets/jquery-easyui-1.5';
+    public $sourcePath = '@sheillendra/jeasyui/assets/jquery-easyui-1.5.1';
     public $css = [
         'themes/icon.css',
         'themes/color.css'
@@ -25,5 +25,4 @@ class jEasyUIAsset extends AssetBundle {
         'yii\web\JqueryAsset',
         'sheillendra\jeasyui\assets\FontAwesomeAsset'
     ];
-    //public $publishOptions=['forceCopy'=>YII_DEBUG];
 }

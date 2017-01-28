@@ -21,5 +21,4 @@ class ExtPortalAsset extends AssetBundle {
     public $depends = [
         'sheillendra\jeasyui\assets\jEasyUIAsset'
     ];
-    public $publishOptions=['forceCopy'=>YII_DEBUG];
 }
