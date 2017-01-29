@@ -43,21 +43,21 @@ $this->params['selectedNav'] = isset($this->params['selectedNav']) ? $this->para
 
 include(Yii::$app->view->theme->applyTo(Yii::getAlias('@app/views/layouts/_nav-item.php')));
 
-$modules = Yii::$app->getModules();
-foreach( $modules as $module){
-    if(is_array($module)){
-        if( isset($module['menuNumber']) && method_exists($module['class'], 'setEasyuiNavigation')){
-            $navItemFromModule = $module['class']::setEasyuiNavigation($module['menuNumber']);
-            $navItem = array_merge($navItem,$navItemFromModule);
-        }
-    }elseif(is_object($module)){
-        if(property_exists($module,'menuNumber') && method_exists($module, 'setEasyuiNavigation')){
-            $navItemFromModule = $module::setEasyuiNavigation($module->menuNumber);
-            $navItem = array_merge($navItem,$navItemFromModule);
-        }
-    }
-}
-ksort($navItem);
+//$modules = Yii::$app->getModules();
+//foreach( $modules as $module){
+//    if(is_array($module)){
+//        if( isset($module['menuNumber']) && method_exists($module['class'], 'setEasyuiNavigation')){
+//            $navItemFromModule = $module['class']::setEasyuiNavigation($module['menuNumber']);
+//            $navItem = array_merge($navItem,$navItemFromModule);
+//        }
+//    }elseif(is_object($module)){
+//        if(property_exists($module,'menuNumber') && method_exists($module, 'setEasyuiNavigation')){
+//            $navItemFromModule = $module::setEasyuiNavigation($module->menuNumber);
+//            $navItem = array_merge($navItem,$navItemFromModule);
+//        }
+//    }
+//}
+//ksort($navItem);
 $navItem = Json::encode($navItem);
 
 $myRoles = '{}';//Json::encode(Yii::$app->authManager->getRolesByUser(Yii::$app->user->identity->id));
