@@ -41,7 +41,8 @@ $westContent = preg_replace(Regex::htmlMinified, ' ', $this->render('@app/views/
 
 $this->params['selectedNav'] = isset($this->params['selectedNav']) ? $this->params['selectedNav'] :'nav-dashboard';
 
-include(Yii::$app->view->theme->applyTo(Yii::getAlias('@app/views/layouts/_nav-item.php')));
+//include(Yii::$app->view->theme->applyTo(Yii::getAlias('@app/views/layouts/_nav-item.php')));
+$navItem = include(Yii::$app->view->theme->applyTo(Yii::getAlias('@app/views/layouts/_nav-item.php')));
 
 //$modules = Yii::$app->getModules();
 //foreach( $modules as $module){
@@ -57,8 +58,8 @@ include(Yii::$app->view->theme->applyTo(Yii::getAlias('@app/views/layouts/_nav-i
 //        }
 //    }
 //}
-//ksort($navItem);
-$navItem = Json::encode($navItem);
+ksort($navItem);
+$navItemJson = Json::encode($navItem);
 
 $myRoles = '{}';//Json::encode(Yii::$app->authManager->getRolesByUser(Yii::$app->user->identity->id));
 
@@ -81,7 +82,7 @@ $this->registerJs(<<<EOD
     yii.app.northContent = '{$northContent}';
     yii.app.centerContent = '{$centerContent}';
     yii.app.westContent = '{$westContent}';
-    yii.app.navItem = {$navItem};
+    yii.app.navItem = {$navItemJson};
     yii.app.selectedNav = '{$this->params['selectedNav']}';
     yii.app.myRoles = {$myRoles};
     yii.app.reference.roles = {$roles};
