@@ -5,7 +5,7 @@
  * since    : v.0.0.1
  * author   : sheillendra
  * date     : 2014-10-04
- * website  : demo.dodeso.com
+ * website  : www.bjuta.com
  */
 
 namespace sheillendra\jeasyui\assets;
@@ -13,7 +13,7 @@ namespace sheillendra\jeasyui\assets;
 use yii\web\AssetBundle;
 
 class jEasyUIAsset extends AssetBundle {
-    public $sourcePath = '@sheillendra/jeasyui/assets/jquery-easyui-1.5.1';
+    public $sourcePath = '@sheillendra/jeasyui/assets/jquery-easyui-1.5.2';
     public $css = [
         'themes/icon.css',
         'themes/color.css'

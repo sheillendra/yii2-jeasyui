@@ -4,7 +4,7 @@
  * version  : v.0.0.1
  * author   : sheillendra
  * date     : 2014-10-04
- * website  : demo.dodeso.com
+ * website  : www.bjuta.com
  */
 
 namespace sheillendra\jeasyui;
