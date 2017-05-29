@@ -1,26 +1,28 @@
 <?php
+
 use yii\helpers\Html;
-use sheillendra\jeasyui\assets\jEasyUIAsset;
+use sheillendra\jeasyui\assets\jEasyUIMobileAsset;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
 
-jEasyUIAsset::register($this);
+jEasyUIMobileAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
     <head>
         <meta charset="<?= Yii::$app->charset ?>">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
         <?= Html::csrfMetaTags() ?>
         <title><?= Html::encode($this->title) ?></title>
         <?php $this->head() ?>
     </head>
     <body>
-        <div id="error"></div>
         <?php $this->beginBody() ?>
-        <?= $content ?>
+        <div id="navpanel">
+            <?php echo $content ?>
+        </div>
         <?php $this->endBody() ?>
     </body>
 </html>

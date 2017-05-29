@@ -13,7 +13,7 @@ use yii\web\AssetBundle;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class AppAsset extends AssetBundle
+class AppMobileAsset extends AssetBundle
 {
     public $sourcePath = '@sheillendra/jeasyui/assets/app';
     public $css = [
@@ -22,7 +22,6 @@ class AppAsset extends AssetBundle
     ];
     public $js = [
         'js/app-mobile.js'
-        //'js/app.min.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',

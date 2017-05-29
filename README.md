@@ -29,8 +29,8 @@ in config.php change view components like this :
             'theme' => [
                 'pathMap' => [
                     '@app/views' => [
-                        '@app/themes/jeasyui',
-                        '@sheillendra/jeasyui',
+                        '@app/themes/jeasyui/views',
+                        '@sheillendra/jeasyui/views',
                     ],
                     '@app/modules' => [
                         '@app/themes/jeasyui/modules',
@@ -57,24 +57,25 @@ modules\
 runtime\
 themes\
     jeasyui\
-        layouts\                    //left blank if you want see the default
-            _nav_item.php           //this your customize nav layout will ovverride to sheillendra\layouts
-            _north_content.php      //this your customize north layout will ovverride to sheillendra\layouts
-            _south_content.php      //this your customize south layout will ovverride to sheillendra\layouts
-            _west_content.php       //this your customize west layout will ovverride to sheillendra\layouts
-        modules\
-            module1\
-                views\
-                    view_of_controller11
-                    view_of_controller12
-            module2\
-                views\
-                    view_of_controller21
-                    view_of_controller22
-        widgets\
-        site\   //this is view of SiteController
-        ...     //other_view_of_controller
+        views\
+            layouts\                            //left blank if you want see the default
+                _nav_item.php                   //this your customize nav layout will ovverride to sheillendra\layouts
+                _north_content.php              //this your customize north layout will ovverride to sheillendra\layouts
+                _south_content.php              //this your customize south layout will ovverride to sheillendra\layouts
+                _west_content.php               //this your customize west layout will ovverride to sheillendra\layouts
+            modules\
+                module1\
+                    views\
+                        view_of_controller11
+                        view_of_controller12
+                module2\
+                    views\
+                        view_of_controller21
+                        view_of_controller22
+            widgets\
+            site\                               //this is view of SiteController
+            ...                                 //other_view_of_controller
         
 views\
-web\        
+web\
 ```
