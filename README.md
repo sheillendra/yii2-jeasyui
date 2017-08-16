@@ -1,3 +1,5 @@
+Warning !!! in master-branch there is some break code.
+
 yii2-jeasyui
 ===============
 
