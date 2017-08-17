@@ -25,11 +25,13 @@ use yii\helpers\Html;
             <td></td>
             <td><?php echo Html::activeCheckbox($model, 'rememberMe') ?></td>
         </tr>
-        <!--<tr>
-            <td colspan="3">
+        <tr>
+            <td></td>
+            <td></td>
+            <td>
                 <a id="login-forgot-btn" href="javascript:void(0);">Forgot Password</a>, or 
                 <a id="login-signup-btn" href="javascript:void(0);">SignUp</a></td>
-        </tr>-->
+        </tr>
     </tbody>
 </table>
 <?php echo Html::endForm() ?>

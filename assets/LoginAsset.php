@@ -10,7 +10,7 @@ namespace sheillendra\jeasyui\assets;
 use yii\web\AssetBundle;
 
 class LoginAsset extends AssetBundle {
-    public $sourcePath = '@sheillendra/jeasyui/assets/app';
+    public $sourcePath = '@sheillendra/jeasyui/assets/app/v2.0.0-alpha';
     public $css = ['css/login.css'];
     public $js = ['js/login.js'];
     public $depends = [

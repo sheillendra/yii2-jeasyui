@@ -1,6 +1,14 @@
 <?php
+/**
+ * My standard login page, to use this view, you must customize controller like this :
+ * 
+ * ```
+ * 
+ * ```
+ */
 
-use sheillendra\jeasyui\assets\LoginAsset;
+//use sheillendra\jeasyui\assets\LoginAsset;
+use backend\themes\jeasyui\assets\LoginAsset;
 use yii\helpers\Url;
 use sheillendra\helpers\Regex;
 
@@ -9,6 +17,8 @@ use sheillendra\helpers\Regex;
 LoginAsset::register($this);
 
 $this->title = 'Login';
+
+$this->context->layout = '//login';
 ?>
 
 <div id="login-dialog"></div>
@@ -27,9 +37,10 @@ $this->title = 'Login';
 </div>
 
 <?php
-$formContent = preg_replace(Regex::HTML_MINIFIED, ' ', $this->render('_login-form', ['model' => $model], true));
-$header = preg_replace(Regex::HTML_MINIFIED, ' ', $this->render('_login-header', [], true));
-$loginUrl = Url::to(['/user/login']);
+print_r($this->params);
+$formContent = preg_replace(Regex::HTML_MINIFIED, ' ', $this->render('@app/modules/user/views/login/_login-form', ['model' => $model], true));
+$header = preg_replace(Regex::HTML_MINIFIED, ' ', $this->render('@app/modules/user/views/login/_login-header', [], true));
+$loginUrl = Url::to(['/user/login/jeasyui-login']);
 $signupUrl = Url::to(['/user/signup']);
 $forgotUrl = Url::to(['/user/reset-password']);
 
