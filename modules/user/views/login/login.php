@@ -37,7 +37,7 @@ $this->context->layout = '//login';
 </div>
 
 <?php
-print_r($this->params);
+//print_r($this->params);
 $formContent = preg_replace(Regex::HTML_MINIFIED, ' ', $this->render('@app/modules/user/views/login/_login-form', ['model' => $model], true));
 $header = preg_replace(Regex::HTML_MINIFIED, ' ', $this->render('@app/modules/user/views/login/_login-header', [], true));
 $loginUrl = Url::to(['/user/login/jeasyui-login']);
