@@ -20,7 +20,7 @@ class LoginAsset extends AssetBundle {
     public $js = ['js/login.js'];
     public $depends = [
         'yii\web\YiiAsset',
-        'sheillendra\jeasyui\jEasyUIAsset',
+        'sheillendra\jeasyui\JEasyUIAsset',
     ];
     public $publishOptions=['forceCopy'=>YII_DEBUG];
 }

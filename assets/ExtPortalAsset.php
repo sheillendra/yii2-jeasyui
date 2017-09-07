@@ -19,6 +19,6 @@ class ExtPortalAsset extends AssetBundle {
         'jquery.portal.js'
     ];
     public $depends = [
-        'sheillendra\jeasyui\assets\jEasyUIAsset'
+        'sheillendra\jeasyui\assets\JEasyUIAsset'
     ];
 }

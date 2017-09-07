@@ -4,12 +4,12 @@ echo "<?php\n";
 
 ?>
 use yii\helpers\Html;
-use sheillendra\jeasyui\jEasyUIAsset;
+use sheillendra\jeasyui\JEasyUIAsset;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
 
-jEasyUIAsset::register($this);
+JEasyUIAsset::register($this);
 ?>
 <?= '<?php $this->beginPage() ?>'."\n" ?>
 <!DOCTYPE html>

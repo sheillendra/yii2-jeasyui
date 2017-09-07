@@ -27,7 +27,7 @@ class AppAsset extends AssetBundle
     ];
     public $depends = [
         'yii\web\YiiAsset',
-        'sheillendra\jeasyui\jEasyUIAsset'
+        'sheillendra\jeasyui\JEasyUIAsset'
     ];
     public $publishOptions=['forceCopy'=>YII_DEBUG];
 }

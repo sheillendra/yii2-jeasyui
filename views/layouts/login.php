@@ -1,12 +1,12 @@
 <?php
 
 use yii\helpers\Html;
-use sheillendra\jeasyui\assets\jEasyUIAsset;
+use sheillendra\jeasyui\assets\JEasyUIAsset;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
 
-jEasyUIAsset::register($this);
+JEasyUIAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <?php $this->render('@app/views/layouts/_login-init_in_view') ?>

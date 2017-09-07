@@ -26,6 +26,6 @@ class AppAsset extends AssetBundle
     ];
     public $depends = [
         'yii\web\YiiAsset',
-        'sheillendra\jeasyui\assets\jEasyUIAsset'
+        'sheillendra\jeasyui\assets\JEasyUIAsset'
     ];
 }

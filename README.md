@@ -59,25 +59,26 @@ modules\
 runtime\
 themes\
     jeasyui\
+        modules\                                //modules view
+            module1\
+                views\
+                    view_of_controller11
+                    view_of_controller12
+            module2\
+                views\
+                    view_of_controller21
+                    view_of_controller22
         views\
             layouts\                            //left blank if you want see the default
                 _nav_item.php                   //this your customize nav layout will ovverride to sheillendra\layouts
                 _north_content.php              //this your customize north layout will ovverride to sheillendra\layouts
                 _south_content.php              //this your customize south layout will ovverride to sheillendra\layouts
                 _west_content.php               //this your customize west layout will ovverride to sheillendra\layouts
-            modules\
-                module1\
-                    views\
-                        view_of_controller11
-                        view_of_controller12
-                module2\
-                    views\
-                        view_of_controller21
-                        view_of_controller22
-            widgets\
             site\                               //this is view of SiteController
             ...                                 //other_view_of_controller
-        
-views\
-web\
+
+        widgets\
+
+views\                                          //default views, view non-themes
+web\                                            //web, public accessed folder
 ```
