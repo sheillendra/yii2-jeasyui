@@ -15,7 +15,7 @@ use yii\web\AssetBundle;
  */
 class AppAsset extends AssetBundle
 {
-    public $sourcePath = '@sheillendra/jeasyui/assets/app';
+    public $sourcePath = '@sheillendra/jeasyui/assets/dist/v2.0.0-alpha';
     public $css = [
         'css/app.css',
         'css/icon.css'

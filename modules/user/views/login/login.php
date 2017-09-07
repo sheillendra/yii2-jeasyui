@@ -7,8 +7,7 @@
  * ```
  */
 
-//use sheillendra\jeasyui\assets\LoginAsset;
-use backend\themes\jeasyui\assets\LoginAsset;
+use sheillendra\jeasyui\assets\LoginAsset;
 use yii\helpers\Url;
 use sheillendra\helpers\Regex;
 

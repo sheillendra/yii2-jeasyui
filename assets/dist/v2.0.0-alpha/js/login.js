@@ -7,6 +7,7 @@ yii.login = (function ($) {
                 $('#login-dialog').dialog({
                     title: 'Login',
                     width: 350,
+                    height: 250,
                     content: yii.login.content,
                     closable: !1,
                     minimizable: !1,
@@ -19,7 +20,7 @@ yii.login = (function ($) {
                     buttons: '#login-btn'
                 });
                 
-                var elUsername = $('#loginform-username'),
+                var elUsername = $('#loginform-email'),
                     elPassword = $('#loginform-password'),
                     elForm = $('#login-form');
                     
