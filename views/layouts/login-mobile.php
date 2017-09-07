@@ -1,12 +1,12 @@
 <?php
 
 use yii\helpers\Html;
-use sheillendra\jeasyui\assets\jEasyUIMobileAsset;
+use sheillendra\jeasyui\assets\JEasyUIAsset;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
 
-jEasyUIMobileAsset::register($this);
+JEasyUIAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>

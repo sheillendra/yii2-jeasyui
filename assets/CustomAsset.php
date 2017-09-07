@@ -24,7 +24,7 @@ class CustomAsset extends AssetBundle {
     ];
     public $depends = [
         'yii\web\YiiAsset',
-        'sheillendra\jeasyui\jEasyUIAsset',
+        'sheillendra\jeasyui\JEasyUIAsset',
         'sheillendra\theme\assets\FontAwesomeAsset'
     ];
     public $publishOptions=['forceCopy'=>YII_DEBUG];
