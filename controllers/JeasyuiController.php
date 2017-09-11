@@ -1,4 +1,5 @@
 <?php
+
 namespace sheillendra\jeasyui\controllers;
 
 use Yii;
@@ -11,19 +12,18 @@ use common\models\LoginForm;
 /**
  * Site controller
  */
-class JeasyuiController extends Controller
-{
+class JeasyuiController extends Controller {
+
     /**
      * @inheritdoc
      */
-    public function behaviors()
-    {
+    public function behaviors() {
         return [
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['login', 'error'],
+                        'actions' => ['login', 'signup', 'forgot-password', 'error'],
                         'allow' => true,
                     ],
                     [
@@ -45,8 +45,7 @@ class JeasyuiController extends Controller
     /**
      * @inheritdoc
      */
-    public function actions()
-    {
+    public function actions() {
         return [
             'error' => [
                 'class' => 'yii\web\ErrorAction',
@@ -59,8 +58,7 @@ class JeasyuiController extends Controller
      *
      * @return string
      */
-    public function actionIndex()
-    {
+    public function actionIndex() {
         if (Yii::$app->request->isAjax) {
             echo $this->renderAjax('_index');
             return Yii::$app->end();
@@ -73,8 +71,7 @@ class JeasyuiController extends Controller
      *
      * @return string
      */
-    public function actionLogin()
-    {
+    public function actionLogin() {
         if (!Yii::$app->user->isGuest) {
             echo Json::encode(['redirect' => Yii::$app->getHomeUrl()]);
             return Yii::$app->end();
@@ -87,7 +84,55 @@ class JeasyuiController extends Controller
             if ($model->hasErrors()) {
                 echo Json::encode(['loginerror' => $model->getErrors()]);
             } else {
-                return $this->redirect(['/user/login']);
+                return $this->render('login', ['model' => $model]);
+            }
+        }
+        Yii::$app->end();
+    }
+
+    /**
+     * Signup action.
+     *
+     * @return string
+     */
+    public function actionSignup() {
+        if (!Yii::$app->user->isGuest) {
+            echo Json::encode(['redirect' => Yii::$app->getHomeUrl()]);
+            return Yii::$app->end();
+        }
+
+        $model = new SignupForm();
+        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            echo Json::encode(['redirect' => Yii::$app->getUser()->getReturnUrl()]);
+        } else {
+            if ($model->hasErrors()) {
+                echo Json::encode(['loginerror' => $model->getErrors()]);
+            } else {
+                return $this->render('signup', ['model' => $model]);
+            }
+        }
+        Yii::$app->end();
+    }
+    
+    /**
+     * Signup action.
+     *
+     * @return string
+     */
+    public function actionForgotPassword() {
+        if (!Yii::$app->user->isGuest) {
+            echo Json::encode(['redirect' => Yii::$app->getHomeUrl()]);
+            return Yii::$app->end();
+        }
+
+        $model = new LoginForm();
+        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            echo Json::encode(['redirect' => Yii::$app->getUser()->getReturnUrl()]);
+        } else {
+            if ($model->hasErrors()) {
+                echo Json::encode(['loginerror' => $model->getErrors()]);
+            } else {
+                return $this->render('signup', ['model' => $model]);
             }
         }
         Yii::$app->end();
@@ -98,9 +143,9 @@ class JeasyuiController extends Controller
      *
      * @return string
      */
-    public function actionLogout()
-    {
+    public function actionLogout() {
         Yii::$app->user->logout();
-        return $this->redirect(['/jeasyu/login']);
+        return $this->redirect(['/jeasyui/login']);
     }
+
 }

@@ -56,48 +56,25 @@ In here you can see the default simulation. Recommended for ```backend``` in ```
 but if you want implement it in ```basic``` make sure your controller have implement ```AccessControl``` behavior
 for logged user only can access the controller.
 
+## GII
+
+```
+// config/main-local.php        for yii2-app-advanced
+// config/web.php               for yii2-basic
+...
+if (!YII_ENV_TEST) {
+    // configuration adjustments for 'dev' environment 
+    ...
+    
+    $config['modules']['gii'] = [
+        'class'=>'yii\gii\Module',
+       'generators' =>[
+           'jeasyui-crud' => ['class'=>'sheillendra\jeasyui\gii\generators\crud\Generator']
+        ]
+    ];
+}
+```
+
 ## CUSTOMIZE
 
-Before customize/replace parts of this extension, you should create themes folder with structure like this :
-
-```
-assets\
-config\
-controllers\
-models\
-modules\
-runtime\
-themes\
-    jeasyui\
-        modules\                                //modules view
-            module1\
-                views\
-                    view_of_controller11
-                    view_of_controller12
-            module2\
-                views\
-                    view_of_controller21
-                    view_of_controller22
-        views\
-            layouts\                            //left blank if you want see the default
-                _init                           //initialization variable
-                _nav_item.php                   //this your customize nav layout will ovverride to sheillendra\layouts
-                _north_content.php              //this your customize north layout will ovverride to sheillendra\layouts
-                _south_content.php              //this your customize south layout will ovverride to sheillendra\layouts
-                _west_content.php               //this your customize west layout will ovverride to sheillendra\layouts
-            site\                               //this is view of SiteController
-            ...                                 //other_view_of_controller
-
-        widgets\
-
-views\                                          //default views, view non-themes
-web\                                            //web, public accessed folder
-```
-Choose one from structure above what you want replace it, not must all.
-
-In ```advanced``` alias ```@app``` means ```backend``` or ```frontend``` according to what application implement it.
-
-### _init
-
-create ```@app\themes\jeasyui\layouts\_init.php``` copy the content from ```sheillendra\jeasyui\layouts\_init.php``` and adjust to your needs.
-This file is replace not override, see inheritance theme documentation.
+Run ```CRUD GII``` you will get sample code to custom

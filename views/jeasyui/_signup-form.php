@@ -29,8 +29,7 @@ use yii\helpers\Html;
             <td></td>
             <td></td>
             <td>
-                <?php echo Html::a('Forgot Password', ['/jeasyui/forgot-password'])?>, or 
-                <?php echo Html::a('SignUp', ['/jeasyui/signup'])?>
+                <?php echo Html::a('Have account?', ['/jeasyui/login'])?>
             </td>
         </tr>
     </tbody>

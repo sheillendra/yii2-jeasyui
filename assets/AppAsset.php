@@ -16,23 +16,23 @@ use yii\web\AssetBundle;
  */
 class AppAsset extends AssetBundle {
 
-//    public $sourcePath = '@sheillendra/jeasyui/assets/dist/v2.0.0-alpha';
-//    public $css = [
-//        'css/app.css',
-//        'css/icon.css'
-//    ];
-//    public $js = [
-//        'js/app.js'
-//        //'js/app.min.js'
-//    ];
-
-    public $basePath = '@webroot';
-    public $baseUrl = '@web';
+    public $sourcePath = '@sheillendra/jeasyui/assets/dist/v2.0.0-alpha';
     public $css = [
-        'jeasyui/v2.0.0-alpha/css/app.css',
-        'jeasyui/v2.0.0-alpha/css/icon.css'
+        'css/app.css',
+        'css/icon.css'
     ];
-    public $js = ['jeasyui/v2.0.0-alpha/js/app.js'];
+    public $js = [
+        'js/app.min.js'
+    ];
+
+//    public $basePath = '@webroot';
+//    public $baseUrl = '@web';
+//    public $css = [
+//        'jeasyui/v2.0.0-alpha/css/app.css',
+//        'jeasyui/v2.0.0-alpha/css/icon.css'
+//    ];
+//    public $js = ['jeasyui/v2.0.0-alpha/js/app.js'];
+    
     public $depends = [
         'yii\web\YiiAsset',
         'sheillendra\jeasyui\assets\JEasyUIAsset'
