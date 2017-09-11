@@ -19,12 +19,16 @@ or add
 ```
 to the require section of your composer.json file.
 
-USAGE 
+INSTALLATION
 ---
 
 in config.php change view components like this :
 
 ```
+    //remove jeasyui controller map if you have understand and want unwatch the default simulation
+    'controllerMap' => [
+        'jeasyui' => 'sheillendra\jeasyui\controllers\JeasyuiController'
+    ],
     'components' =>[
         #... other 
         'view' => [
@@ -48,7 +52,13 @@ in config.php change view components like this :
     ]
 ```
 
-in your base application create themes folder with structure like this :
+In here you can see the default simulation. Recommended for ```backend``` in ```advanced```,
+but if you want implement it in ```basic``` make sure your controller have implement ```AccessControl``` behavior
+for logged user only can access the controller.
+
+## CUSTOMIZE
+
+Before customize/replace parts of this extension, you should create themes folder with structure like this :
 
 ```
 assets\
@@ -70,6 +80,7 @@ themes\
                     view_of_controller22
         views\
             layouts\                            //left blank if you want see the default
+                _init                           //initialization variable
                 _nav_item.php                   //this your customize nav layout will ovverride to sheillendra\layouts
                 _north_content.php              //this your customize north layout will ovverride to sheillendra\layouts
                 _south_content.php              //this your customize south layout will ovverride to sheillendra\layouts
@@ -82,3 +93,11 @@ themes\
 views\                                          //default views, view non-themes
 web\                                            //web, public accessed folder
 ```
+Choose one from structure above what you want replace it, not must all.
+
+In ```advanced``` alias ```@app``` means ```backend``` or ```frontend``` according to what application implement it.
+
+### _init
+
+create ```@app\themes\jeasyui\layouts\_init.php``` copy the content from ```sheillendra\jeasyui\layouts\_init.php``` and adjust to your needs.
+This file is replace not override, see inheritance theme documentation.

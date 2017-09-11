@@ -12,18 +12,10 @@ namespace sheillendra\jeasyui\assets;
 
 use yii\web\AssetBundle;
 
-class JEasyUIAsset extends AssetBundle {
-    public $sourcePath = '@sheillendra/jeasyui/assets/jquery-easyui-1.5.3';
+class JEasyUIMobileAsset extends JEasyUIAsset {
     public $css = [
         'themes/mobile.css',
         'themes/icon.css',
         'themes/color.css'
-    ];
-    public $js = [
-        'easyloader.js'
-    ];
-    public $depends = [
-        'yii\web\JqueryAsset',
-        'sheillendra\jeasyui\assets\FontAwesomeAsset'
     ];
 }

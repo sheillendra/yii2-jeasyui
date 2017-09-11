@@ -22,4 +22,9 @@ class FontAwesomeAsset extends AssetBundle {
     ];
     public $js = [];
     public $depends = [];
+    public $publishOptions = [
+        'only' => [
+            'css/font-awesome.min.css', 'fonts/*'
+        ]
+    ];
 }

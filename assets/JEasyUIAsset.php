@@ -25,4 +25,10 @@ class JEasyUIAsset extends AssetBundle {
         'yii\web\JqueryAsset',
         'sheillendra\jeasyui\assets\FontAwesomeAsset'
     ];
+    public $publishOptions = [
+        'except' => [
+            'demo', 'demo-mobile', 'changelog.txt', 'jquery.min.js',
+            'license_freeware.txt', 'readme.txt'
+        ]
+    ];
 }

@@ -11,6 +11,7 @@ use yii\helpers\Json;
 
 AppAsset::register($this);
 ?>
+<?php $this->render('@app/views/layouts/_init_logged') ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
@@ -31,65 +32,32 @@ AppAsset::register($this);
 </html>
 
 <?php
-$username = Yii::$app->user->identity->username;
-$logoutUrl = Url::to(['/user/logout'],true);
-$profileUrl  = Url::to(['/user/profile'],true);
-$getReferenceUrl = Url::to(['/reference/get'],true);
 $northContent = preg_replace(Regex::htmlMinified, ' ', $this->render('@app/views/layouts/_north-content'));
 $centerContent = '<div id="maintab"></div>';
 $westContent = preg_replace(Regex::htmlMinified, ' ', $this->render('@app/views/layouts/_west-content'));
-
-$this->params['selectedNav'] = isset($this->params['selectedNav']) ? $this->params['selectedNav'] :'nav-dashboard';
-
-//include(Yii::$app->view->theme->applyTo(Yii::getAlias('@app/views/layouts/_nav-item.php')));
 $navItem = include(Yii::$app->view->theme->applyTo(Yii::getAlias('@app/views/layouts/_nav-item.php')));
-
-//$modules = Yii::$app->getModules();
-//foreach( $modules as $module){
-//    if(is_array($module)){
-//        if( isset($module['menuNumber']) && method_exists($module['class'], 'setEasyuiNavigation')){
-//            $navItemFromModule = $module['class']::setEasyuiNavigation($module['menuNumber']);
-//            $navItem = array_merge($navItem,$navItemFromModule);
-//        }
-//    }elseif(is_object($module)){
-//        if(property_exists($module,'menuNumber') && method_exists($module, 'setEasyuiNavigation')){
-//            $navItemFromModule = $module::setEasyuiNavigation($module->menuNumber);
-//            $navItem = array_merge($navItem,$navItemFromModule);
-//        }
-//    }
-//}
 ksort($navItem);
 $navItemJson = Json::encode($navItem);
+$errors = isset($this->params['error']) ? "yii.app.errors = " . Json::encode($this->params['error']) . ";" : '';
 
-$myRoles = '{}';//Json::encode(Yii::$app->authManager->getRolesByUser(Yii::$app->user->identity->id));
+$this->params['selectedNav'] = isset($this->params['selectedNav']) ? $this->params['selectedNav'] : 'nav-dashboard';
 
-//$allRoles = Yii::$app->authManager->getRoles();
-//$arrRoles = [];
-//foreach($allRoles as $k=>$v){
-//    $stdClass = new stdClass();
-//    $stdClass->name = $v->name;
-//    $arrRoles[] = $stdClass;
-//}
-$roles = '{}';//Json::encode($arrRoles);
-
-$errors = isset($this->params['error'])?"yii.app.errors = ". Json::encode($this->params['error'] ) .";":'';
-        
 $this->registerJs(<<<EOD
-    yii.app.username = '{$username}';
-    yii.app.logoutUrl = '{$logoutUrl}';
-    yii.app.profileUrl = '{$profileUrl}';
-    yii.app.getReferenceUrl = '{$getReferenceUrl}';
+    yii.app.username = '{$this->params['userName']}';
+    yii.app.logoutUrl = '{$this->params['logoutUrl']}';
+    yii.app.profileUrl = '{$this->params['profileUrl']}';
+    yii.app.getReferenceUrl = '{$this->params['getReferenceUrl']}';
     yii.app.northContent = '{$northContent}';
     yii.app.centerContent = '{$centerContent}';
     yii.app.westContent = '{$westContent}';
     yii.app.navItem = {$navItemJson};
     yii.app.selectedNav = '{$this->params['selectedNav']}';
-    yii.app.myRoles = {$myRoles};
-    yii.app.reference.roles = {$roles};
     {$errors}
     yii.app.showMainMask();
     yii.app.init();
 EOD
-);?>
+);
+?>
 
-<?php $this->endPage(); ?>
+<?php
+$this->endPage();
