@@ -1,10 +1,9 @@
 <?php
 
-use sheillendra\jeasyui\assets\AppAsset;
 use yii\helpers\Html;
-use sheillendra\helpers\Regex;
-use yii\helpers\Url;
 use yii\helpers\Json;
+use sheillendra\jeasyui\components\helpers\Regex;
+use sheillendra\jeasyui\assets\AppAsset;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
@@ -32,9 +31,9 @@ AppAsset::register($this);
 </html>
 
 <?php
-$northContent = preg_replace(Regex::htmlMinified, ' ', $this->render('@app/views/layouts/_north-content'));
+$northContent = preg_replace(Regex::HTML_MINIFIED, ' ', $this->render('@app/views/layouts/_north-content'));
 $centerContent = '<div id="maintab"></div>';
-$westContent = preg_replace(Regex::htmlMinified, ' ', $this->render('@app/views/layouts/_west-content'));
+$westContent = preg_replace(Regex::HTML_MINIFIED, ' ', $this->render('@app/views/layouts/_west-content'));
 $navItem = include(Yii::$app->view->theme->applyTo(Yii::getAlias('@app/views/layouts/_nav-item.php')));
 ksort($navItem);
 $navItemJson = Json::encode($navItem);

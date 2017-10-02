@@ -6,13 +6,12 @@
     "authors": [
         {
             "name": "Sheillendra",
-            "email": "sheillendra@yahoo.com"
+            "email": "suryana869@gmail.com"
         }
     ],
     "require": {
         "yiisoft/yii2": "*",
-        "bower-asset/font-awesome": "*",
-        "sheillendra/yii2-helpers": "*"
+        "bower-asset/font-awesome": "*"
     },
     "autoload": {
         "psr-4": {

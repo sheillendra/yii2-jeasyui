@@ -16,10 +16,12 @@ class JEasyUIAsset extends AssetBundle {
     public $sourcePath = '@sheillendra/jeasyui/assets/jquery-easyui-1.5.3';
     public $css = [
         'themes/icon.css',
-        'themes/color.css'
+        'themes/color.css',
+        'themes/default/easyui.css',
     ];
     public $js = [
-        'easyloader.js'
+        //'easyloader.js',
+        'jquery.easyui.min-custom.js'
     ];
     public $depends = [
         'yii\web\JqueryAsset',

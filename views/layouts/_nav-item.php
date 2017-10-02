@@ -9,27 +9,66 @@ use yii\helpers\Url;
  */
 return [
     [
-        'title' => 'Home',
+        'id' => '_easyui_tree_nav-dashboard',
+        'text' => 'Home',
         'iconCls' => 'icon-house',
-        'content' => $this->render('@app/views/layouts/_nav-item_content', [
-            'accordionItemName' => 'Home',
-            'id' => 'nav-dashboard',
-            'icon' => 'icon-chart-curve',
-            'url' => Url::to(['/jeasyui']),
-            'label' => 'Dashboard'
-                ], true
-        )
+//        'content' => $this->render('@app/views/layouts/_nav-item_content', [
+//            'accordionItemName' => 'Home',
+//            'id' => 'nav-dashboard',
+//            'icon' => 'icon-chart-curve',
+//            'url' => Url::to(['/jeasyui']),
+//            'label' => 'Dashboard'
+//                ], true
+//        )
     ],
     [
-        'title' => 'Setting',
-        'iconCls' => 'icon-house',
-        'content' => $this->render('@app/views/layouts/_nav-item_content', [
-            'accordionItemName' => 'Setting',
-            'id' => 'nav-setting',
-            'icon' => 'icon-chart-curve',
-            'url' => Url::to(['/jeasyui/setting']),
-            'label' => 'Dashboard'
-                ], true
-        )
+        'id' => '_easyui_tree_nav-setting',
+        'text' => 'Setting',
+        'iconCls' => 'icon-cog',
+        'state' => 'closed',
+        'children' => [
+            [
+                'id' => 'setting-general',
+                'text' => 'General',
+                'iconCls' => 'icon-cog'
+            ]
+        ]
+//        'content' => $this->render('@app/views/layouts/_nav-item_content', [
+//            'accordionItemName' => 'Setting',
+//            'id' => 'nav-setting',
+//            'icon' => 'icon-chart-curve',
+//            'url' => Url::to(['/jeasyui/setting']),
+//            'label' => 'Dashboard'
+//                ], true
+//        )
     ]
 ];
+
+
+// accordion mode :
+//return [
+//    [
+//        'title' => 'Home',
+//        'iconCls' => 'icon-house',
+//        'content' => $this->render('@app/views/layouts/_nav-item_content', [
+//            'accordionItemName' => 'Home',
+//            'id' => 'nav-dashboard',
+//            'icon' => 'icon-chart-curve',
+//            'url' => Url::to(['/jeasyui']),
+//            'label' => 'Dashboard'
+//                ], true
+//        )
+//    ],
+//    [
+//        'title' => 'Setting',
+//        'iconCls' => 'icon-cog',
+//        'content' => $this->render('@app/views/layouts/_nav-item_content', [
+//            'accordionItemName' => 'Setting',
+//            'id' => 'nav-setting',
+//            'icon' => 'icon-chart-curve',
+//            'url' => Url::to(['/jeasyui/setting']),
+//            'label' => 'Dashboard'
+//                ], true
+//        )
+//    ]
+//];

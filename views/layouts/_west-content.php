@@ -1,1 +1,1 @@
-<div id="navigation"></div>
+<ul id="navigation"></ul>
