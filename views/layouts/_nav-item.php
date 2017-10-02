@@ -9,7 +9,7 @@ use yii\helpers\Url;
  */
 return [
     [
-        'id' => '_easyui_tree_nav-dashboard',
+        'id' => 'nav-dashboard',
         'text' => 'Home',
         'iconCls' => 'icon-house',
 //        'content' => $this->render('@app/views/layouts/_nav-item_content', [
@@ -22,7 +22,7 @@ return [
 //        )
     ],
     [
-        'id' => '_easyui_tree_nav-setting',
+        'id' => 'nav-setting',
         'text' => 'Setting',
         'iconCls' => 'icon-cog',
         'state' => 'closed',

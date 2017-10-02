@@ -21,7 +21,7 @@ class JEasyUIAsset extends AssetBundle {
     ];
     public $js = [
         //'easyloader.js',
-        'jquery.easyui.min-custom.js'
+        'jquery.easyui.custom.js'
     ];
     public $depends = [
         'yii\web\JqueryAsset',

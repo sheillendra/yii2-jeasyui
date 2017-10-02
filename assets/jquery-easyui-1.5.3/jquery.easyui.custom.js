@@ -2553,7 +2553,11 @@
                     if (item.state != "open" && item.state != "closed") {
                         item.state = "open";
                     }
-                    item.domId = "_easyui_tree_" + _1c0++;
+                    if (item.id) {
+                        item.domId = item.id;
+                    } else {
+                        item.domId = "_easyui_tree_" + _1c0++;
+                    }
                     cc.push("<li>");
                     cc.push("<div id=\"" + item.domId + "\" class=\"tree-node\">");
                     for (var j = 0; j < _1c8; j++) {
