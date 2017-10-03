@@ -4,71 +4,65 @@ use yii\helpers\Url;
 
 /* @var $this \yii\web\View */
 
-/**
- * key like '01' is only for sorting
- */
-return [
-    [
-        'id' => 'nav-dashboard',
-        'text' => 'Home',
-        'iconCls' => 'icon-house',
-//        'content' => $this->render('@app/views/layouts/_nav-item_content', [
-//            'accordionItemName' => 'Home',
-//            'id' => 'nav-dashboard',
-//            'icon' => 'icon-chart-curve',
-//            'url' => Url::to(['/jeasyui']),
-//            'label' => 'Dashboard'
-//                ], true
-//        )
-    ],
-    [
-        'id' => 'nav-setting',
-        'text' => 'Setting',
-        'iconCls' => 'icon-cog',
-        'state' => 'closed',
-        'children' => [
-            [
-                'id' => 'setting-general',
-                'text' => 'General',
-                'iconCls' => 'icon-cog'
+if ($this->params['sidebarPlugin'] === 'tree') {
+    return [
+        [
+            'id' => 'nav-dashboard',
+            'text' => 'Home',
+            'iconCls' => 'icon-house',
+            'attributes' => [
+                'url' => Url::to(['/jeasyui'])
+            ]
+        ],
+        [
+            'text' => 'Setting',
+            'iconCls' => 'icon-cog',
+            'children' => [
+                [
+                    'id' => 'nav-setting',
+                    'text' => 'General',
+                    'iconCls' => 'icon-cog',
+                    'attributes' => [
+                        'url' => Url::to(['/jeasyui/setting']),
+                    ]
+                ],
+                [
+                    'id' => 'nav-setting-rbac',
+                    'text' => 'Access Management',
+                    'iconCls' => 'icon-cog',
+                    'attributes' => [
+                        'url' => Url::to(['/jeasyui/setting-rbac']),
+                    ]
+                ]
             ]
         ]
-//        'content' => $this->render('@app/views/layouts/_nav-item_content', [
-//            'accordionItemName' => 'Setting',
-//            'id' => 'nav-setting',
-//            'icon' => 'icon-chart-curve',
-//            'url' => Url::to(['/jeasyui/setting']),
-//            'label' => 'Dashboard'
-//                ], true
-//        )
-    ]
-];
-
-
-// accordion mode :
-//return [
-//    [
-//        'title' => 'Home',
-//        'iconCls' => 'icon-house',
-//        'content' => $this->render('@app/views/layouts/_nav-item_content', [
-//            'accordionItemName' => 'Home',
-//            'id' => 'nav-dashboard',
-//            'icon' => 'icon-chart-curve',
-//            'url' => Url::to(['/jeasyui']),
-//            'label' => 'Dashboard'
-//                ], true
-//        )
-//    ],
-//    [
-//        'title' => 'Setting',
-//        'iconCls' => 'icon-cog',
-//        'content' => $this->render('@app/views/layouts/_nav-item_content', [
-//            'accordionItemName' => 'Setting',
-//            'id' => 'nav-setting',
-//            'icon' => 'icon-chart-curve',
-//            'url' => Url::to(['/jeasyui/setting']),
-//            'label' => 'Dashboard'
-//                ], true
-//        )
-//    ]
-//];
+    ];
+} else {
+    // accordion mode :
+    return [
+        [
+            'title' => 'Home',
+            'iconCls' => 'icon-house',
+            'content' => $this->render('@app/views/layouts/_nav-item_accordion_content', [
+                'accordionItemName' => 'Home',
+                'id' => 'nav-dashboard',
+                'icon' => 'icon-chart-curve',
+                'url' => Url::to(['/jeasyui']),
+                'label' => 'Dashboard'
+                    ], true
+            )
+        ],
+        [
+            'title' => 'Setting',
+            'iconCls' => 'icon-cog',
+            'content' => $this->render('@app/views/layouts/_nav-item_accordion_content', [
+                'accordionItemName' => 'Setting',
+                'id' => 'nav-setting',
+                'icon' => 'icon-chart-curve',
+                'url' => Url::to(['/jeasyui/setting']),
+                'label' => 'Dashboard'
+                    ], true
+            )
+        ]
+    ];
+}

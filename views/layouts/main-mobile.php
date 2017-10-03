@@ -71,23 +71,23 @@ $myRoles = '{}';//Json::encode(Yii::$app->authManager->getRolesByUser(Yii::$app-
 //}
 $roles = '{}';//Json::encode($arrRoles);
 
-$errors = isset($this->params['error'])?"yii.app.errors = ". Json::encode($this->params['error'] ) .";":'';
+$errors = isset($this->params['error'])?"yii.easyui.errors = ". Json::encode($this->params['error'] ) .";":'';
         
 $this->registerJs(<<<EOD
-    yii.app.username = '{$username}';
-    yii.app.logoutUrl = '{$logoutUrl}';
-    yii.app.profileUrl = '{$profileUrl}';
-    yii.app.getReferenceUrl = '{$getReferenceUrl}';
-    yii.app.northContent = '{$northContent}';
-    yii.app.centerContent = '{$centerContent}';
-    yii.app.westContent = '{$westContent}';
-    yii.app.navItem = {$navItem};
-    yii.app.selectedNav = '{$this->params['selectedNav']}';
-    yii.app.myRoles = {$myRoles};
-    yii.app.reference.roles = {$roles};
+    yii.easyui.username = '{$username}';
+    yii.easyui.logoutUrl = '{$logoutUrl}';
+    yii.easyui.profileUrl = '{$profileUrl}';
+    yii.easyui.getReferenceUrl = '{$getReferenceUrl}';
+    yii.easyui.northContent = '{$northContent}';
+    yii.easyui.centerContent = '{$centerContent}';
+    yii.easyui.westContent = '{$westContent}';
+    yii.easyui.navItem = {$navItem};
+    yii.easyui.selectedNav = '{$this->params['selectedNav']}';
+    yii.easyui.myRoles = {$myRoles};
+    yii.easyui.reference.roles = {$roles};
     {$errors}
-    yii.app.showMainMask();
-    yii.app.init();
+    yii.easyui.showMainMask();
+    yii.easyui.init();
 EOD
 );?>
 

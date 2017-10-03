@@ -4,13 +4,12 @@ use yii\helpers\Url;
 use yii\web\View;
 
 /* @var $this yii\web\View */
-$this->title = 'Dashboard';
 ?>
 
 <?php $this->beginPage();?>
 <?php $this->head();?>
 <?php $this->beginBody();?>
-<div id="dashboard-index">
+<div id="setting-general-index">
     This is dashboard page, change file at path <?=__FILE__?> for customize
 </div>
 <?php $this->endBody();?>

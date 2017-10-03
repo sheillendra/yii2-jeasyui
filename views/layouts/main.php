@@ -3,12 +3,12 @@
 use yii\helpers\Html;
 use yii\helpers\Json;
 use sheillendra\jeasyui\components\helpers\Regex;
-use sheillendra\jeasyui\assets\AppAsset;
+use sheillendra\jeasyui\assets\YiiEasyUIAsset;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
 
-AppAsset::register($this);
+YiiEasyUIAsset::register($this);
 ?>
 <?php $this->render('@app/views/layouts/_init_logged') ?>
 <?php $this->beginPage() ?>
@@ -18,7 +18,7 @@ AppAsset::register($this);
         <meta charset="<?= Yii::$app->charset ?>">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <?= Html::csrfMetaTags() ?>
-        <title><?= Html::encode($this->title) ?></title>
+        <title>Loading...</title>
         <?php $this->head() ?>
     </head>
     <body>
@@ -33,27 +33,28 @@ AppAsset::register($this);
 <?php
 $northContent = preg_replace(Regex::HTML_MINIFIED, ' ', $this->render('@app/views/layouts/_north-content'));
 $centerContent = '<div id="maintab"></div>';
-$westContent = preg_replace(Regex::HTML_MINIFIED, ' ', $this->render('@app/views/layouts/_west-content'));
+$westContent = $this->params['sidebarPlugin'] === 'tree' ? '<ul id="navigation"></ul>' : '<div id="navigation"></div>';
 $navItem = include(Yii::$app->view->theme->applyTo(Yii::getAlias('@app/views/layouts/_nav-item.php')));
 ksort($navItem);
 $navItemJson = Json::encode($navItem);
-$errors = isset($this->params['error']) ? "yii.app.errors = " . Json::encode($this->params['error']) . ";" : '';
+$errors = isset($this->params['error']) ? "yii.easyui.errors = " . Json::encode($this->params['error']) . ";" : '';
 
 $this->params['selectedNav'] = isset($this->params['selectedNav']) ? $this->params['selectedNav'] : 'nav-dashboard';
 
 $this->registerJs(<<<EOD
-    yii.app.username = '{$this->params['userName']}';
-    yii.app.logoutUrl = '{$this->params['logoutUrl']}';
-    yii.app.profileUrl = '{$this->params['profileUrl']}';
-    yii.app.getReferenceUrl = '{$this->params['getReferenceUrl']}';
-    yii.app.northContent = '{$northContent}';
-    yii.app.centerContent = '{$centerContent}';
-    yii.app.westContent = '{$westContent}';
-    yii.app.navItem = {$navItemJson};
-    yii.app.selectedNav = '{$this->params['selectedNav']}';
+    yii.easyui.username = '{$this->params['userName']}';
+    yii.easyui.logoutUrl = '{$this->params['logoutUrl']}';
+    yii.easyui.profileUrl = '{$this->params['profileUrl']}';
+    yii.easyui.getReferenceUrl = '{$this->params['getReferenceUrl']}';
+    yii.easyui.northContent = '{$northContent}';
+    yii.easyui.centerContent = '{$centerContent}';
+    yii.easyui.westContent = '{$westContent}';
+    yii.easyui.navItem = {$navItemJson};
+    yii.easyui.selectedNav = '{$this->params['selectedNav']}';
+    yii.easyui.sidebarPlugin = '{$this->params['sidebarPlugin']}';
     {$errors}
-    yii.app.showMainMask();
-    yii.app.init();
+    yii.easyui.showMainMask();
+    yii.easyui.init();
 EOD
 );
 ?>

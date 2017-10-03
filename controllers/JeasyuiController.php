@@ -27,7 +27,7 @@ class JeasyuiController extends Controller {
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index'],
+                        'actions' => ['logout', 'index', 'setting', 'setting-rbac'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -148,4 +148,19 @@ class JeasyuiController extends Controller {
         return $this->redirect(['/jeasyui/login']);
     }
 
+    public function actionSetting(){
+        if (Yii::$app->request->isAjax) {
+            echo $this->renderAjax('setting/_index');
+            return Yii::$app->end();
+        }
+        return $this->render('setting/index');
+    }
+    
+    public function actionSettingRbac(){
+        if (Yii::$app->request->isAjax) {
+            echo $this->renderAjax('setting-rbac/_index');
+            return Yii::$app->end();
+        }
+        return $this->render('setting-rbac/index');
+    }
 }

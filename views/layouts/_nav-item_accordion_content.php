@@ -1,5 +1,6 @@
 <?php
 /**
+ * use for accordion sidebar menu
  * @since v2.0.1
  */
 ?>

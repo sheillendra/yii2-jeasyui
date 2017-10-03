@@ -10,18 +10,19 @@
 
 namespace sheillendra\jeasyui\assets;
 
+use Yii;
 use yii\web\AssetBundle;
 
 class JEasyUIAsset extends AssetBundle {
+
     public $sourcePath = '@sheillendra/jeasyui/assets/jquery-easyui-1.5.3';
     public $css = [
         'themes/icon.css',
         'themes/color.css',
-        'themes/default/easyui.css',
     ];
     public $js = [
         //'easyloader.js',
-        'jquery.easyui.custom.js'
+        'jquery.easyui.min.js'
     ];
     public $depends = [
         'yii\web\JqueryAsset',
@@ -33,4 +34,16 @@ class JEasyUIAsset extends AssetBundle {
             'license_freeware.txt', 'readme.txt'
         ]
     ];
+
+    public function init() {
+        $themeCookies = Yii::$app->request->cookies->get('jeasyui-theme');
+        $themes = ['black', 'bootstrap', 'default', 'gray', 'material', 'metro'];
+        if ($themeCookies && in_array($themeCookies, $themes)) {
+            $this->css[] = "themes/$themeCookies/easyui.css";
+        }else{
+            $this->css[] = 'themes/default/easyui.css';
+        }
+        parent::init();
+    }
+
 }
