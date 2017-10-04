@@ -16,8 +16,11 @@
  * }
  * ```
  */
+/* @var $this \yii\web\View */
 
-$this->params['selectedNav'] = 'nav-setting';
-
-//use if choose sidebarPlugin is accordion 
-$this->params['selectedNavAccordion'] = 'setting';
+$this->params['selectedNav'] = 'nav-profile';
+$this->params['tabOptions'] = [
+    'tabtitle' => 'Profile',
+    'url' => \yii\helpers\Url::to(['/jeasyui/profile'], true),
+    'icon' => 'icon-profile'
+];

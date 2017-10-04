@@ -4,7 +4,7 @@ use yii\helpers\Html;
 
 /* @var $model backend\modules\user\models\LoginForm */
 ?>
-<?php echo Html::beginForm(['/user/login'], 'post', ['id' => 'login-form']) ?>
+<?php echo Html::beginForm(['/easyui/login'], 'post', ['id' => 'login-form']) ?>
 <table width="100%">
     <tbody>
         <tr>

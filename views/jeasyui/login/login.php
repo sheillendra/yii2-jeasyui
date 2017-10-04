@@ -4,13 +4,11 @@
  * My standard login page
  * 
  */
-use sheillendra\jeasyui\assets\LoginAsset;
+
 use yii\helpers\Url;
 use sheillendra\helpers\Regex;
 
 /* @var $this \yii\web\View */
-
-LoginAsset::register($this);
 
 $this->title = 'Login';
 
@@ -37,8 +35,8 @@ $formContent = preg_replace(Regex::HTML_MINIFIED, ' ', $this->render('_login-for
 $header = preg_replace(Regex::HTML_MINIFIED, ' ', $this->render('_login-header', [], true));
 
 $this->registerJs(<<<EOD
-        yii.login.header = '{$header}';
-        yii.login.content = '{$formContent}';
+        yii.easyuiLogin.header = '{$header}';
+        yii.easyuiLogin.content = '{$formContent}';
 EOD
         , $this::POS_READY, 'login-view'
 );

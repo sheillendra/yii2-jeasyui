@@ -27,7 +27,9 @@ class JeasyuiController extends Controller {
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index', 'setting', 'setting-rbac'],
+                        'actions' => [
+                            'logout', 'index', 'setting', 'setting-rbac', 'profile'
+                        ],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -84,7 +86,7 @@ class JeasyuiController extends Controller {
             if ($model->hasErrors()) {
                 echo Json::encode(['loginerror' => $model->getErrors()]);
             } else {
-                return $this->render('login', ['model' => $model]);
+                return $this->render('login/login', ['model' => $model]);
             }
         }
         Yii::$app->end();
@@ -113,7 +115,7 @@ class JeasyuiController extends Controller {
         }
         Yii::$app->end();
     }
-    
+
     /**
      * Signup action.
      *
@@ -148,19 +150,28 @@ class JeasyuiController extends Controller {
         return $this->redirect(['/jeasyui/login']);
     }
 
-    public function actionSetting(){
+    public function actionSetting() {
         if (Yii::$app->request->isAjax) {
             echo $this->renderAjax('setting/_index');
             return Yii::$app->end();
         }
         return $this->render('setting/index');
     }
-    
-    public function actionSettingRbac(){
+
+    public function actionSettingRbac() {
         if (Yii::$app->request->isAjax) {
             echo $this->renderAjax('setting-rbac/_index');
             return Yii::$app->end();
         }
         return $this->render('setting-rbac/index');
     }
+
+    public function actionProfile() {
+        if (Yii::$app->request->isAjax) {
+            echo $this->renderAjax('profile/_index');
+            return Yii::$app->end();
+        }
+        return $this->render('profile/index');
+    }
+
 }

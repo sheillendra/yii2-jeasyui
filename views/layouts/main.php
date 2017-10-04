@@ -41,10 +41,12 @@ $errors = isset($this->params['error']) ? "yii.easyui.errors = " . Json::encode(
 
 $this->params['selectedNav'] = isset($this->params['selectedNav']) ? $this->params['selectedNav'] : 'nav-dashboard';
 
+$tabOptions = isset($this->params['tabOptions'])? Json::encode($this->params['tabOptions']) : 0;
+
+$northUserMenu = isset($this->params['northUserMenu'])? Json::encode($this->params['northUserMenu']) : 0;
+
 $this->registerJs(<<<EOD
     yii.easyui.username = '{$this->params['userName']}';
-    yii.easyui.logoutUrl = '{$this->params['logoutUrl']}';
-    yii.easyui.profileUrl = '{$this->params['profileUrl']}';
     yii.easyui.getReferenceUrl = '{$this->params['getReferenceUrl']}';
     yii.easyui.northContent = '{$northContent}';
     yii.easyui.centerContent = '{$centerContent}';
@@ -53,7 +55,9 @@ $this->registerJs(<<<EOD
     yii.easyui.selectedNav = '{$this->params['selectedNav']}';
     yii.easyui.sidebarPlugin = '{$this->params['sidebarPlugin']}';
     {$errors}
+    yii.easyui.tabOptions = {$tabOptions};
     yii.easyui.showMainMask();
+    yii.easyui.northUserMenu = {$northUserMenu};
     yii.easyui.init();
 EOD
 );

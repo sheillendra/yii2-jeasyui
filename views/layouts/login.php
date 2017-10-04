@@ -1,12 +1,12 @@
 <?php
 
 use yii\helpers\Html;
-use sheillendra\jeasyui\assets\JEasyUIAsset;
+use sheillendra\jeasyui\assets\YiiEasyUILoginAsset;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
 
-JEasyUIAsset::register($this);
+YiiEasyUILoginAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <?php $this->render('@app/views/layouts/_init_login') ?>
@@ -28,15 +28,15 @@ JEasyUIAsset::register($this);
 </html>
 <?php
 $this->registerJs(<<<EOD
-        yii.login.dialogTitle = '{$this->params['loginDialogTitle']}';
-        yii.login.dialogWidth = {$this->params['loginDialogWidth']};
-        yii.login.dialogHeight = {$this->params['loginDialogHeight']};
-        yii.login.textboxWidth = {$this->params['textboxWidth']};
-        yii.login.usernameSelector = '{$this->params['usernameSelector']}';
-        yii.login.url = '{$this->params['loginUrl']}';
-        yii.login.signupurl = '{$this->params['signupUrl']}';
-        yii.login.forgoturl = '{$this->params['forgotUrl']}';
-        yii.login.init();
+        yii.easyuiLogin.dialogTitle = '{$this->params['loginDialogTitle']}';
+        yii.easyuiLogin.dialogWidth = {$this->params['loginDialogWidth']};
+        yii.easyuiLogin.dialogHeight = {$this->params['loginDialogHeight']};
+        yii.easyuiLogin.textboxWidth = {$this->params['textboxWidth']};
+        yii.easyuiLogin.usernameSelector = '{$this->params['usernameSelector']}';
+        yii.easyuiLogin.url = '{$this->params['loginUrl']}';
+        yii.easyuiLogin.signupurl = '{$this->params['signupUrl']}';
+        yii.easyuiLogin.forgoturl = '{$this->params['forgotUrl']}';
+        yii.easyuiLogin.init();
 EOD
 );
 

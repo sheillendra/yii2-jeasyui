@@ -27,6 +27,14 @@ if ($this->params['sidebarPlugin'] === 'tree') {
                     ]
                 ],
                 [
+                    'id' => 'nav-setting-user',
+                    'text' => 'Users',
+                    'iconCls' => 'icon-cog',
+                    'attributes' => [
+                        'url' => Url::to(['/jeasyui/setting-user']),
+                    ]
+                ],
+                [
                     'id' => 'nav-setting-rbac',
                     'text' => 'Access Management',
                     'iconCls' => 'icon-cog',
@@ -58,9 +66,9 @@ if ($this->params['sidebarPlugin'] === 'tree') {
             'content' => $this->render('@app/views/layouts/_nav-item_accordion_content', [
                 'accordionItemName' => 'Setting',
                 'id' => 'nav-setting',
-                'icon' => 'icon-chart-curve',
+                'icon' => 'icon-cog',
                 'url' => Url::to(['/jeasyui/setting']),
-                'label' => 'Dashboard'
+                'label' => 'General'
                     ], true
             )
         ]
