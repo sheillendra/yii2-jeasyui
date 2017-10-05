@@ -6,7 +6,7 @@
  */
 
 use yii\helpers\Url;
-use sheillendra\helpers\Regex;
+use sheillendra\jeasyui\components\helpers\Regex;
 
 /* @var $this \yii\web\View */
 
