@@ -36,11 +36,24 @@ class JEasyUIAsset extends AssetBundle {
     ];
 
     public function init() {
-        $themeCookies = Yii::$app->request->cookies->get('jeasyui-theme');
+//        $cookies = Yii::$app->request->cookies;
+//        $themeCookies = $cookies->get('jeasyui-theme');
+//        $addCookie = false;
+//        if (!$themeCookies) {
+            $themeCookies = filter_input(INPUT_COOKIE, 'jeasyui-theme', FILTER_SANITIZE_STRING);
+//            $addCookie = true;
+//        }
+
         $themes = ['black', 'bootstrap', 'default', 'gray', 'material', 'metro'];
         if ($themeCookies && in_array($themeCookies, $themes)) {
             $this->css[] = "themes/$themeCookies/easyui.css";
-        }else{
+//            if ($addCookie) {
+//                Yii::$app->response->cookies->add(new \yii\web\Cookie([
+//                    'name' => 'jeasyui-theme',
+//                    'value' => $themeCookies
+//                ]));
+//            }
+        } else {
             $this->css[] = 'themes/default/easyui.css';
         }
         parent::init();

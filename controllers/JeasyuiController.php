@@ -28,7 +28,8 @@ class JeasyuiController extends Controller {
                     ],
                     [
                         'actions' => [
-                            'logout', 'index', 'setting', 'setting-rbac', 'profile'
+                            'logout', 'index', 'setting', 'setting-rbac',
+                            'setting-user','profile'
                         ],
                         'allow' => true,
                         'roles' => ['@'],
@@ -164,6 +165,14 @@ class JeasyuiController extends Controller {
             return Yii::$app->end();
         }
         return $this->render('setting-rbac/index');
+    }
+    
+    public function actionSettingUser() {
+        if (Yii::$app->request->isAjax) {
+            echo $this->renderAjax('setting-user/_index');
+            return Yii::$app->end();
+        }
+        return $this->render('setting-user/index');
     }
 
     public function actionProfile() {

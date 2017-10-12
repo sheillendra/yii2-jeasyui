@@ -75,6 +75,11 @@ if (!YII_ENV_TEST) {
 }
 ```
 
-## CUSTOMIZE
+## yii.easyui
 
-Run ```CRUD GII``` you will get sample code to custom
+Method :
+.showMainMask()
+.hideMainMask()
+.cookie.set(name, value, days, path)
+.cookie.get(name)
+.cookie.delete(name, path)

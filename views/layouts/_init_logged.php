@@ -22,11 +22,56 @@ $logoutOnClick = <<<JS
         e.stopPropagation();
     }
 JS;
+        
+$templateThemeOnClick = <<<JS
+    function (e) {
+        yii.easyui.cookie.delete('jeasyui-theme');
+        yii.easyui.cookie.set('jeasyui-theme', '{thema}');
+        window.location.reload(false);
+        e.stopPropagation();
+    }
+JS;
+        
 $this->params['northUserMenu'] = [
     [
         'text' => 'Profile',
         'iconCls' => 'icon-profile',
         'onclick' => new JsExpression($profileOnClick)
+    ],
+    ['separator' => 1],
+    [
+        'text' => 'Theme',
+        'iconCls' => 'icon-profile',
+    ],
+    [
+        'parent' => 'Theme',
+        'text' => 'Default',
+        'onclick' => new JsExpression(strtr($templateThemeOnClick, ['{thema}' => 'default']))
+    ],
+    [
+        'parent' => 'Theme',
+        'text' => 'Black',
+        'onclick' => new JsExpression(strtr($templateThemeOnClick, ['{thema}' => 'black']))
+    ],
+    [
+        'parent' => 'Theme',
+        'text' => 'Bootstrap',
+        'onclick' => new JsExpression(strtr($templateThemeOnClick, ['{thema}' => 'bootstrap']))
+    ],
+    [
+        'parent' => 'Theme',
+        'text' => 'Gray',
+        'onclick' => new JsExpression(strtr($templateThemeOnClick, ['{thema}' => 'gray']))
+    ],
+    [
+        'parent' => 'Theme',
+        'text' => 'Material',
+        'onclick' => new JsExpression(strtr($templateThemeOnClick, ['{thema}' => 'material']))
+    ],
+    [
+        'parent' => 'Theme',
+        'text' => 'Metro',
+        'onclick' => new JsExpression(strtr($templateThemeOnClick, ['{thema}' => 'metro']))
     ],
     ['separator' => 1],
     [

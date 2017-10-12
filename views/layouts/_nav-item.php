@@ -21,7 +21,7 @@ if ($this->params['sidebarPlugin'] === 'tree') {
                 [
                     'id' => 'nav-setting',
                     'text' => 'General',
-                    'iconCls' => 'icon-cog',
+                    'iconCls' => 'icon-cog-edit',
                     'attributes' => [
                         'url' => Url::to(['/jeasyui/setting']),
                     ]
@@ -29,7 +29,7 @@ if ($this->params['sidebarPlugin'] === 'tree') {
                 [
                     'id' => 'nav-setting-user',
                     'text' => 'Users',
-                    'iconCls' => 'icon-cog',
+                    'iconCls' => 'icon-group',
                     'attributes' => [
                         'url' => Url::to(['/jeasyui/setting-user']),
                     ]
@@ -37,7 +37,7 @@ if ($this->params['sidebarPlugin'] === 'tree') {
                 [
                     'id' => 'nav-setting-rbac',
                     'text' => 'Access Management',
-                    'iconCls' => 'icon-cog',
+                    'iconCls' => 'icon-group-gear',
                     'attributes' => [
                         'url' => Url::to(['/jeasyui/setting-rbac']),
                     ]
