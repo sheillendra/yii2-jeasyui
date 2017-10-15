@@ -55,7 +55,7 @@ if ($this->params['sidebarPlugin'] === 'tree') {
                 'accordionItemName' => 'Home',
                 'id' => 'nav-dashboard',
                 'icon' => 'icon-chart-curve',
-                'url' => Url::to(['/jeasyui']),
+                'url' => Url::to(['/']),
                 'label' => 'Dashboard'
                     ], true
             )
