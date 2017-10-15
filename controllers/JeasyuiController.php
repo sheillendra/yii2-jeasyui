@@ -62,11 +62,7 @@ class JeasyuiController extends Controller {
      * @return string
      */
     public function actionIndex() {
-        if (Yii::$app->request->isAjax) {
-            echo $this->renderAjax('_index');
-            return Yii::$app->end();
-        }
-        return $this->render('index');
+        return $this->render('index/index');
     }
 
     /**
@@ -99,22 +95,22 @@ class JeasyuiController extends Controller {
      * @return string
      */
     public function actionSignup() {
-        if (!Yii::$app->user->isGuest) {
-            echo Json::encode(['redirect' => Yii::$app->getHomeUrl()]);
-            return Yii::$app->end();
-        }
-
-        $model = new SignupForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            echo Json::encode(['redirect' => Yii::$app->getUser()->getReturnUrl()]);
-        } else {
-            if ($model->hasErrors()) {
-                echo Json::encode(['loginerror' => $model->getErrors()]);
-            } else {
-                return $this->render('signup', ['model' => $model]);
-            }
-        }
-        Yii::$app->end();
+//        if (!Yii::$app->user->isGuest) {
+//            echo Json::encode(['redirect' => Yii::$app->getHomeUrl()]);
+//            return Yii::$app->end();
+//        }
+//
+//        $model = new SignupForm();
+//        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+//            echo Json::encode(['redirect' => Yii::$app->getUser()->getReturnUrl()]);
+//        } else {
+//            if ($model->hasErrors()) {
+//                echo Json::encode(['loginerror' => $model->getErrors()]);
+//            } else {
+//                return $this->render('signup', ['model' => $model]);
+//            }
+//        }
+//        Yii::$app->end();
     }
 
     /**
@@ -123,22 +119,22 @@ class JeasyuiController extends Controller {
      * @return string
      */
     public function actionForgotPassword() {
-        if (!Yii::$app->user->isGuest) {
-            echo Json::encode(['redirect' => Yii::$app->getHomeUrl()]);
-            return Yii::$app->end();
-        }
-
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            echo Json::encode(['redirect' => Yii::$app->getUser()->getReturnUrl()]);
-        } else {
-            if ($model->hasErrors()) {
-                echo Json::encode(['loginerror' => $model->getErrors()]);
-            } else {
-                return $this->render('signup', ['model' => $model]);
-            }
-        }
-        Yii::$app->end();
+//        if (!Yii::$app->user->isGuest) {
+//            echo Json::encode(['redirect' => Yii::$app->getHomeUrl()]);
+//            return Yii::$app->end();
+//        }
+//
+//        $model = new LoginForm();
+//        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+//            echo Json::encode(['redirect' => Yii::$app->getUser()->getReturnUrl()]);
+//        } else {
+//            if ($model->hasErrors()) {
+//                echo Json::encode(['loginerror' => $model->getErrors()]);
+//            } else {
+//                return $this->render('signup', ['model' => $model]);
+//            }
+//        }
+//        Yii::$app->end();
     }
 
     /**
@@ -152,34 +148,18 @@ class JeasyuiController extends Controller {
     }
 
     public function actionSetting() {
-        if (Yii::$app->request->isAjax) {
-            echo $this->renderAjax('setting/_index');
-            return Yii::$app->end();
-        }
         return $this->render('setting/index');
     }
 
     public function actionSettingRbac() {
-        if (Yii::$app->request->isAjax) {
-            echo $this->renderAjax('setting-rbac/_index');
-            return Yii::$app->end();
-        }
         return $this->render('setting-rbac/index');
     }
     
     public function actionSettingUser() {
-        if (Yii::$app->request->isAjax) {
-            echo $this->renderAjax('setting-user/_index');
-            return Yii::$app->end();
-        }
         return $this->render('setting-user/index');
     }
 
     public function actionProfile() {
-        if (Yii::$app->request->isAjax) {
-            echo $this->renderAjax('profile/_index');
-            return Yii::$app->end();
-        }
         return $this->render('profile/index');
     }
 

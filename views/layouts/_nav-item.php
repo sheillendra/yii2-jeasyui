@@ -11,7 +11,7 @@ if ($this->params['sidebarPlugin'] === 'tree') {
             'text' => 'Home',
             'iconCls' => 'icon-house',
             'attributes' => [
-                'url' => Url::to(['/jeasyui'])
+                'url' => Url::to(['/'])
             ]
         ],
         [
