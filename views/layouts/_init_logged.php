@@ -82,6 +82,9 @@ $this->params['northUserMenu'] = [
 ];
 $this->params['getReferenceUrl'] = Url::to(['/jeasyui/reference'], true);
 
+$this->params['westTitle'] = 'Navigation';
+$this->params['westIcon'] = 'icon-compas';
+
 /**
  * sidebar plugin : tree or accordion
  */

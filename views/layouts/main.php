@@ -34,6 +34,10 @@ YiiEasyUIAsset::register($this);
 $northContent = preg_replace(Regex::HTML_MINIFIED, ' ', $this->render('@app/views/layouts/_north-content'));
 $centerContent = '<div id="maintab"></div>';
 $westContent = $this->params['sidebarPlugin'] === 'tree' ? '<ul id="navigation"></ul>' : '<div id="navigation"></div>';
+
+$westTitle = isset($this->params['westTitle']) ? $this->params['westTitle'] : '';
+$westIcon = isset($this->params['westIcon']) ? $this->params['westIcon'] : '';
+
 $navItem = include(Yii::$app->view->theme->applyTo(Yii::getAlias('@app/views/layouts/_nav-item.php')));
 ksort($navItem);
 $navItemJson = Json::encode($navItem);
@@ -41,9 +45,9 @@ $errors = isset($this->params['error']) ? "yii.easyui.errors = " . Json::encode(
 
 $this->params['selectedNav'] = isset($this->params['selectedNav']) ? $this->params['selectedNav'] : 'nav-dashboard';
 
-$tabOptions = isset($this->params['tabOptions'])? Json::encode($this->params['tabOptions']) : 0;
+$tabOptions = isset($this->params['tabOptions']) ? Json::encode($this->params['tabOptions']) : 0;
 
-$northUserMenu = isset($this->params['northUserMenu'])? Json::encode($this->params['northUserMenu']) : 0;
+$northUserMenu = isset($this->params['northUserMenu']) ? Json::encode($this->params['northUserMenu']) : 0;
 
 $this->registerJs(<<<EOD
     yii.easyui.username = '{$this->params['userName']}';
@@ -51,6 +55,8 @@ $this->registerJs(<<<EOD
     yii.easyui.northContent = '{$northContent}';
     yii.easyui.centerContent = '{$centerContent}';
     yii.easyui.westContent = '{$westContent}';
+    yii.easyui.westTitle = '{$westTitle}';
+    yii.easyui.westIcon = '{$westIcon}';
     yii.easyui.navItem = {$navItemJson};
     yii.easyui.selectedNav = '{$this->params['selectedNav']}';
     yii.easyui.sidebarPlugin = '{$this->params['sidebarPlugin']}';
