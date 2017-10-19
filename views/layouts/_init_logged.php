@@ -12,7 +12,11 @@ $profileUrl = Url::to(['/jeasyui/profile'], true);
 $logoutUrl = Url::to(['/jeasyui/logout'], true);
 $profileOnClick = <<<JS
     function (e) {
-        yii.easyui.createTab('Profile', '{$profileUrl}', 'icon-profile', 'nav-profile');
+        yii.easyui.createTab({
+            title: 'Profile',
+            href: '{$profileUrl}',
+            iconCls: 'icon-profile'
+        }, 'nav-profile');
         e.stopPropagation();
     }
 JS;
@@ -88,4 +92,4 @@ $this->params['westIcon'] = 'icon-compas';
 /**
  * sidebar plugin : tree or accordion
  */
-$this->params['sidebarPlugin'] = 'tree';
+$this->params['sidebarPlugin'] = 'accordion';

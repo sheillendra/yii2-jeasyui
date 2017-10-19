@@ -8,8 +8,8 @@ if (Yii::$app->request->isAjax) {
 } else {
     $this->params['selectedNav'] = 'nav-profile';
     $this->params['tabOptions'] = [
-        'tabtitle' => 'Profile',
-        'url' => \yii\helpers\Url::to(['/jeasyui/profile'], true),
-        'icon' => 'icon-profile'
+        'title' => 'Profile',
+        'href' => \yii\helpers\Url::to(['/jeasyui/profile'], true),
+        'iconCls' => 'icon-profile'
     ];
 }

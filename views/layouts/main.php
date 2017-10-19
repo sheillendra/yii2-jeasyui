@@ -1,8 +1,10 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\helpers\Json;
 use sheillendra\jeasyui\components\helpers\Regex;
+use sheillendra\jeasyui\components\helpers\ArrayHelper;
 use sheillendra\jeasyui\assets\YiiEasyUIAsset;
 
 /* @var $this \yii\web\View */
@@ -41,9 +43,26 @@ $westIcon = isset($this->params['westIcon']) ? $this->params['westIcon'] : '';
 $navItem = include(Yii::$app->view->theme->applyTo(Yii::getAlias('@app/views/layouts/_nav-item.php')));
 ksort($navItem);
 $navItemJson = Json::encode($navItem);
-$errors = isset($this->params['error']) ? "yii.easyui.errors = " . Json::encode($this->params['error']) . ";" : '';
 
-$this->params['selectedNav'] = isset($this->params['selectedNav']) ? $this->params['selectedNav'] : 'nav-dashboard';
+$errors = '';
+if (isset($this->params['errorName'])) {
+    $errorNav = ArrayHelper::getArrayByKeyValue('id', 'url', Url::to(), $navItem);
+    if ($errorNav) {
+        $this->params['selectedNav'] = $errorNav['id'];
+        $this->params['tabOptions'] = [
+            'title' => $errorNav['text'],
+            'iconCls' => $errorNav['iconCls'],
+            'content' => $this->params['errorName'] . ': ' . $this->params['errorMessage']
+        ];
+    } else {
+        $errors = <<<JS
+            yii.easyui.errorName = '{$this->params['errorName']}';
+            yii.easyui.errorMessage = '{$this->params['errorMessage']}';
+JS;
+    }
+} else {
+    $this->params['selectedNav'] = isset($this->params['selectedNav']) ? $this->params['selectedNav'] : 'nav-dashboard';
+}
 
 $tabOptions = isset($this->params['tabOptions']) ? Json::encode($this->params['tabOptions']) : 0;
 
@@ -62,7 +81,7 @@ $this->registerJs(<<<EOD
     yii.easyui.sidebarPlugin = '{$this->params['sidebarPlugin']}';
     {$errors}
     yii.easyui.tabOptions = {$tabOptions};
-    yii.easyui.showMainMask();
+    //yii.easyui.showMainMask();
     yii.easyui.northUserMenu = {$northUserMenu};
     yii.easyui.init();
 EOD
