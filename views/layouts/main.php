@@ -55,10 +55,14 @@ if (isset($this->params['errorName'])) {
             'content' => $this->params['errorName'] . ': ' . $this->params['errorMessage']
         ];
     } else {
-        $errors = <<<JS
-            yii.easyui.errorName = '{$this->params['errorName']}';
-            yii.easyui.errorMessage = '{$this->params['errorMessage']}';
+        if(isset($this->params['tabOptions'])){
+            $this->params['tabOptions']['content'] = $this->params['errorName'] . ': ' . $this->params['errorMessage'];
+        }else{
+            $errors = <<<JS
+                yii.easyui.errorName = '{$this->params['errorName']}';
+                yii.easyui.errorMessage = '{$this->params['errorMessage']}';
 JS;
+        }
     }
 } else {
     $this->params['selectedNav'] = isset($this->params['selectedNav']) ? $this->params['selectedNav'] : 'nav-dashboard';

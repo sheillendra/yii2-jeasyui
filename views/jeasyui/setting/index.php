@@ -2,12 +2,12 @@
 
 /* @var $this \yii\web\View */
 
+use sheillendra\jeasyui\components\helpers\Regex;
+
 if (Yii::$app->request->isAjax) {
-    $this->context->layout = '//blank';
+    $this->context->layout = '//ajax';
     echo $this->renderAjax('_index');
 } else {
     $this->params['selectedNav'] = 'nav-setting';
-
-    //use if choose sidebarPlugin is accordion 
-    //$this->params['selectedNavAccordion'] = 'setting';
+    $this->params['tabOptions']['content'] = preg_replace(Regex::HTML_MINIFIED, ' ', $this->render('_index'));
 }

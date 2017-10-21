@@ -92,4 +92,4 @@ $this->params['westIcon'] = 'icon-compas';
 /**
  * sidebar plugin : tree or accordion
  */
-$this->params['sidebarPlugin'] = 'accordion';
+$this->params['sidebarPlugin'] = 'tree';
