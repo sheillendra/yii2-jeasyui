@@ -25,7 +25,7 @@ YiiEasyUIAsset::register($this);
     </head>
     <body>
         <div class="main-mask overlay"></div>
-        <div class="main-mask loader">Processing, please wait ...</div>
+        <div class="panel-body panel-loading main-mask loader">Processing, please wait ...</div>
         <div id="global-error"></div>
         <?php $this->beginBody() ?>
         <?php $this->endBody() ?>
@@ -34,6 +34,7 @@ YiiEasyUIAsset::register($this);
 
 <?php
 $northContent = preg_replace(Regex::HTML_MINIFIED, ' ', $this->render('@app/views/layouts/_north-content'));
+$southContent = preg_replace(Regex::HTML_MINIFIED, ' ', $this->render('@app/views/layouts/_south-content'));
 $centerContent = '<div id="maintab"></div>';
 $westContent = $this->params['sidebarPlugin'] === 'tree' ? '<ul id="navigation"></ul>' : '<div id="navigation"></div>';
 
@@ -76,6 +77,7 @@ $this->registerJs(<<<EOD
     yii.easyui.username = '{$this->params['userName']}';
     yii.easyui.getReferenceUrl = '{$this->params['getReferenceUrl']}';
     yii.easyui.northContent = '{$northContent}';
+    yii.easyui.southContent = '{$southContent}';
     yii.easyui.centerContent = '{$centerContent}';
     yii.easyui.westContent = '{$westContent}';
     yii.easyui.westTitle = '{$westTitle}';

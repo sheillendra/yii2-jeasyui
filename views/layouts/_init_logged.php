@@ -74,8 +74,61 @@ $this->params['northUserMenu'] = [
     ],
     [
         'parent' => 'Theme',
+        'separator' => 1
+    ],
+    [
+        'parent' => 'Theme',
         'text' => 'Metro',
         'onclick' => new JsExpression(strtr($templateThemeOnClick, ['{thema}' => 'metro']))
+    ],
+    [
+        'parent' => 'Theme',
+        'text' => 'Metro Blue',
+        'onclick' => new JsExpression(strtr($templateThemeOnClick, ['{thema}' => 'metro-blue']))
+    ],
+    [
+        'parent' => 'Theme',
+        'text' => 'Metro Green',
+        'onclick' => new JsExpression(strtr($templateThemeOnClick, ['{thema}' => 'metro-green']))
+    ],
+    [
+        'parent' => 'Theme',
+        'text' => 'Metro Gray',
+        'onclick' => new JsExpression(strtr($templateThemeOnClick, ['{thema}' => 'metro-gray']))
+    ],
+    [
+        'parent' => 'Theme',
+        'text' => 'Metro Orange',
+        'onclick' => new JsExpression(strtr($templateThemeOnClick, ['{thema}' => 'metro-orange']))
+    ],
+    [
+        'parent' => 'Theme',
+        'text' => 'Metro Red',
+        'onclick' => new JsExpression(strtr($templateThemeOnClick, ['{thema}' => 'metro-red']))
+    ],
+    [
+        'parent' => 'Theme',
+        'separator' => 1
+    ],
+    [
+        'parent' => 'Theme',
+        'text' => 'UI Cupertino',
+        'onclick' => new JsExpression(strtr($templateThemeOnClick, ['{thema}' => 'ui-cupertino']))
+    ],
+    [
+        'parent' => 'Theme',
+        'text' => 'UI Dark Hive',
+        'onclick' => new JsExpression(strtr($templateThemeOnClick, ['{thema}' => 'ui-dark-hive']))
+    ],
+    [
+        'parent' => 'Theme',
+        'text' => 'UI Pepper Grinder',
+        'onclick' => new JsExpression(strtr($templateThemeOnClick, ['{thema}' => 'ui-pepper-grinder']))
+    ],
+    [
+        'parent' => 'Theme',
+        'text' => 'UI Sunny',
+        'onclick' => new JsExpression(strtr($templateThemeOnClick, ['{thema}' => 'ui-sunny']))
     ],
     ['separator' => 1],
     [

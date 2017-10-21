@@ -51,8 +51,8 @@ body {
 }
 
 .main-mask.loader {
-    background: #fff url("images/loading.gif") no-repeat scroll 10px 10px;
-    border: 2px solid #95b8e7;
+    border-width: 2px;
+    border-style: solid;
     width: 150px;
     padding: 10px 5px 10px 30px;
     margin: auto;
@@ -66,4 +66,21 @@ body {
 
 .numberbox .textbox-text{
     text-align: right;
+}
+
+.panel-title.layout-expand-title.layout-expand-title-down.layout-expand-with-icon {
+    margin-top: 21px;
+}
+
+.logo {
+    float: left;
+    margin-left: 5px;
+    font-size: 18px;
+    height: 38px;
+    line-height: 38px;
+}
+
+#north-right-nav {
+    height: 38px;
+    line-height: 38px;
 }

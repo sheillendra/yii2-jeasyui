@@ -1,1 +1,1 @@
-<div>Server Execution Time : 0.00 sec.</div>
+<div>Server Time : <span id="server-time"><?php echo date('Y-m-d H:i:s')?></span></div>

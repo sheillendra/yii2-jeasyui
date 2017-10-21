@@ -40,11 +40,15 @@ class JEasyUIAsset extends AssetBundle {
 //        $themeCookies = $cookies->get('jeasyui-theme');
 //        $addCookie = false;
 //        if (!$themeCookies) {
-            $themeCookies = filter_input(INPUT_COOKIE, 'jeasyui-theme', FILTER_SANITIZE_STRING);
+        $themeCookies = filter_input(INPUT_COOKIE, 'jeasyui-theme', FILTER_SANITIZE_STRING);
 //            $addCookie = true;
 //        }
 
-        $themes = ['black', 'bootstrap', 'default', 'gray', 'material', 'metro'];
+        $themes = ['black', 'bootstrap', 'default', 'gray', 'material', 'metro',
+            'metro-blue', 'metro-gray', 'metro-green', 'metro-orange',
+            'metro-red', 'ui-cupertino', 'ui-dark-hive', 'ui-pepper-grinder',
+            'ui-sunny'
+        ];
         if ($themeCookies && in_array($themeCookies, $themes)) {
             $this->css[] = "themes/$themeCookies/easyui.css";
 //            if ($addCookie) {
