@@ -16,7 +16,7 @@ class ArrayHelper extends \yii\helpers\ArrayHelper {
      * @return array returned array when have $key and $value like in params
      */
     public static function getArrayByKeyValue($keyMustHaveByParent, $key, $value, $array) {
-        foreach ($array as $k => $v) {echo $k, '=>',$v,'<br/>';
+        foreach ($array as $k => $v) {
             if (isset($v[$keyMustHaveByParent])) {
                 self::$_temp_parent_array = $v;
             }

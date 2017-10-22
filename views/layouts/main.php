@@ -42,8 +42,6 @@ $westTitle = isset($this->params['westTitle']) ? $this->params['westTitle'] : ''
 $westIcon = isset($this->params['westIcon']) ? $this->params['westIcon'] : '';
 
 $navItem = include(Yii::$app->view->theme->applyTo(Yii::getAlias('@app/views/layouts/_nav-item.php')));
-ksort($navItem);
-$navItemJson = Json::encode($navItem);
 
 $errors = '';
 if (isset($this->params['errorName'])) {
@@ -68,6 +66,8 @@ JS;
 } else {
     $this->params['selectedNav'] = isset($this->params['selectedNav']) ? $this->params['selectedNav'] : 'nav-dashboard';
 }
+
+$navItemJson = Json::encode($navItem);
 
 $tabOptions = isset($this->params['tabOptions']) ? Json::encode($this->params['tabOptions']) : 0;
 
