@@ -51,7 +51,10 @@ if (isset($this->params['errorName'])) {
         $this->params['tabOptions'] = [
             'title' => $errorNav['text'],
             'iconCls' => $errorNav['iconCls'],
-            'content' => $this->params['errorName'] . ': ' . $this->params['errorMessage']
+            'content' => $this->params['errorName'] . ': ' . $this->params['errorMessage'],
+            'data' => [
+                'url' => $errorNav['attributes']['url']
+            ]
         ];
     } else {
         if(isset($this->params['tabOptions'])){
