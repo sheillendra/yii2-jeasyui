@@ -140,7 +140,7 @@ $this->params['northUserMenu'] = [
 $this->params['getReferenceUrl'] = Url::to(['/jeasyui/reference'], true);
 
 $this->params['westTitle'] = 'Navigation';
-$this->params['westIcon'] = 'icon-compas';
+$this->params['westIcon'] = 'icon-compass';
 
 /**
  * sidebar plugin : tree or accordion
