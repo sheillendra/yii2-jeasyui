@@ -14,21 +14,17 @@ use yii\web\AssetBundle;
  * @author Sheillendra <sheillendra@yahoo.com>
  * @since 2.0
  */
-class C3Asset extends AssetBundle {
+class D3Asset extends AssetBundle {
 
-    public $sourcePath = '@bower/c3';
-    public $css = [
-        'c3.min.css',
-    ];
+    public $sourcePath = '@bower/d3';
+    public $css = [];
     public $js = [
-        'c3.min.js'
+        'd3.min.js'
     ];
     public $depends = [
-        'sheillendra\jeasyui\assets\D3Asset',
+        'sheillendra\jeasyui\assets\JEasyUIAsset',
     ];
     public $publishOptions = [
-        'only' => [
-            'c3.min.css', 'c3.min.js'
-        ]
+        'only' => ['d3.min.js']
     ];
 }

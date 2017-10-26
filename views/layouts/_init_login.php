@@ -12,6 +12,6 @@ $this->params['textboxWidth'] = 230;
 //accomodate login with email
 $this->params['usernameSelector'] = '#loginform-username';
 
-$this->params['loginUrl'] = Url::to(['/jeasyui/login'], true);
-$this->params['signupUrl'] = Url::to(['/jeasyui/signup'], true);
-$this->params['forgotUrl'] = Url::to(['/jeasyui/reset-password'], true);
+$this->params['loginUrl'] = Url::to(['/jeasyui/login']);
+$this->params['signupUrl'] = Url::to(['/jeasyui/signup']);
+$this->params['forgotUrl'] = Url::to(['/jeasyui/reset-password']);
