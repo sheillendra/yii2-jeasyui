@@ -12,18 +12,18 @@ namespace sheillendra\jeasyui\assets;
 
 use yii\web\AssetBundle;
 
-class ExtPortalAsset extends AssetBundle {
-    public $sourcePath = '@sheillendra/jeasyui/assets/extensions';
+class ExtDgFilterRowAsset extends AssetBundle {
+    public $sourcePath = '@sheillendra/jeasyui/assets/extensions/datagrid-filter';
     public $css = [];
     public $js = [
-        'jquery.portal.js'
+        'datagrid-filter.js'
     ];
     public $depends = [
         'sheillendra\jeasyui\assets\JEasyUIAsset'
     ];
     public $publishOptions = [
         'only' => [
-            'jquery.portal.js'
+            'datagrid-filter.js'
         ]
     ];
 }
