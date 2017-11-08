@@ -22,7 +22,7 @@ class ArrayHelper extends \yii\helpers\ArrayHelper {
             }
             if (is_array($v)) {
                 self::getArrayByKeyValue($keyMustHaveByParent, $key, $value, $v);
-            } elseif ($k === $key && $v === $value) {
+            } elseif ($k === $key && urldecode ($v) === $value) {
                 self::$_parent_array = self::$_temp_parent_array;
                 break;
             }
