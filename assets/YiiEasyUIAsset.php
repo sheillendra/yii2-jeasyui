@@ -8,6 +8,7 @@
 
 namespace sheillendra\jeasyui\assets;
 
+use Yii;
 use yii\web\AssetBundle;
 
 /**
@@ -24,10 +25,16 @@ class YiiEasyUIAsset extends AssetBundle {
     public $js = [
         'js/yii.easyui.min.js'
     ];
-    
     public $depends = [
         'yii\web\YiiAsset',
         'sheillendra\jeasyui\assets\JEasyUIAsset'
     ];
+
+    public function init() {
+        if (Yii::$app->devicedetect->isMobile()) {
+            $this->js = ['js/yii.easyui-mobile.min.js'];
+        }
+        parent::init();
+    }
 
 }

@@ -10,12 +10,15 @@
 
 namespace sheillendra\jeasyui\assets;
 
-use yii\web\AssetBundle;
-
 class JEasyUIMobileAsset extends JEasyUIAsset {
     public $css = [
         'themes/mobile.css',
         'themes/icon.css',
         'themes/color.css'
+    ];
+    
+    public $js = [
+        'jquery.easyui.min.js',
+        'jquery.easyui.mobile.js'
     ];
 }

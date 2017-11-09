@@ -12,7 +12,8 @@
     "require": {
         "yiisoft/yii2": "*",
         "bower-asset/font-awesome": "*",
-        "bower-asset/c3": "v0.4.18"
+        "bower-asset/c3": "v0.4.18",
+        "alexandernst/yii2-device-detect": "~0.0.11"
     },
     "autoload": {
         "psr-4": {

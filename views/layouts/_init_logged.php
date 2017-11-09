@@ -8,8 +8,8 @@ $this->title = 'Admin - ' . $this->title;
 
 $this->params['userName'] = Yii::$app->user->identity->username;
 
-$profileUrl = Url::to(['/jeasyui/profile'], true);
-$logoutUrl = Url::to(['/jeasyui/logout'], true);
+$profileUrl = Url::to(['/jeasyui/profile']);
+$logoutUrl = Url::to(['/jeasyui/logout']);
 $profileOnClick = <<<JS
     function (e) {
         yii.easyui.createTab({
@@ -137,7 +137,7 @@ $this->params['northUserMenu'] = [
         'onclick' => new JsExpression($logoutOnClick)
     ]
 ];
-$this->params['getReferenceUrl'] = Url::to(['/jeasyui/reference'], true);
+$this->params['getReferenceUrl'] = Url::to(['/jeasyui/reference']);
 
 $this->params['westTitle'] = 'Navigation';
 $this->params['westIcon'] = 'icon-compass';

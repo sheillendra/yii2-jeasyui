@@ -22,8 +22,22 @@ YiiEasyUILoginAsset::register($this);
     <body>
         <div id="error"></div>
         <?php $this->beginBody() ?>
-        <?php echo $content ?>
-        <?php $this->endBody() ?>
+        <div id="login-dialog"></div>
+        <div id="login-btn">
+            <table width="100%">
+                <tbody>
+                    <tr>
+                        <td width="50%"><div id="login-message"></div></td>
+                        <td>
+                            <a id="login-btn-ok"></a>
+                            <a id="login-btn-reset"></a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <?php $this->endBody()
+        ?>
     </body>
 </html>
 <?php
