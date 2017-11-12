@@ -17,6 +17,7 @@ class JEasyUIAsset extends AssetBundle {
 
     public $sourcePath = '@sheillendra/jeasyui/assets/jquery-easyui-1.5.3';
     public $css = [
+        'themes/default/easyui.css',
         'themes/icon.css',
         'themes/color.css',
     ];
@@ -50,15 +51,13 @@ class JEasyUIAsset extends AssetBundle {
             'ui-sunny'
         ];
         if ($themeCookies && in_array($themeCookies, $themes)) {
-            $this->css[] = "themes/$themeCookies/easyui.css";
+            $this->css[0] = "themes/$themeCookies/easyui.css";
 //            if ($addCookie) {
 //                Yii::$app->response->cookies->add(new \yii\web\Cookie([
 //                    'name' => 'jeasyui-theme',
 //                    'value' => $themeCookies
 //                ]));
 //            }
-        } else {
-            $this->css[] = 'themes/default/easyui.css';
         }
         parent::init();
     }
