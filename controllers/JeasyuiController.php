@@ -29,7 +29,7 @@ class JeasyuiController extends Controller {
                     [
                         'actions' => [
                             'logout', 'index', 'setting', 'setting-rbac',
-                            'setting-user','profile'
+                            'setting-user', 'profile'
                         ],
                         'allow' => true,
                         'roles' => ['@'],
@@ -78,7 +78,10 @@ class JeasyuiController extends Controller {
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            echo Json::encode(['redirect' => Yii::$app->getUser()->getReturnUrl()]);
+            echo Json::encode([
+                'redirect' => Yii::$app->getUser()->getReturnUrl(),
+                'token' => $model->getUser()->getToken()
+            ]);
         } else {
             if ($model->hasErrors()) {
                 echo Json::encode(['loginerror' => $model->getErrors()]);
@@ -86,7 +89,7 @@ class JeasyuiController extends Controller {
                 return $this->render('login/login', ['model' => $model]);
             }
         }
-        Yii::$app->end();
+        return Yii::$app->end();
     }
 
     /**
@@ -154,7 +157,7 @@ class JeasyuiController extends Controller {
     public function actionSettingRbac() {
         return $this->render('setting-rbac/index');
     }
-    
+
     public function actionSettingUser() {
         return $this->render('setting-user/index');
     }

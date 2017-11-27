@@ -67,7 +67,7 @@ JS;
         }
     }
 } else {
-    $this->params['selectedNav'] = isset($this->params['selectedNav']) ? $this->params['selectedNav'] : 'nav-dashboard';
+    $this->params['selectedNav'] = isset($this->params['selectedNav']) ? $this->params['selectedNav'] : $this->params['defaultSelectedNav'];
 }
 
 $navItemJson = Json::encode($navItem);
