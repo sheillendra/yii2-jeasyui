@@ -25,6 +25,7 @@ INSTALLATION
 in config.php change view components like this :
 
 ```
+    'bootstrap' => ['log', 'devicedetect'],
     //remove jeasyui controller map if you have understand and want unwatch the default simulation
     'controllerMap' => [
         'jeasyui' => 'sheillendra\jeasyui\controllers\JeasyuiController'
@@ -48,6 +49,9 @@ in config.php change view components like this :
                     ]
                 ],
             ],
+        ],
+        'devicedetect' => [
+            'class' => 'alexandernst\devicedetect\DeviceDetect'
         ],
     ]
 ```
