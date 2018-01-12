@@ -17,7 +17,7 @@ use yii\web\AssetBundle;
  */
 class YiiEasyUIAsset extends AssetBundle {
 
-    public $sourcePath = '@sheillendra/jeasyui/assets/dist/v2.0.0-alpha.2';
+    public $sourcePath = '@sheillendra/jeasyui/assets/dist/v2.0.0-alpha.3';
     public $css = [
         'css/yii.easyui.css',
         'css/icon.css'
