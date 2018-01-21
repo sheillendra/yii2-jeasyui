@@ -71,16 +71,23 @@ class JeasyuiController extends Controller {
      * @return string
      */
     public function actionLogin() {
+        $req = Yii::$app->getRequest();
         if (!Yii::$app->user->isGuest) {
-            echo Json::encode(['redirect' => Yii::$app->getHomeUrl()]);
-            return Yii::$app->end();
+            if ($req->isAjax) {
+                echo Json::encode(['redirect' => Yii::$app->getHomeUrl()]);
+                return Yii::$app->end();
+            }else{
+                return $this->redirect(['/']);
+            }
         }
 
         $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+        if ($model->load($req->post()) && $model->login()) {
             echo Json::encode([
                 'redirect' => Yii::$app->getUser()->getReturnUrl(),
-                'token' => $model->getUser()->getToken()
+                'data' => [
+                    'token' => $model->getUser()->getToken(),
+                ]
             ]);
         } else {
             if ($model->hasErrors()) {
@@ -147,7 +154,7 @@ class JeasyuiController extends Controller {
      */
     public function actionLogout() {
         Yii::$app->user->logout();
-        return $this->redirect(['/jeasyui/login']);
+        return $this->redirect(Yii::$app->user->loginUrl);
     }
 
     public function actionSetting() {
