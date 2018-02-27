@@ -12,18 +12,22 @@ namespace sheillendra\jeasyui\assets;
 
 use yii\web\AssetBundle;
 
-class ExtPortalAsset extends AssetBundle {
-    public $sourcePath = '@sheillendra/jeasyui/assets/extensions/jquery-easyui-portal';
+class ExtDgPivotAsset extends AssetBundle {
+
+    public $sourcePath = '@sheillendra/jeasyui/assets/extensions/jquery-easyui-pivotgrid';
     public $css = [];
     public $js = [
-        'jquery.portal.js'
+        'jquery.pivotgrid.js',
     ];
     public $depends = [
         'sheillendra\jeasyui\assets\JEasyUIAsset'
     ];
     public $publishOptions = [
         'only' => [
-            'jquery.portal.js'
+            'jquery.pivotgrid.js',
+            'layout.png',
+            'load.png',
         ]
     ];
+
 }

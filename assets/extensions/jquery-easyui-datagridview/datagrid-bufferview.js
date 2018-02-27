@@ -1,4 +1,5 @@
 $.extend($.fn.datagrid.defaults, {
+	rowHeight: 25,
 	onBeforeFetch: function(page){},
 	onFetch: function(page, rows){}
 });
@@ -94,14 +95,15 @@ var bufferview = $.extend({}, $.fn.datagrid.defaults.view, {
 		}
 		
 		function getDataHeight(){
-			var h = 0;
-			dc.body2.children('table.datagrid-btable').each(function(){
-				h += $(this).outerHeight();
-			});
-			if (!h){
-				h = view.renderedCount * 25;
-			}
-			return h;
+			// var h = 0;
+			// dc.body2.children('table.datagrid-btable').each(function(){
+			// 	h += $(this).outerHeight();
+			// });
+			// if (!h){
+			// 	h = view.renderedCount * opts.rowHeight;
+			// }
+			// return h;
+			return view.renderedCount * opts.rowHeight;
 		}
 	},
 	

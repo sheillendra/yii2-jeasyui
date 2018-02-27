@@ -57,9 +57,10 @@ if (isset($this->params['errorName'])) {
             ]
         ];
     } else {
-        if(isset($this->params['tabOptions'])){
+        if (isset($this->params['tabOptions'])) {
             $this->params['tabOptions']['content'] = $this->params['errorName'] . ': ' . $this->params['errorMessage'];
-        }else{
+        } else {
+            $this->params['selectedNav'] = $this->params['defaultSelectedNav'];
             $errors = <<<JS
                 yii.easyui.errorName = '{$this->params['errorName']}';
                 yii.easyui.errorMessage = '{$this->params['errorMessage']}';
@@ -75,10 +76,13 @@ $navItemJson = Json::encode($navItem);
 $tabOptions = isset($this->params['tabOptions']) ? Json::encode($this->params['tabOptions']) : 0;
 
 $northUserMenu = isset($this->params['northUserMenu']) ? Json::encode($this->params['northUserMenu']) : 0;
+$homeUrl = Url::to(['/'], true);
 
 $this->registerJs(<<<EOD
     yii.easyui.username = '{$this->params['userName']}';
     yii.easyui.getReferenceUrl = '{$this->params['getReferenceUrl']}';
+    yii.easyui.homeUrl = '{$homeUrl}';
+    yii.easyui.logoutUrl = '{$this->params['logoutUrl']}';
     yii.easyui.northContent = '{$northContent}';
     yii.easyui.southContent = '{$southContent}';
     yii.easyui.centerContent = '{$centerContent}';
@@ -95,7 +99,5 @@ $this->registerJs(<<<EOD
     yii.easyui.init();
 EOD
 );
-?>
 
-<?php
 $this->endPage();

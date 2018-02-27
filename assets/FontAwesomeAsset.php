@@ -18,13 +18,13 @@ class FontAwesomeAsset extends AssetBundle {
 
     public $sourcePath = '@bower/font-awesome';
     public $css = [
-        'css/font-awesome.min.css',
+        'web-fonts-with-css/css/fontawesome.min.css',
     ];
     public $js = [];
     public $depends = [];
     public $publishOptions = [
         'only' => [
-            'css/font-awesome.min.css', 'fonts/*'
+            'web-fonts-with-css/css/fontawesome.min.css', 'web-fonts-with-css/webfonts/*'
         ]
     ];
 }

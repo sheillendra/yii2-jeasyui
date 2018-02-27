@@ -4,7 +4,7 @@
  * Licensed under the GPL:
  *   http://www.gnu.org/licenses/gpl.txt
  *
- * Copyright 2010-2012 stworthy [ stworthy@gmail.com ] 
+ * Copyright 2010-2012 www.jeasyui.com 
  * 
  * Dependencies:
  *   draggable
@@ -26,8 +26,8 @@
 		$(target).children('div:last').addClass('portal-column-right');
 		$(target).find('>div').each(function(){	// each column panel
 			var column = $(this);
-			totalWidth += column.innerWidth();
-			columnWidths.push(column.innerWidth());
+			totalWidth += column.outerWidth();
+			columnWidths.push(column.outerWidth());
 			
 			var td = $('<td class="portal-column-td"></td>').appendTo(tr)
 			column.addClass('portal-column').appendTo(td);
@@ -166,7 +166,7 @@
 				panel.panel('move');
 				
 				var opts = $.data(target, 'portal').options;
-				opts.onStateChange.call(target);
+				opts.onStateChange.call(target, panel);
 			}
 		});
 		
@@ -322,6 +322,6 @@
 		border:true,
 		fit:false,
 		onResize:function(width,height){},
-		onStateChange:function(){}
+		onStateChange:function(panel){}
 	};
 })(jQuery);
