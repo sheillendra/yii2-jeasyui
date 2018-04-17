@@ -8,6 +8,7 @@ $this->title = 'Admin - ' . $this->title;
 //required params
 $this->params['favico'] = Yii::getAlias('@web') . '/favicon.png';
 $this->params['userName'] = Yii::$app->user->identity->username;
+$this->params['homeUrl'] = Url::to(['/']);
 $this->params['logoutUrl'] = Url::to(['/jeasyui/logout']);
 $this->params['getReferenceUrl'] = Url::to(['/jeasyui/reference']);
 $this->params['westTitle'] = 'Navigation';

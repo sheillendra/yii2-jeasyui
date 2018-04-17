@@ -82,6 +82,21 @@ class IndexAction extends \yii\rest\IndexAction {
             $query->andWhere($filter);
         }
 
+        $enableMultiSort = false;
+        if (isset($requestParams['sort']) && isset($requestParams['order'])) {
+            $sorts = explode(',', $requestParams['sort']);
+            $orders = explode(',', $requestParams['order']);
+            foreach ($sorts as $k => &$sort) {
+                if ($orders[$k] === 'desc') {
+                    $sort = '-' . $sort;
+                }
+            }
+            $requestParams['sort'] = implode(',', $sorts);
+            if ($k > 0) {
+                $enableMultiSort = true;
+            }
+        }
+
         if (isset($requestParams['page'])) {
             $dataProvider = new ActiveDataProvider([
                 'query' => $query,
@@ -91,6 +106,7 @@ class IndexAction extends \yii\rest\IndexAction {
                 ],
                 'sort' => [
                     'params' => $requestParams,
+                    'enableMultiSort' => $enableMultiSort
                 ],
             ]);
             return [
@@ -103,6 +119,7 @@ class IndexAction extends \yii\rest\IndexAction {
             'pagination' => false,
             'sort' => [
                 'params' => $requestParams,
+                'enableMultiSort' => $enableMultiSort
             ],
         ]);
     }

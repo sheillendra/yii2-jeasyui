@@ -76,12 +76,11 @@ $navItemJson = Json::encode($navItem);
 $tabOptions = isset($this->params['tabOptions']) ? Json::encode($this->params['tabOptions']) : 0;
 
 $northUserMenu = isset($this->params['northUserMenu']) ? Json::encode($this->params['northUserMenu']) : 0;
-$homeUrl = Url::to(['/'], true);
 
 $this->registerJs(<<<EOD
     yii.easyui.username = '{$this->params['userName']}';
     yii.easyui.getReferenceUrl = '{$this->params['getReferenceUrl']}';
-    yii.easyui.homeUrl = '{$homeUrl}';
+    yii.easyui.homeUrl = '{$this->params['homeUrl']}';
     yii.easyui.logoutUrl = '{$this->params['logoutUrl']}';
     yii.easyui.northContent = '{$northContent}';
     yii.easyui.southContent = '{$southContent}';

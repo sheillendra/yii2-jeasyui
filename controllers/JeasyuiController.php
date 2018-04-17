@@ -153,6 +153,7 @@ class JeasyuiController extends Controller {
      * @return string
      */
     public function actionLogout() {
+        $this->enableCsrfValidation = false;
         Yii::$app->user->logout();
         return $this->redirect(Yii::$app->user->loginUrl);
     }
