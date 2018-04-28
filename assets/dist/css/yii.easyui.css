@@ -29,6 +29,10 @@ body {
     padding: 5px;
 }
 
+#maintab > .tabs-panels > .panel > .panel-body {
+    overflow-x: auto;
+}
+
 .toolbar {
     border-bottom: 1px solid #000;
     padding:2px 0;

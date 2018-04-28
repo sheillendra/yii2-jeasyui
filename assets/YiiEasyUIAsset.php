@@ -17,7 +17,7 @@ use yii\web\AssetBundle;
  */
 class YiiEasyUIAsset extends AssetBundle {
 
-    public $sourcePath = '@sheillendra/jeasyui/assets/dist/v2.0.0-alpha.3';
+    public $sourcePath = '@sheillendra/jeasyui/assets/dist';
     public $css = [
         'css/yii.easyui.css',
         'css/icon.css'
@@ -31,9 +31,6 @@ class YiiEasyUIAsset extends AssetBundle {
     ];
 
     public function init() {
-        if (Yii::$app->devicedetect->isMobile()) {
-            $this->js = ['js/yii.easyui-mobile.min.js'];
-        }
         parent::init();
     }
 

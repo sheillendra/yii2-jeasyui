@@ -7,7 +7,6 @@ $this->title = $this->title;
 $this->params['loginDialogTitle'] = $this->title;
 $this->params['loginDialogWidth'] = 350;
 $this->params['loginDialogHeight'] = 260;
-$this->params['textboxWidth'] = 230;
 
 //accomodate login with email
 $this->params['usernameSelector'] = '#loginform-username';
