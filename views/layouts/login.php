@@ -17,6 +17,7 @@ YiiEasyUILoginAsset::register($this);
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
         <?php echo Html::csrfMetaTags() ?>
         <title><?php echo Html::encode($this->title) ?></title>
+        <link rel="shortcut icon" href="<?php echo $this->params['favico'] ?>">
         <?php $this->head() ?>
     </head>
     <body>
