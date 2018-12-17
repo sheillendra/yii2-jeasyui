@@ -5,7 +5,7 @@
  * since    : v.0.0.1
  * author   : sheillendra
  * date     : 2014-10-04
- * website  : www.bjuta.com
+ * website  : www.anjani.id
  */
 
 namespace sheillendra\jeasyui\assets;
