@@ -21,6 +21,7 @@ class IndexAction extends \yii\rest\IndexAction {
         'equal' => 'eq',
         'contains' => 'like'
     ];
+
     /**
      * @inheritdoc
      */
@@ -35,11 +36,20 @@ class IndexAction extends \yii\rest\IndexAction {
             $tmp = [];
             foreach ($rules as $rule) {
                 if ($rule['value'] !== '') {
-                    $tmp[] = [
-                        $rule['field'] => [
-                            self::OP_ADAPTER[$rule['op']] => $rule['value']
-                        ]
-                    ];
+                    //some database like oracle in "like" operator cannot insensitive 
+                    if (isset($rule['insensitive']) && $rule['insensitive']) {
+                        $tmp[] = [
+                            'lower(' . $rule['field'] . ')' => [
+                                self::OP_ADAPTER[$rule['op']] => strtolower($rule['value'])
+                            ]
+                        ];
+                    } else {
+                        $tmp[] = [
+                            $rule['field'] => [
+                                self::OP_ADAPTER[$rule['op']] => $rule['value']
+                            ]
+                        ];
+                    }
                 }
             }
             if (count($tmp) > 1) {
@@ -71,21 +81,47 @@ class IndexAction extends \yii\rest\IndexAction {
         if (!empty($filter)) {
             $query->andWhere($filter);
         }
-        
-        $dataProvider = new ActiveDataProvider([
+
+        $enableMultiSort = false;
+        if (isset($requestParams['sort']) && isset($requestParams['order'])) {
+            $sorts = explode(',', $requestParams['sort']);
+            $orders = explode(',', $requestParams['order']);
+            foreach ($sorts as $k => &$sort) {
+                if ($orders[$k] === 'desc') {
+                    $sort = '-' . $sort;
+                }
+            }
+            $requestParams['sort'] = implode(',', $sorts);
+            if ($k > 0) {
+                $enableMultiSort = true;
+            }
+        }
+
+        if (isset($requestParams['page'])) {
+            $dataProvider = new ActiveDataProvider([
+                'query' => $query,
+                'pagination' => [
+                    'params' => $requestParams,
+                    'pageSizeParam' => 'rows'
+                ],
+                'sort' => [
+                    'params' => $requestParams,
+                    'enableMultiSort' => $enableMultiSort
+                ],
+            ]);
+            return [
+                'total' => $dataProvider->getTotalCount(),
+                'rows' => $dataProvider->getModels()
+            ];
+        }
+        return new ActiveDataProvider([
             'query' => $query,
-            'pagination' => [
-                'params' => $requestParams,
-                'pageSizeParam' => 'rows'
-            ],
+            'pagination' => false,
             'sort' => [
                 'params' => $requestParams,
+                'enableMultiSort' => $enableMultiSort
             ],
         ]);
-        return [
-            'total' => $dataProvider->getTotalCount(),
-            'rows' => $dataProvider->getModels()
-        ];
     }
 
 }

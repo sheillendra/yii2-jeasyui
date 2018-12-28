@@ -5,7 +5,7 @@
  * since    : v.0.0.1
  * author   : sheillendra
  * date     : 2014-10-04
- * website  : www.bjuta.com
+ * website  : www.anjani.id
  */
 
 namespace sheillendra\jeasyui\assets;
@@ -15,7 +15,7 @@ use yii\web\AssetBundle;
 
 class JEasyUIAsset extends AssetBundle {
 
-    public $sourcePath = '@sheillendra/jeasyui/assets/jquery-easyui-1.5.4';
+    public $sourcePath = '@sheillendra/jeasyui/assets/jquery-easyui-1.5.4.5';
     public $css = [
         'themes/default/easyui.css',
         'themes/icon.css',
@@ -37,14 +37,7 @@ class JEasyUIAsset extends AssetBundle {
     ];
 
     public function init() {
-//        $cookies = Yii::$app->request->cookies;
-//        $themeCookies = $cookies->get('jeasyui-theme');
-//        $addCookie = false;
-//        if (!$themeCookies) {
         $themeCookies = filter_input(INPUT_COOKIE, 'jeasyui-theme', FILTER_SANITIZE_STRING);
-//            $addCookie = true;
-//        }
-
         $themes = ['black', 'bootstrap', 'default', 'gray', 'material', 'metro',
             'metro-blue', 'metro-gray', 'metro-green', 'metro-orange',
             'metro-red', 'ui-cupertino', 'ui-dark-hive', 'ui-pepper-grinder',
@@ -52,12 +45,6 @@ class JEasyUIAsset extends AssetBundle {
         ];
         if ($themeCookies && in_array($themeCookies, $themes)) {
             $this->css[0] = "themes/$themeCookies/easyui.css";
-//            if ($addCookie) {
-//                Yii::$app->response->cookies->add(new \yii\web\Cookie([
-//                    'name' => 'jeasyui-theme',
-//                    'value' => $themeCookies
-//                ]));
-//            }
         }
         parent::init();
     }

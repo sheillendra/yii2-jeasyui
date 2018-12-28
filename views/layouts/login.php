@@ -14,9 +14,10 @@ YiiEasyUILoginAsset::register($this);
 <html lang="<?php echo Yii::$app->language ?>">
     <head>
         <meta charset="<?php echo Yii::$app->charset ?>">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
         <?php echo Html::csrfMetaTags() ?>
         <title><?php echo Html::encode($this->title) ?></title>
+        <link rel="shortcut icon" href="<?php echo $this->params['favico'] ?>">
         <?php $this->head() ?>
     </head>
     <body>
@@ -45,7 +46,6 @@ $this->registerJs(<<<EOD
         yii.easyuiLogin.dialogTitle = '{$this->params['loginDialogTitle']}';
         yii.easyuiLogin.dialogWidth = {$this->params['loginDialogWidth']};
         yii.easyuiLogin.dialogHeight = {$this->params['loginDialogHeight']};
-        yii.easyuiLogin.textboxWidth = {$this->params['textboxWidth']};
         yii.easyuiLogin.usernameSelector = '{$this->params['usernameSelector']}';
         yii.easyuiLogin.url = '{$this->params['loginUrl']}';
         yii.easyuiLogin.signupurl = '{$this->params['signupUrl']}';

@@ -13,7 +13,7 @@ namespace sheillendra\jeasyui\assets;
 use yii\web\AssetBundle;
 
 class ExtPortalAsset extends AssetBundle {
-    public $sourcePath = '@sheillendra/jeasyui/assets/extensions';
+    public $sourcePath = '@sheillendra/jeasyui/assets/extensions/jquery-easyui-portal';
     public $css = [];
     public $js = [
         'jquery.portal.js'

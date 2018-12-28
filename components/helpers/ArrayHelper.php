@@ -17,7 +17,7 @@ class ArrayHelper extends \yii\helpers\ArrayHelper {
      */
     public static function getArrayByKeyValue($keyMustHaveByParent, $key, $value, $array) {
         foreach ($array as $k => $v) {
-            if (isset($v[$keyMustHaveByParent])) {
+            if (is_array($v) && isset($v[$keyMustHaveByParent])) {
                 self::$_temp_parent_array = $v;
             }
             if (is_array($v)) {
