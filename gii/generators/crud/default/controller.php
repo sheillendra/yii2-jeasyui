@@ -1,6 +1,6 @@
 <?php
 
-use yii\helpers\Inflector;
+
 use yii\helpers\StringHelper;
 
 $controllerClass = StringHelper::basename($generator->controllerClass);
@@ -21,7 +21,6 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
-use yii\helpers\Json;
 
 /**
  * <?=$controllerClass?> implements the CRUD actions for <?=$modelClass?> model.
@@ -56,8 +55,7 @@ class <?=$controllerClass?> extends Controller
     public function actionIndex()
     {
         if(Yii::$app->request->isAjax){
-            echo $this->renderAjax('_index');
-            Yii::$app->end();
+            return $this->renderAjax('_index');
         }else{
             return $this->render('index');
         }
@@ -74,8 +72,7 @@ class <?=$controllerClass?> extends Controller
             $query->offset(($page * $rows) - $rows);
             $query->limit($rows);
             $result['rows'] = $query->All();
-            echo Json::encode($result);
-            Yii::$app->end();
+            return $this->asJson($result);
         }
     }
 
@@ -90,11 +87,10 @@ class <?=$controllerClass?> extends Controller
                 $result['status'] = 'error';
                 $result['error'] =  $model->getErrors();
             }
-            echo Json::encode($result);
+            return $this->asJson($result);
         } else {
             if (Yii::$app->request->isAjax) {
-                echo $this->renderAjax('_new', ['model' => $model]);
-                Yii::$app->end();
+                return  $this->renderAjax('_new', ['model' => $model]);
             } else {
                 return $this->render('new');
             }
@@ -120,8 +116,7 @@ class <?=$controllerClass?> extends Controller
             $this->findModel(<?=implode(', ',$tempPk)?>)->delete();
         }
 
-        echo Json::encode(['status' => 'success']);
-        Yii::$app->end();
+        return $this->asJson(['status' => 'success']);
     }
   
     /**
