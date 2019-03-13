@@ -1,6 +1,5 @@
 <?php
 
-
 use yii\helpers\StringHelper;
 
 $controllerClass = StringHelper::basename($generator->controllerClass);
