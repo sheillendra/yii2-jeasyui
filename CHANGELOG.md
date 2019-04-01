@@ -1,3 +1,9 @@
+v2.0.1, Apr 2019
+----------
+* move to src folder
+* fix some bugs
+
+
 v2.0.0-beta, Sep 2017
 -----------
 * break code from v1.0.0 remake code

@@ -32,6 +32,12 @@ in config.php change view components like this :
     ],
     'components' =>[
         #... other 
+        'user' => [
+            #... other
+            //change the line below if you understand the UserModel login action in jeasyui controller
+            'identityClass' => 
+            'urlLogin' => ['/jeasyui/login']
+        ],
         'view' => [
             'theme' => [
                 'pathMap' => [
@@ -60,6 +66,7 @@ In here you can see the default simulation. Recommended for ```backend``` in ```
 but if you want implement it in ```basic``` make sure your controller have implement ```AccessControl``` behavior
 for logged user only can access the controller.
 
+
 ## GII
 
 ```
@@ -79,11 +86,12 @@ if (!YII_ENV_TEST) {
 }
 ```
 
-## yii.easyui
-
+## yii.easyui.min.js
+```
 Method :
 .showMainMask()
 .hideMainMask()
 .cookie.set(name, value, days, path)
 .cookie.get(name)
 .cookie.delete(name, path)
+```
