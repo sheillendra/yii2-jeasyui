@@ -19,7 +19,7 @@ or add
 ```
 to the require section of your composer.json file.
 
-INSTALLATION
+USAGE
 ---
 
 in config.php change view components like this :
