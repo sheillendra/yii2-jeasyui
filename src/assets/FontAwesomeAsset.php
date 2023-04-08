@@ -24,7 +24,7 @@ class FontAwesomeAsset extends AssetBundle {
     public $depends = [];
     public $publishOptions = [
         'only' => [
-            'css/fontawesome.min.css', 'webfonts/*'
+            'css/*'
         ]
     ];
 }

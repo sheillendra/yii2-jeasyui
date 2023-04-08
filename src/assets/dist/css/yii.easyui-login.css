@@ -21,11 +21,3 @@ body {
     text-align: center;
     line-height: 0;
 }
-
-.panel-body,
-.l-btn-text,
-.textbox .textbox-prompt,
-.textbox .textbox-text
-{
-    font-size: 12px;
-}

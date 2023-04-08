@@ -12,7 +12,7 @@ use yii\web\AssetBundle;
 
 class YiiEasyUIMobileLoginAsset extends AssetBundle {
 
-    public $sourcePath = '@sheillendra/jeasyui/assets/dist/v2.0.0-alpha.3';
+    public $sourcePath = '@sheillendra/jeasyui/assets/dist';
     public $css = ['css/yii.easyui-mobile-login.css'];
     public $js = ['js/yii.easyui-mobile-login.min.js'];
     public $depends = [

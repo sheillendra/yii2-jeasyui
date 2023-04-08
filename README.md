@@ -22,6 +22,13 @@ to the require section of your composer.json file.
 USAGE
 ---
 
+in bootstrap.php add line :
+```
+Yii::setAlias('@sheillendra/jeasyui', dirname(__DIR__) . '/extensions/sheillendra/yii2-jeasyui/src');
+```
+this test use advanced template, so bootstrap.php place in common/config
+
+
 in config.php change view components like this :
 
 ```

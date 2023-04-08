@@ -6,6 +6,7 @@ use Yii;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\helpers\Json;
 use sheillendra\jeasyui\models\LoginForm;
 
 /**
@@ -73,7 +74,8 @@ class JeasyuiController extends Controller {
         $req = Yii::$app->getRequest();
         if (!Yii::$app->user->isGuest) {
             if ($req->isAjax) {
-                return $this->asJson(['redirect' => Yii::$app->getHomeUrl()]);
+                echo Json::encode(['redirect' => Yii::$app->getHomeUrl()]);
+                return Yii::$app->end();
             }else{
                 return $this->redirect(['/']);
             }
@@ -81,19 +83,21 @@ class JeasyuiController extends Controller {
 
         $model = new LoginForm();
         if ($model->load($req->post()) && $model->login()) {
-            return $this->asJson([
+            echo Json::encode([
                 'redirect' => Yii::$app->getUser()->getReturnUrl(),
                 'data' => [
-                    'token' => $model->getUser()->getToken(),
+                    'token' => $model->user->token,
+                    'level' => $model->user->maxLevel,
                 ]
             ]);
         } else {
             if ($model->hasErrors()) {
-                return $this->asJson(['loginerror' => $model->getErrors()]);
+                echo Json::encode(['loginerror' => $model->getFirstErrors()]);
             } else {
                 return $this->render('login/login', ['model' => $model]);
             }
         }
+        return Yii::$app->end();
     }
 
     /**

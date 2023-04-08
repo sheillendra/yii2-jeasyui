@@ -25,14 +25,16 @@ use yii\helpers\Html;
             <td></td>
             <td><?php echo Html::activeCheckbox($model, 'rememberMe') ?></td>
         </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td>
-                <?php echo Html::a('Forgot Password', ['/jeasyui/forgot-password'])?>, or 
-                <?php echo Html::a('SignUp', ['/jeasyui/signup'])?>
-            </td>
-        </tr>
+        <?php if (isset($this->params['useResetPassword']) && $this->params['useResetPassword']) : ?>
+            <tr>
+                <td></td>
+                <td></td>
+                <td>
+                    <?php echo Html::a('Forgot Password', ['/jeasyui/forgot-password']) ?>, or
+                    <?php echo Html::a('SignUp', ['/jeasyui/signup']) ?>
+                </td>
+            </tr>
+        <?php endif; ?>
     </tbody>
 </table>
 <?php

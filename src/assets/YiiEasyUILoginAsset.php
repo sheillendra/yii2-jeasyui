@@ -12,9 +12,14 @@ use yii\web\AssetBundle;
 
 class YiiEasyUILoginAsset extends AssetBundle {
 
-    public $sourcePath = '@sheillendra/jeasyui/assets/dist';
+    //public $sourcePath = '@sheillendra/jeasyui/assets/dist';
+    public $basePath = '@webroot/dist/jeasyui';
+    public $baseUrl = '@web/dist/jeasyui';
     public $css = ['css/yii.easyui-login.css'];
-    public $js = ['js/yii.easyui-login.min.js'];
+    public $js = [
+        //'js/yii.easyui-login.min.js'
+        'js/yii.easyui-login.js'
+    ];
     public $depends = [
         'yii\web\YiiAsset',
         'sheillendra\jeasyui\assets\JEasyUIAsset'

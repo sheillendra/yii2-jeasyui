@@ -1,15 +1,12 @@
 <?php
 use yii\helpers\Url;
-use sheillendra\jeasyui\assets\YiiEasyUIAsset;
 
-$assetUrl = YiiEasyUIAsset::register($this);
-
-$this->params['favico'] = $assetUrl->baseUrl . '/favicon.ico';
+$this->params['favico'] = Yii::getAlias('@web') . '/favicon.png';
 $this->title = $this->title;
 
 $this->params['loginDialogTitle'] = $this->title;
 $this->params['loginDialogWidth'] = 350;
-$this->params['loginDialogHeight'] = 260;
+$this->params['loginDialogHeight'] = 290;
 
 //accomodate login with email
 $this->params['usernameSelector'] = '#loginform-username';

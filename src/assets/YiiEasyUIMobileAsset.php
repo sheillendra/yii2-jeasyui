@@ -16,7 +16,8 @@ use yii\web\AssetBundle;
  */
 class YiiEasyUIMobileAsset extends AssetBundle {
 
-    public $sourcePath = '@sheillendra/jeasyui/assets/dist/v2.0.0-alpha.3';
+    public $sourcePath = '@sheillendra/jeasyui/assets/dist';
+    //public $sourcePath = '@sheillendra/jeasyui/assets/dist/v2.0.0-alpha.3';
     public $css = [
         'css/yii.easyui-mobile.css',
         'css/icon.css'

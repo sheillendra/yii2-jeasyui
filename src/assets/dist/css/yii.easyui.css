@@ -79,30 +79,12 @@ body {
 .logo {
     float: left;
     margin-left: 5px;
-    font-size: 16px;
+    font-size: 18px;
     height: 38px;
     line-height: 38px;
-}
-
-.logo img {
-    height: 28px;
-    margin-top: 5px;
-    margin-right: 5px;
-}
-
-.logo .title {
-    float: right;
 }
 
 #north-right-nav {
     height: 38px;
     line-height: 38px;
-}
-
-.panel-body,
-.l-btn-text,
-.textbox .textbox-prompt,
-.textbox .textbox-text
-{
-    font-size: 12px;
 }

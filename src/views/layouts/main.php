@@ -16,21 +16,23 @@ YiiEasyUIAsset::register($this);
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
-    <head>
-        <meta charset="<?= Yii::$app->charset ?>">
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
-        <?= Html::csrfMetaTags() ?>
-        <title>Loading...</title>
-        <link rel="shortcut icon" href="<?php echo $this->params['favico'] ?>">
-        <?php $this->head() ?>
-    </head>
-    <body>
-        <div class="main-mask overlay"></div>
-        <div class="panel-body panel-loading main-mask loader">Processing, please wait ...</div>
-        <div id="global-error"></div>
-        <?php $this->beginBody() ?>
-        <?php $this->endBody() ?>
-    </body>
+
+<head>
+    <meta charset="<?= Yii::$app->charset ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+    <?= Html::csrfMetaTags() ?>
+    <title>Loading...</title>
+    <?php $this->head() ?>
+</head>
+
+<body>
+    <div class="main-mask overlay"></div>
+    <div class="panel-body panel-loading main-mask loader"><?php echo Yii::t('app', 'Please wait ...'); ?></div>
+    <div id="global-error"></div>
+    <?php $this->beginBody() ?>
+    <?php $this->endBody() ?>
+</body>
+
 </html>
 
 <?php
@@ -77,8 +79,11 @@ $navItemJson = Json::encode($navItem);
 $tabOptions = isset($this->params['tabOptions']) ? Json::encode($this->params['tabOptions']) : 0;
 
 $northUserMenu = isset($this->params['northUserMenu']) ? Json::encode($this->params['northUserMenu']) : 0;
-
-$this->registerJs(<<<EOD
+$apiUrl = Yii::$app->urlManagerApi->createAbsoluteUrl('', true);
+$backendUrl = isset(Yii::$app->urlManagerBackend) ? Yii::$app->urlManagerBackend->createAbsoluteUrl('', true) : '';
+$frontendUrl = Yii::$app->urlManager->createAbsoluteUrl('', true);
+$this->registerJs(
+    <<<JS
     yii.easyui.username = '{$this->params['userName']}';
     yii.easyui.getReferenceUrl = '{$this->params['getReferenceUrl']}';
     yii.easyui.homeUrl = '{$this->params['homeUrl']}';
@@ -96,8 +101,11 @@ $this->registerJs(<<<EOD
     yii.easyui.tabOptions = {$tabOptions};
     //yii.easyui.showMainMask();
     yii.easyui.northUserMenu = {$northUserMenu};
+    yii.easyui.setHost('api', '{$apiUrl}');
+    yii.easyui.setHost('backend', '{$backendUrl}');
+    yii.easyui.setHost('frontend', '{$frontendUrl}');
     yii.easyui.init();
-EOD
+JS
 );
 
 $this->endPage();
