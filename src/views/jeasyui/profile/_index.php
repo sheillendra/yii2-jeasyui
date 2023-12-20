@@ -1,15 +1,17 @@
 <?php
 /* @var $this yii\web\View */
+
+use yii\helpers\Url;
+use sheillendra\jeasyui\assets\ProfileAsset;
+
+ProfileAsset::register($this);
 ?>
-
-<div id="setting-general-index">
-    This is dashboard page, change file at path <?= __FILE__ ?> for customize
-</div>
-
+<div id="profile-index" style="min-width: 1154px"></div>
 <?php
 $this->registerJs(<<<JS
-    yii.easyui.hideMainMask();
+    yii.easyui.tabInit = function(){
+        yii.profile.init();
+        yii.easyui.hideMainMask();
+    };
 JS
         , $this::POS_END);
-
-//SiteIndexAsset::register($this);

@@ -1,15 +1,17 @@
 <?php
 
-namespace apidas\modules\v1\components\rest;
+namespace sheillendra\jeasyui\components\rest;
 
-class ActiveController extends \yii\rest\ActiveController {
+use yii\filters\ContentNegotiator;
+use yii\web\Response;
 
-    public $serializer = [
-        'class' => 'yii\rest\Serializer',
-        'collectionEnvelope' => 'rows'
-    ];
+class ActiveController extends \yii\rest\ActiveController
+{
 
-    public function behaviors() {
+    public $allowRoles = '@';
+    public $searchModelClass;
+    public function behaviors()
+    {
 
         return array_merge(parent::behaviors(), [
             'authenticator' => [
@@ -20,19 +22,37 @@ class ActiveController extends \yii\rest\ActiveController {
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['@'],
+                        'roles' => [$this->allowRoles],
                     ],
                 ]
             ],
-            'corsFilter' => \yii\filters\Cors::class
+            'corsFilter' => \yii\filters\Cors::class,
+            'contentNegotiator' => [
+                'class' => ContentNegotiator::class,
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
+                ],
+            ],
         ]);
     }
 
-    protected function verbs() {
+    protected function verbs()
+    {
         $verbs = parent::verbs();
         $verbs['update'][] = 'POST';
         $verbs['delete'][] = 'POST';
         return $verbs;
     }
 
+    public function actions()
+    {
+        $actions = parent::actions();
+        $actions['index']['prepareDataProvider'] = [$this, 'prepareDataProvider'];
+        return $actions;
+    }
+
+    public function prepareDataProvider() {
+        $searchModel = new $this->searchModelClass();
+        return $searchModel->search(\Yii::$app->request->queryParams);
+    }
 }

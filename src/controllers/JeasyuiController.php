@@ -8,16 +8,19 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\helpers\Json;
 use sheillendra\jeasyui\models\LoginForm;
+use sheillendra\jeasyui\models\ChangePasswordForm;
 
 /**
  * Site controller
  */
-class JeasyuiController extends Controller {
+class JeasyuiController extends Controller
+{
 
     /**
      * @inheritdoc
      */
-    public function behaviors() {
+    public function behaviors()
+    {
         return [
             'access' => [
                 'class' => AccessControl::className(),
@@ -29,7 +32,7 @@ class JeasyuiController extends Controller {
                     [
                         'actions' => [
                             'logout', 'index', 'setting', 'setting-rbac',
-                            'setting-user', 'profile'
+                            'setting-user', 'profile', 'change-password'
                         ],
                         'allow' => true,
                         'roles' => ['@'],
@@ -48,7 +51,8 @@ class JeasyuiController extends Controller {
     /**
      * @inheritdoc
      */
-    public function actions() {
+    public function actions()
+    {
         return [
             'error' => [
                 'class' => 'yii\web\ErrorAction',
@@ -61,7 +65,8 @@ class JeasyuiController extends Controller {
      *
      * @return string
      */
-    public function actionIndex() {
+    public function actionIndex()
+    {
         return $this->render('index/index');
     }
 
@@ -70,13 +75,14 @@ class JeasyuiController extends Controller {
      *
      * @return string
      */
-    public function actionLogin() {
+    public function actionLogin()
+    {
         $req = Yii::$app->getRequest();
         if (!Yii::$app->user->isGuest) {
             if ($req->isAjax) {
                 echo Json::encode(['redirect' => Yii::$app->getHomeUrl()]);
                 return Yii::$app->end();
-            }else{
+            } else {
                 return $this->redirect(['/']);
             }
         }
@@ -105,23 +111,24 @@ class JeasyuiController extends Controller {
      *
      * @return string
      */
-    public function actionSignup() {
-//        if (!Yii::$app->user->isGuest) {
-//            echo Json::encode(['redirect' => Yii::$app->getHomeUrl()]);
-//            return Yii::$app->end();
-//        }
-//
-//        $model = new SignupForm();
-//        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-//            echo Json::encode(['redirect' => Yii::$app->getUser()->getReturnUrl()]);
-//        } else {
-//            if ($model->hasErrors()) {
-//                echo Json::encode(['loginerror' => $model->getErrors()]);
-//            } else {
-//                return $this->render('signup', ['model' => $model]);
-//            }
-//        }
-//        Yii::$app->end();
+    public function actionSignup()
+    {
+        //        if (!Yii::$app->user->isGuest) {
+        //            echo Json::encode(['redirect' => Yii::$app->getHomeUrl()]);
+        //            return Yii::$app->end();
+        //        }
+        //
+        //        $model = new SignupForm();
+        //        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+        //            echo Json::encode(['redirect' => Yii::$app->getUser()->getReturnUrl()]);
+        //        } else {
+        //            if ($model->hasErrors()) {
+        //                echo Json::encode(['loginerror' => $model->getErrors()]);
+        //            } else {
+        //                return $this->render('signup', ['model' => $model]);
+        //            }
+        //        }
+        //        Yii::$app->end();
     }
 
     /**
@@ -129,23 +136,49 @@ class JeasyuiController extends Controller {
      *
      * @return string
      */
-    public function actionForgotPassword() {
-//        if (!Yii::$app->user->isGuest) {
-//            echo Json::encode(['redirect' => Yii::$app->getHomeUrl()]);
-//            return Yii::$app->end();
-//        }
-//
-//        $model = new LoginForm();
-//        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-//            echo Json::encode(['redirect' => Yii::$app->getUser()->getReturnUrl()]);
-//        } else {
-//            if ($model->hasErrors()) {
-//                echo Json::encode(['loginerror' => $model->getErrors()]);
-//            } else {
-//                return $this->render('signup', ['model' => $model]);
-//            }
-//        }
-//        Yii::$app->end();
+    public function actionSignupByAdmin()
+    {
+        //        if (!Yii::$app->user->isGuest) {
+        //            echo Json::encode(['redirect' => Yii::$app->getHomeUrl()]);
+        //            return Yii::$app->end();
+        //        }
+        //
+        //        $model = new SignupForm();
+        //        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+        //            echo Json::encode(['redirect' => Yii::$app->getUser()->getReturnUrl()]);
+        //        } else {
+        //            if ($model->hasErrors()) {
+        //                echo Json::encode(['loginerror' => $model->getErrors()]);
+        //            } else {
+        //                return $this->render('signup', ['model' => $model]);
+        //            }
+        //        }
+        //        Yii::$app->end();
+    }
+
+    /**
+     * Signup action.
+     *
+     * @return string
+     */
+    public function actionForgotPassword()
+    {
+        //        if (!Yii::$app->user->isGuest) {
+        //            echo Json::encode(['redirect' => Yii::$app->getHomeUrl()]);
+        //            return Yii::$app->end();
+        //        }
+        //
+        //        $model = new LoginForm();
+        //        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+        //            echo Json::encode(['redirect' => Yii::$app->getUser()->getReturnUrl()]);
+        //        } else {
+        //            if ($model->hasErrors()) {
+        //                echo Json::encode(['loginerror' => $model->getErrors()]);
+        //            } else {
+        //                return $this->render('signup', ['model' => $model]);
+        //            }
+        //        }
+        //        Yii::$app->end();
     }
 
     /**
@@ -153,26 +186,48 @@ class JeasyuiController extends Controller {
      *
      * @return string
      */
-    public function actionLogout() {
+    public function actionLogout()
+    {
         $this->enableCsrfValidation = false;
         Yii::$app->user->logout();
         return $this->redirect(Yii::$app->user->loginUrl);
     }
 
-    public function actionSetting() {
+    public function actionSetting()
+    {
         return $this->render('setting/index');
     }
 
-    public function actionSettingRbac() {
+    public function actionSettingRbac()
+    {
         return $this->render('setting-rbac/index');
     }
 
-    public function actionSettingUser() {
+    public function actionSettingUser()
+    {
         return $this->render('setting-user/index');
     }
 
-    public function actionProfile() {
+    public function actionProfile()
+    {
+
         return $this->render('profile/index');
     }
 
+    public function actionChangePassword()
+    {
+        $result = [
+            'success' => false,
+            'message' => '',
+        ];
+        $model = new ChangePasswordForm();
+        if ($model->load(Yii::$app->request->post(), '') && $model->change()) {
+            Yii::$app->user->logout();
+            $result['success'] = true;
+        } else {
+            $result['message'] = implode(', ', $model->getFirstErrors());
+        }
+        echo Json::encode($result);
+        return Yii::$app->end();
+    }
 }

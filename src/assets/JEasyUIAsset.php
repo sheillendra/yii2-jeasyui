@@ -4,8 +4,10 @@
  * Implement jQuery EasyUI v.1.4 GPL Edition on Yii2
  * since    : v.0.0.1
  * author   : sheillendra
+ * email    : suryana869@gmail.com
+ * contact  : +6281242126699 (whatsapp, viber)
  * date     : 2014-10-04
- * website  : www.anjani.co.id
+ * website  : https://esppd.fly.dev/
  */
 
 namespace sheillendra\jeasyui\assets;
@@ -13,8 +15,9 @@ namespace sheillendra\jeasyui\assets;
 use Yii;
 use yii\web\AssetBundle;
 
-class JEasyUIAsset extends AssetBundle {
-    public $sourcePath = '@sheillendra/jeasyui/assets/jquery-easyui-1.10.15';
+class JEasyUIAsset extends AssetBundle
+{
+    public $sourcePath = '@sheillendra/jeasyui/assets/jquery-easyui-1.10.18';
     public $css = [
         'themes/default/easyui.css',
         'themes/icon.css',
@@ -35,12 +38,18 @@ class JEasyUIAsset extends AssetBundle {
         ]
     ];
 
-    public function init() {
+    public function init()
+    {
         $themeCookies = filter_input(INPUT_COOKIE, 'jeasyui-theme');
-        $themes = ['black', 'bootstrap', 'default', 'gray', 'material', 'metro',
-            //'metro-blue', 'metro-gray', 'metro-green', 'metro-orange', 'metro-red',
-            //'ui-cupertino', 'ui-dark-hive', 'ui-pepper-grinder','ui-sunny'
-            'material-blue', 'material-teal'
+        $themes = [
+            'black',
+            'bootstrap',
+            'default',
+            'gray',
+            'material',
+            'material-blue',
+            'material-teal',
+            'metro',
         ];
         if ($themeCookies && in_array($themeCookies, $themes)) {
             $this->css[0] = "themes/$themeCookies/easyui.css";
@@ -49,5 +58,4 @@ class JEasyUIAsset extends AssetBundle {
         }
         parent::init();
     }
-
 }

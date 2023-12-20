@@ -1,11 +1,13 @@
 <?php
 
 /**
- * Implement jQuery EasyUI GPL Edition on Yii2
- * since    : v.0.0.2
+ * Implement jQuery EasyUI v.1.4 GPL Edition on Yii2
+ * since    : v.0.0.1
  * author   : sheillendra
- * date     : 2017-05-28
- * website  : www.anjani.co.id
+ * email    : suryana869@gmail.com
+ * contact  : +6281242126699 (whatsapp, viber)
+ * date     : 2014-10-04
+ * website  : https://esppd.fly.dev/
  */
 
 namespace sheillendra\jeasyui\assets;

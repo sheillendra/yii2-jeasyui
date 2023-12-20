@@ -12,118 +12,29 @@ use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\helpers\StringHelper;
 
-class Generator extends \yii\gii\Generator
+class Generator extends \yii\gii\generators\crud\Generator
 {
-    public $modelClass;
-    public $controllerClass;
-    public $viewPath;
-    public $baseControllerClass = 'yii\web\Controller';
-    public $indexWidgetType = 'grid';
-    public $searchModelClass = '';
-    
+    public $appName = 'backend';
+    public $apiName = 'api\modules\v1';
+    public $controllerClass = 'backend\controllers\SiteController';
+    public $apiControllerClass = 'api\modules\v1\controllers\SiteController';
+    public $apiJeasyUIControllerClass = 'api\modules\v1\modules\jeasyui\controllers\SiteController';
+    public $jeasyUiSearchModelClass = 'api\modules\v1\modules\jeasyui\models\ModelSearch';
+
     public function getName()
     {
         return 'jEasyUI CRUD Generator';
     }
-    
+
     /**
-     * @inheritdoc
-     */
-    public function getDescription()
-    {
-        return 'This jEasyUI generator generates a controller and views that implement CRUD (Create, Read, Update, Delete)
-            operations for the specified data model.';
-    }
-    
-    /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['controllerClass', 'modelClass', 'searchModelClass', 'baseControllerClass'], 'filter', 'filter' => 'trim'],
-            [['modelClass', 'controllerClass', 'baseControllerClass', 'indexWidgetType'], 'required'],
-            [['searchModelClass'], 'compare', 'compareAttribute' => 'modelClass', 'operator' => '!==', 'message' => 'Search Model Class must not be equal to Model Class.'],
-            [['modelClass', 'controllerClass', 'baseControllerClass', 'searchModelClass'], 'match', 'pattern' => '/^[\w\\\\]*$/', 'message' => 'Only word characters and backslashes are allowed.'],
-            [['modelClass'], 'validateClass', 'params' => ['extends' => BaseActiveRecord::className()]],
-            [['baseControllerClass'], 'validateClass', 'params' => ['extends' => Controller::className()]],
-            [['controllerClass'], 'match', 'pattern' => '/Controller$/', 'message' => 'Controller class name must be suffixed with "Controller".'],
-            [['controllerClass'], 'match', 'pattern' => '/(^|\\\\)[A-Z][^\\\\]+Controller$/', 'message' => 'Controller class name must start with an uppercase letter.'],
-            [['controllerClass', 'searchModelClass'], 'validateNewClass'],
-            [['indexWidgetType'], 'in', 'range' => ['grid', 'list']],
-            [['modelClass'], 'validateModelClass'],
-            [['enableI18N'], 'boolean'],
-            [['messageCategory'], 'validateMessageCategory', 'skipOnEmpty' => false],
-            ['viewPath', 'safe'],
+            [['modelClass', 'appName', 'apiName'], 'required'],
+            [['controllerClass', 'modelClass', 'appName', 'apiName', 'searchModelClass', 'baseControllerClass'], 'trim', 'chars' => '\ '],
         ]);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return array_merge(parent::attributeLabels(), [
-            'modelClass' => 'Model Class',
-            'controllerClass' => 'Controller Class',
-            'viewPath' => 'View Path',
-            'baseControllerClass' => 'Base Controller Class',
-            'indexWidgetType' => 'Widget Used in Index Page',
-            'searchModelClass' => 'Search Model Class',
-        ]);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function hints()
-    {
-        return array_merge(parent::hints(), [
-            'modelClass' => 'This is the ActiveRecord class associated with the table that CRUD will be built upon.
-                You should provide a fully qualified class name, e.g., <code>app\models\Post</code>.',
-            'controllerClass' => 'This is the name of the controller class to be generated. You should
-                provide a fully qualified namespaced class (e.g. <code>app\controllers\PostController</code>),
-                and class name should be in CamelCase with an uppercase first letter. Make sure the class
-                is using the same namespace as specified by your application\'s controllerNamespace property.',
-            'viewPath' => 'Specify the directory for storing the view scripts for the controller. You may use path alias here, e.g.,
-                <code>/var/www/basic/controllers/views/post</code>, <code>@app/views/post</code>. If not set, it will default
-                to <code>@app/views/ControllerID</code>',
-            'baseControllerClass' => 'This is the class that the new CRUD controller class will extend from.
-                You should provide a fully qualified class name, e.g., <code>yii\web\Controller</code>.',
-            'indexWidgetType' => 'This is the widget type to be used in the index page to display list of the models.
-                You may choose either <code>GridView</code> or <code>ListView</code>',
-            'searchModelClass' => 'This is the name of the search model class to be generated. You should provide a fully
-                qualified namespaced class name, e.g., <code>app\models\PostSearch</code>.',
-        ]);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function requiredTemplates()
-    {
-        return ['controller.php'];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function stickyAttributes()
-    {
-        return array_merge(parent::stickyAttributes(), ['baseControllerClass', 'indexWidgetType']);
-    }
-
-    /**
-     * Checks if model class is valid
-     */
-    public function validateModelClass()
-    {
-        /* @var $class ActiveRecord */
-        $class = $this->modelClass;
-        $pk = $class::primaryKey();
-        if (empty($pk)) {
-            $this->addError('modelClass', "The table associated with $class must have primary key(s).");
-        }
     }
 
     /**
@@ -131,19 +42,35 @@ class Generator extends \yii\gii\Generator
      */
     public function generate()
     {
+        $modelClassName = StringHelper::basename($this->modelClass);
+
+        $baseControllerName = substr($modelClassName, 0, -3) . 'Controller';
+        $baseSearchModelName = substr($modelClassName, 0, -3) . 'Search';
+
+        $this->controllerClass = $this->appName . '\controllers\\' . $baseControllerName;
         $controllerFile = Yii::getAlias('@' . str_replace('\\', '/', ltrim($this->controllerClass, '\\')) . '.php');
 
         $files = [
             new CodeFile($controllerFile, $this->render('controller.php')),
         ];
 
-        /*if (!empty($this->searchModelClass)) {
-            $searchModel = Yii::getAlias('@' . str_replace('\\', '/', ltrim($this->searchModelClass, '\\') . '.php'));
-            $files[] = new CodeFile($searchModel, $this->render('search.php'));
-        }
-         
-         */
+        $this->apiControllerClass = $this->apiName . '\controllers\\' . $baseControllerName;
+        $controllerApiFile = Yii::getAlias('@' . str_replace('\\', '/', ltrim($this->apiControllerClass, '\\')) . '.php');
 
+        $files[] = new CodeFile($controllerApiFile, $this->render('controller-api.php'));
+
+        $controllerApiFile = Yii::getAlias('@' . str_replace('\\', '/', ltrim($this->apiName . '\modules\jeasyui\\'. $baseControllerName, '\\')) . '.php');
+        $files[] = new CodeFile($controllerApiFile, $this->render('controller-api-jeasyui.php'));
+
+        $this->searchModelClass = $this->apiName . '\models\\'. $baseSearchModelName;
+        $searchModel = Yii::getAlias('@' . str_replace('\\', '/', ltrim($this->searchModelClass, '\\') . '.php'));
+        $files[] = new CodeFile($searchModel, $this->render('search.php'));
+
+        $this->jeasyUiSearchModelClass = $this->apiName . '\modules\jeasyui\models\\'. $baseSearchModelName;
+        $jeasyUiSearchModel = Yii::getAlias('@' . str_replace('\\', '/', ltrim($this->jeasyUiSearchModelClass, '\\') . '.php'));
+        $files[] = new CodeFile($jeasyUiSearchModel, $this->render('search-jeasyui.php'));
+
+        $this->viewPath = '@' . $this->appName . '/themes/jeasyui/views/' . Inflector::camel2id(str_replace('Controller', '',$baseControllerName));
         $viewPath = $this->getViewPath();
         $templatePath = $this->getTemplatePath() . '/views';
         foreach (scandir($templatePath) as $file) {
@@ -155,458 +82,103 @@ class Generator extends \yii\gii\Generator
             }
         }
 
-        
+        return $files;
+
         $assetsPath = Yii::getAlias('@app/assets');
         $assetsTemplatePath = $this->getTemplatePath() . '/assets';
-        
-        
-        $modelClassName = StringHelper::basename($this->modelClass);
+
         $idModelClassName = Inflector::camel2id($modelClassName);
         $varModelClassName = Inflector::variablize($modelClassName);
-        
+
         foreach (scandir($assetsTemplatePath) as $file) {
             if (is_file($assetsTemplatePath . '/' . $file) && pathinfo($file, PATHINFO_EXTENSION) === 'php') {
                 $files[] = new CodeFile("$assetsPath/{$modelClassName}$file", $this->render("assets/$file"));
             }
         }
-        
+
         $cssPath = $this->getTemplatePath() . '/views/assets/css';
         foreach (scandir($cssPath) as $file) {
             if (is_file($cssPath . '/' . $file) && pathinfo($file, PATHINFO_EXTENSION) === 'php') {
-                $file_path_as = str_replace('.php', '.css',$file);
+                $file_path_as = str_replace('.php', '.css', $file);
                 $files[] = new CodeFile("$viewPath/assets/css/{$idModelClassName}$file_path_as", $this->render("views/assets/css/$file"));
             }
         }
-        
+
         $jsPath = $this->getTemplatePath() . '/views/assets/js';
         foreach (scandir($jsPath) as $file) {
             if (is_file($jsPath . '/' . $file) && pathinfo($file, PATHINFO_EXTENSION) === 'php') {
-                $file_path_as = str_replace('.php', '.js',$file);
+                $file_path_as = str_replace('.php', '.js', $file);
                 $files[] = new CodeFile("$viewPath/assets/js/{$idModelClassName}$file_path_as", $this->render("views/assets/js/$file"));
             }
         }
-        
+
         $layoutsPath = Yii::getAlias('@app/views/layouts');
         $layoutsTemplatePath = $this->getTemplatePath() . '/views/layouts';
-        
-        if(file_exists("$layoutsPath/_nav-item.php")){
-            require ("$layoutsPath/_nav-item.php");
+
+        if (file_exists("$layoutsPath/_nav-item.php")) {
+            require("$layoutsPath/_nav-item.php");
             $oldFileAsText = file_get_contents("$layoutsPath/_nav-item.php");
-        }  else {
+        } else {
             foreach (scandir($layoutsTemplatePath) as $file) {
-                if (is_file($layoutsTemplatePath . '/' . $file) && 
-                        pathinfo($file, PATHINFO_EXTENSION) === 'php' &&
-                        $file!=='_nav-item.php' &&
-                        $file!=='_nav-item-def.php' ) {
+                if (
+                    is_file($layoutsTemplatePath . '/' . $file) &&
+                    pathinfo($file, PATHINFO_EXTENSION) === 'php' &&
+                    $file !== '_nav-item.php' &&
+                    $file !== '_nav-item-def.php'
+                ) {
                     $files[] = new CodeFile("$layoutsPath/$file", $this->render("views/layouts/$file"));
                 }
             }
-            require ("$layoutsTemplatePath/_nav-item-def.php");
+            require("$layoutsTemplatePath/_nav-item-def.php");
             $oldFileAsText = file_get_contents("$layoutsTemplatePath/_nav-item-def.php");
-            
+
             $webPath = Yii::getAlias('@app/web');
-            $files[] = new CodeFile("$webPath/js/app.js",$this->render("app.js"));
-            $files[] = new CodeFile("$webPath/css/site.css",$this->render("site.css"));
-            
+            $files[] = new CodeFile("$webPath/js/app.js", $this->render("app.js"));
+            $files[] = new CodeFile("$webPath/css/site.css", $this->render("site.css"));
+
             $controllersPath = Yii::getAlias('@app/controllers');
-            $files[] = new CodeFile("$controllersPath/SiteController.php",$this->render("SiteController.php"));
-            
+            $files[] = new CodeFile("$controllersPath/SiteController.php", $this->render("SiteController.php"));
+
             $sitePath = Yii::getAlias('@app/views/site');
             $siteTemplatePath = $this->getTemplatePath() . '/views/site';
             foreach (scandir($siteTemplatePath) as $file) {
-                if (is_file($siteTemplatePath . '/' . $file)){
+                if (is_file($siteTemplatePath . '/' . $file)) {
                     $files[] = new CodeFile("$sitePath/$file", $this->render("views/site/$file"));
                 }
             }
-            
-            foreach (scandir($siteTemplatePath.'/assets') as $file) {
-                if (is_file($siteTemplatePath . '/assets/' . $file)){
+
+            foreach (scandir($siteTemplatePath . '/assets') as $file) {
+                if (is_file($siteTemplatePath . '/assets/' . $file)) {
                     $files[] = new CodeFile("$sitePath/assets/$file", $this->render("views/site/assets/$file"));
                 }
             }
-            
-            foreach (scandir($siteTemplatePath.'/assets/css') as $file) {
-                if (is_file($siteTemplatePath . '/assets/css/' . $file)){
+
+            foreach (scandir($siteTemplatePath . '/assets/css') as $file) {
+                if (is_file($siteTemplatePath . '/assets/css/' . $file)) {
                     $files[] = new CodeFile("$sitePath/assets/css/$file", $this->render("views/site/assets/css/$file"));
                 }
             }
-            
-            foreach (scandir($siteTemplatePath.'/assets/js') as $file) {
-                if (is_file($siteTemplatePath . '/assets/js/' . $file)){
+
+            foreach (scandir($siteTemplatePath . '/assets/js') as $file) {
+                if (is_file($siteTemplatePath . '/assets/js/' . $file)) {
                     $files[] = new CodeFile("$sitePath/assets/js/$file", $this->render("views/site/assets/js/$file"));
                 }
             }
-            
-            $files[] = new CodeFile("$assetsPath/AppAsset.php",$this->render("AppAsset.php"));
-            
+
+            $files[] = new CodeFile("$assetsPath/AppAsset.php", $this->render("AppAsset.php"));
+
             $componentsPath = Yii::getAlias('@app/components');
-            $files[] = new CodeFile("$componentsPath/helpers/Regex.php",$this->render("Regex.php"));
+            $files[] = new CodeFile("$componentsPath/helpers/Regex.php", $this->render("Regex.php"));
         }
-        
+
         $files[] = new CodeFile(
-            "$layoutsPath/_nav-item.php", 
-            $this->render("views/layouts/_nav-item.php",[
-                'navItemUrl'=>$navItemUrl,
-                'navItem'=>$navItem,
-                'oldFileAsText'=>$oldFileAsText
+            "$layoutsPath/_nav-item.php",
+            $this->render("views/layouts/_nav-item.php", [
+                'navItemUrl' => $navItemUrl,
+                'navItem' => $navItem,
+                'oldFileAsText' => $oldFileAsText
             ])
         );
         return $files;
-    }
-
-    /**
-     * @return string the controller ID (without the module ID prefix)
-     */
-    public function getControllerID()
-    {
-        $pos = strrpos($this->controllerClass, '\\');
-        $class = substr(substr($this->controllerClass, $pos + 1), 0, -10);
-
-        return Inflector::camel2id($class);
-    }
-
-    /**
-     * @return string the controller view path
-     */
-    public function getViewPath()
-    {
-        if (empty($this->viewPath)) {
-            return Yii::getAlias('@app/views/' . $this->getControllerID());
-        } else {
-            return Yii::getAlias($this->viewPath);
-        }
-    }
-
-    public function getNameAttribute()
-    {
-        foreach ($this->getColumnNames() as $name) {
-            if (!strcasecmp($name, 'name') || !strcasecmp($name, 'title')) {
-                return $name;
-            }
-        }
-        /* @var $class \yii\db\ActiveRecord */
-        $class = $this->modelClass;
-        $pk = $class::primaryKey();
-
-        return $pk[0];
-    }
-
-    /**
-     * Generates code for active field
-     * @param string $attribute
-     * @return string
-     */
-    public function generateField($attribute)
-    {
-        $tableSchema = $this->getTableSchema();
-        if ($tableSchema === false || !isset($tableSchema->columns[$attribute])) {
-            if (preg_match('/^(password|pass|passwd|passcode)$/i', $attribute)) {
-                return "\Html::activePasswordInput(\$model, '$attribute')";
-            } else {
-                return "\Html::activeTextInput(\$model, '$attribute')";
-            }
-        }
-        $column = $tableSchema->columns[$attribute];
-        $require = $column->allowNull?'false':'true';
-        $size = $column->size?$column->size:0;
-        $size = $size > 200?200:$size;
-        if ($column->phpType === 'boolean') {
-            return "\Html::activeCheckbox(\$model, '$attribute')";
-        } elseif ($column->type === 'text') {
-            return "Html::activeTextarea(\$model, '$attribute',['class' => 'easyui-textbox','data-options'=>'multiline:true,required:$require','style'=>'width:300px;height:100px'])";
-        } elseif ($column->type === 'date') {
-            return "Html::activeTextInput(\$model, '$attribute',['class' =>'easyui-datebox','data-options'=>'required:$require'])";
-        } elseif ($column->type === 'datetime') {
-            return "Html::activeTextInput(\$model, '$attribute',['class' =>'easyui-datetimebox','data-options'=>'required:$require'])";
-        } elseif ($column->type === 'double'|| $column->type === 'integer') {
-            return "Html::activeTextInput(\$model, '$attribute',['class' =>'easyui-numberbox','data-options'=>'required:$require'])";
-        } else {
-            return "Html::activeTextInput(\$model, '$attribute',['class' =>'easyui-textbox','data-options'=>'required:$require','size'=>$size])";
-        }
-    }
-
-    /**
-     * Generates code for active search field
-     * @param string $attribute
-     * @return string
-     */
-    public function generateActiveSearchField($attribute)
-    {
-        $tableSchema = $this->getTableSchema();
-        if ($tableSchema === false) {
-            return "\$form->field(\$model, '$attribute')";
-        }
-        $column = $tableSchema->columns[$attribute];
-        if ($column->phpType === 'boolean') {
-            return "\$form->field(\$model, '$attribute')->checkbox()";
-        } else {
-            return "\$form->field(\$model, '$attribute')";
-        }
-    }
-
-    /**
-     * Generates column format
-     * @param \yii\db\ColumnSchema $column
-     * @return string
-     */
-    public function generateColumnFormat($column)
-    {
-        if ($column->phpType === 'boolean') {
-            return 'boolean';
-        } elseif ($column->type === 'text') {
-            return 'ntext';
-        } elseif (stripos($column->name, 'time') !== false && $column->phpType === 'integer') {
-            return 'datetime';
-        } elseif (stripos($column->name, 'email') !== false) {
-            return 'email';
-        } elseif (stripos($column->name, 'url') !== false) {
-            return 'url';
-        } else {
-            return 'text';
-        }
-    }
-
-    /**
-     * Generates validation rules for the search model.
-     * @return array the generated validation rules
-     */
-    public function generateSearchRules()
-    {
-        if (($table = $this->getTableSchema()) === false) {
-            return ["[['" . implode("', '", $this->getColumnNames()) . "'], 'safe']"];
-        }
-        $types = [];
-        foreach ($table->columns as $column) {
-            switch ($column->type) {
-                case Schema::TYPE_SMALLINT:
-                case Schema::TYPE_INTEGER:
-                case Schema::TYPE_BIGINT:
-                    $types['integer'][] = $column->name;
-                    break;
-                case Schema::TYPE_BOOLEAN:
-                    $types['boolean'][] = $column->name;
-                    break;
-                case Schema::TYPE_FLOAT:
-                case Schema::TYPE_DOUBLE:
-                case Schema::TYPE_DECIMAL:
-                case Schema::TYPE_MONEY:
-                    $types['number'][] = $column->name;
-                    break;
-                case Schema::TYPE_DATE:
-                case Schema::TYPE_TIME:
-                case Schema::TYPE_DATETIME:
-                case Schema::TYPE_TIMESTAMP:
-                default:
-                    $types['safe'][] = $column->name;
-                    break;
-            }
-        }
-
-        $rules = [];
-        foreach ($types as $type => $columns) {
-            $rules[] = "[['" . implode("', '", $columns) . "'], '$type']";
-        }
-
-        return $rules;
-    }
-
-    /**
-     * @return array searchable attributes
-     */
-    public function getSearchAttributes()
-    {
-        return $this->getColumnNames();
-    }
-
-    /**
-     * Generates the attribute labels for the search model.
-     * @return array the generated attribute labels (name => label)
-     */
-    public function generateLabels()
-    {
-        /* @var $model \yii\base\Model */
-        $model = new $this->modelClass();
-        $attributeLabels = $model->attributeLabels();
-        $labels = [];
-        foreach ($this->getColumnNames() as $name) {
-            if (isset($attributeLabels[$name])) {
-                $labels[$name] = $attributeLabels[$name];
-            } else {
-                if (!strcasecmp($name, 'id')) {
-                    $labels[$name] = 'ID';
-                } else {
-                    $label = Inflector::camel2words($name);
-                    if (!empty($label) && substr_compare($label, ' id', -3, 3, true) === 0) {
-                        $label = substr($label, 0, -3) . ' ID';
-                    }
-                    $labels[$name] = $label;
-                }
-            }
-        }
-
-        return $labels;
-    }
-
-    /**
-     * Generates search conditions
-     * @return array
-     */
-    public function generateSearchConditions()
-    {
-        $columns = [];
-        if (($table = $this->getTableSchema()) === false) {
-            $class = $this->modelClass;
-            /* @var $model \yii\base\Model */
-            $model = new $class();
-            foreach ($model->attributes() as $attribute) {
-                $columns[$attribute] = 'unknown';
-            }
-        } else {
-            foreach ($table->columns as $column) {
-                $columns[$column->name] = $column->type;
-            }
-        }
-
-        $likeConditions = [];
-        $hashConditions = [];
-        foreach ($columns as $column => $type) {
-            switch ($type) {
-                case Schema::TYPE_SMALLINT:
-                case Schema::TYPE_INTEGER:
-                case Schema::TYPE_BIGINT:
-                case Schema::TYPE_BOOLEAN:
-                case Schema::TYPE_FLOAT:
-                case Schema::TYPE_DOUBLE:
-                case Schema::TYPE_DECIMAL:
-                case Schema::TYPE_MONEY:
-                case Schema::TYPE_DATE:
-                case Schema::TYPE_TIME:
-                case Schema::TYPE_DATETIME:
-                case Schema::TYPE_TIMESTAMP:
-                    $hashConditions[] = "'{$column}' => \$this->{$column},";
-                    break;
-                default:
-                    $likeConditions[] = "->andFilterWhere(['like', '{$column}', \$this->{$column}])";
-                    break;
-            }
-        }
-
-        $conditions = [];
-        if (!empty($hashConditions)) {
-            $conditions[] = "\$query->andFilterWhere([\n"
-                . str_repeat(' ', 12) . implode("\n" . str_repeat(' ', 12), $hashConditions)
-                . "\n" . str_repeat(' ', 8) . "]);\n";
-        }
-        if (!empty($likeConditions)) {
-            $conditions[] = "\$query" . implode("\n" . str_repeat(' ', 12), $likeConditions) . ";\n";
-        }
-
-        return $conditions;
-    }
-
-    /**
-     * Generates URL parameters
-     * @return string
-     */
-    public function generateUrlParams()
-    {
-        /* @var $class ActiveRecord */
-        $class = $this->modelClass;
-        $pks = $class::primaryKey();
-        if (count($pks) === 1) {
-            if (is_subclass_of($class, 'yii\mongodb\ActiveRecord')) {
-                return "'id' => (string)\$model->{$pks[0]}";
-            } else {
-                return "'id' => \$model->{$pks[0]}";
-            }
-        } else {
-            $params = [];
-            foreach ($pks as $pk) {
-                if (is_subclass_of($class, 'yii\mongodb\ActiveRecord')) {
-                    $params[] = "'$pk' => (string)\$model->$pk";
-                } else {
-                    $params[] = "'$pk' => \$model->$pk";
-                }
-            }
-
-            return implode(', ', $params);
-        }
-    }
-
-    /**
-     * Generates action parameters
-     * @return string
-     */
-    public function generateActionParams()
-    {
-        /* @var $class ActiveRecord */
-        $class = $this->modelClass;
-        $pks = $class::primaryKey();
-        if (count($pks) === 1) {
-            return '$id';
-        } else {
-            return '$' . implode(', $', $pks);
-        }
-    }
-
-    /**
-     * Generates parameter tags for phpdoc
-     * @return array parameter tags for phpdoc
-     */
-    public function generateActionParamComments()
-    {
-        /* @var $class ActiveRecord */
-        $class = $this->modelClass;
-        $pks = $class::primaryKey();
-        if (($table = $this->getTableSchema()) === false) {
-            $params = [];
-            foreach ($pks as $pk) {
-                $params[] = '@param ' . (substr(strtolower($pk), -2) == 'id' ? 'integer' : 'string') . ' $' . $pk;
-            }
-
-            return $params;
-        }
-        if (count($pks) === 1) {
-            return ['@param ' . $table->columns[$pks[0]]->phpType . ' $id'];
-        } else {
-            $params = [];
-            foreach ($pks as $pk) {
-                $params[] = '@param ' . $table->columns[$pk]->phpType . ' $' . $pk;
-            }
-
-            return $params;
-        }
-    }
-
-    /**
-     * Returns table schema for current model class or false if it is not an active record
-     * @return boolean|\yii\db\TableSchema
-     */
-    public function getTableSchema()
-    {
-        /* @var $class ActiveRecord */
-        $class = $this->modelClass;
-        if (is_subclass_of($class, 'yii\db\ActiveRecord')) {
-            return $class::getTableSchema();
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * @return array model column names
-     */
-    public function getColumnNames()
-    {
-        /* @var $class ActiveRecord */
-        $class = $this->modelClass;
-        if (is_subclass_of($class, 'yii\db\ActiveRecord')) {
-            return $class::getTableSchema()->getColumnNames();
-        } else {
-            /* @var $model \yii\base\Model */
-            $model = new $class();
-
-            return $model->attributes();
-        }
     }
 }

@@ -26,8 +26,8 @@ YiiEasyUIAsset::register($this);
 </head>
 
 <body>
-    <div class="main-mask overlay"></div>
-    <div class="panel-body panel-loading main-mask loader"><?php echo Yii::t('app', 'Please wait ...'); ?></div>
+    <div id="main-mask-overlay" class="main-mask overlay"></div>
+    <div id="main-mask" class="panel-body panel-loading main-mask loader"><?php echo Yii::t('app', 'Please wait ...'); ?></div>
     <div id="global-error"></div>
     <?php $this->beginBody() ?>
     <?php $this->endBody() ?>
