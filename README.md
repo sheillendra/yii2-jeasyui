@@ -1,5 +1,3 @@
-Warning !!! in master-branch there is some break code.
-
 yii2-jeasyui
 ===============
 
@@ -11,29 +9,23 @@ The preferred way to install this extension is through composer.
 
 Either run
 ```
-php composer.phar require sheillendra/yii2-jeasyui "dev-master"
+php composer.phar require sheillendra/yii2-jeasyui "2.0.1.1"
 ```
 or add
 ```
-"sheillendra/yii2-jeasyui": "dev-master"
+"sheillendra/yii2-jeasyui": "2.0.1.1"
 ```
 to the require section of your composer.json file.
 
 USAGE
 ---
 
-in bootstrap.php add line :
-```
-Yii::setAlias('@sheillendra/jeasyui', dirname(__DIR__) . '/extensions/sheillendra/yii2-jeasyui/src');
-```
-this test use advanced template, so bootstrap.php place in common/config
-
-
 in config.php change view components like this :
 
 ```
     'bootstrap' => ['log', 'devicedetect'],
     //remove jeasyui controller map if you have understand and want unwatch the default simulation
+    //keep it to use login default
     'controllerMap' => [
         'jeasyui' => 'sheillendra\jeasyui\controllers\JeasyuiController'
     ],
