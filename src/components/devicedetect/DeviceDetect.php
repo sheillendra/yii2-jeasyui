@@ -1,6 +1,6 @@
 <?php
 
-namespace common\components\devicedetect;
+namespace sheillendra\jeasyui\components\devicedetect;
 
 use Yii;
 use Detection\MobileDetect;

@@ -13,7 +13,7 @@ use sheillendra\jeasyui\models\ChangePasswordForm;
 /**
  * Site controller
  */
-class JeasyuiController extends Controller
+class SiteController extends Controller
 {
 
     /**
@@ -100,7 +100,7 @@ class JeasyuiController extends Controller
             if ($model->hasErrors()) {
                 echo Json::encode(['loginerror' => $model->getFirstErrors()]);
             } else {
-                return $this->render('login/login', ['model' => $model]);
+                return $this->render('login', ['model' => $model]);
             }
         }
         return Yii::$app->end();

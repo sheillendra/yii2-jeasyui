@@ -19,8 +19,9 @@ to the require section of your composer.json file.
 
 USAGE
 ---
+In this case used advanced template and backend
 
-in config.php change view components like this :
+Change ```backend/config/main.php``` like this :
 
 ```
     'bootstrap' => ['log', 'devicedetect'],
@@ -56,15 +57,10 @@ in config.php change view components like this :
             ],
         ],
         'devicedetect' => [
-            'class' => 'alexandernst\devicedetect\DeviceDetect'
+            'class' => 'sheillendra\jeasyui\components\devicedetect\DeviceDetect'
         ],
     ]
 ```
-
-In here you can see the default simulation. Recommended for ```backend``` in ```advanced```,
-but if you want implement it in ```basic``` make sure your controller have implement ```AccessControl``` behavior
-for logged user only can access the controller.
-
 
 ## GII
 
