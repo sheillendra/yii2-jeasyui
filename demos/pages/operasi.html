@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+    <meta name="csrf-param" content="_csrf-backend">
+<meta name="csrf-token" content="Uv5r8y996C-o4fdcMBGDDOQP7t1jXRMZBPDXip3vyOp_sx-4Zh_cGsbUuTlRV9lvjX-rjCISUix9gLTe1IGwuQ==">
+    <title>Loading...</title>
+    <link href="../../demos/assets/css/fontawesome.min.css" rel="stylesheet">
+<link href="../../src/assets/jquery-easyui-1.10.19/themes/default/easyui.css" rel="stylesheet">
+<link href="../../src/assets/jquery-easyui-1.10.19/themes/icon.css" rel="stylesheet">
+<link href="../../src/assets/jquery-easyui-1.10.19/themes/color.css" rel="stylesheet">
+<link href="../../src/assets/dist/css/yii.easyui.css" rel="stylesheet">
+<link href="../../src/assets/dist/css/icon.css" rel="stylesheet">
+<link href="../../demos/assets/css/jeasyui/app.css" rel="stylesheet">
+<link href="../../demos/assets/css/jeasyui/operasi.css" rel="stylesheet"></head>
+
+<body>
+    <div class="main-mask overlay"></div>
+    <div class="panel-body panel-loading main-mask loader">Please wait ...</div>
+    <div id="global-error"></div>
+    <script src="../../demos/assets/js/jquery.js"></script>
+    <script src="../../src/assets/jquery-easyui-1.10.19/jquery.easyui.min.js"></script>
+    <script src="../../src/assets/extensions/datagrid-filter/datagrid-filter.js"></script>
+    <script src="../../demos/assets/js/yii.js"></script>
+    <script src="../../src/assets/dist/js/yii.easyui.min.js"></script>
+    <script src="../../demos/assets/js/jeasyui/app.js"></script>
+    <script src="../../demos/assets/js/jeasyui/operasi.js"></script>
+<script>
+    yii.easyui.tabInit = function(){
+        yii.app.operasi.init();
+        yii.easyui.hideMainMask();
+    };
+</script>
+<script>
+jQuery(function ($) {
+    yii.easyui.t.tryAgain = 'Ulangi';
+    yii.easyui.t.close = 'Tutup';
+    yii.easyui.username = 'superadmin, superadmin';
+    yii.easyui.getReferenceUrl = '../../data/reference.json';
+    yii.easyui.homeUrl = 'satker.html';
+    yii.easyui.logoutUrl = '../../index.html';
+    yii.easyui.northContent = '<div id="nort-content"> <div class="panel-title logo"> SIMOPS </div> <div id="north-right-nav"> <a id="north-user-menu-btn"></a> <div id="north-user-menu"></div> </div> </div>';
+    yii.easyui.southContent = '<div>Server Time : <span id="server-time"></span></div>';
+    yii.easyui.centerContent = '<div id="maintab"></div>';
+    yii.easyui.westContent = '<div id="navigation"></div>';
+    yii.easyui.westTitle = 'Menu Utama';
+    yii.easyui.westIcon = 'icon-compass';
+    yii.easyui.navItem = [{"text":"Manajemen","iconCls":"icon-demo","children":[{"id":"nav-operasi","text":"Operasi","iconCls":"icon-layout-content","attributes":{"url":"operasi.html"}},{"id":"nav-personel","text":"Personel","iconCls":"icon-layout-content","attributes":{"url":".personel.html"}},{"id":"nav-user","text":"Akun Pengguna","iconCls":"icon-layout-content","attributes":{"url":"user.html"}}]},{"text":"Master","iconCls":"icon-demo","children":[{"id":"nav-pangkat","text":"Pangkat","iconCls":"icon-layout-content","attributes":{"url":"pangkat.html"}},{"id":"nav-satker","text":"Satker","iconCls":"icon-layout-content","attributes":{"url":"satker.html"}}]}];
+    yii.easyui.selectedNav = 'nav-operasi';
+    yii.easyui.sidebarPlugin = 'accordion';
+    
+    yii.easyui.tabOptions = {"content":"<div id=\"operasi-index\" style=\"min-width: 1154px\"></div> "};
+    //yii.easyui.showMainMask();
+    yii.easyui.northUserMenu = [{"text":"Profile","iconCls":"icon-profile","onclick":        function (e) {
+            yii.easyui.createTab({
+                title: 'Profile',
+                href: 'ajax/profile.html',
+                iconCls: 'icon-profile'
+            }, 'nav-profile');
+            e.stopPropagation();
+        }},{"separator":1},{"text":"Theme","iconCls":"icon-profile"},{"parent":"Theme","text":"Default","onclick":    function (e) {
+        yii.easyui.cookie.delete('jeasyui-theme');
+        yii.easyui.cookie.set('jeasyui-theme', 'default');
+        window.location.reload(false);
+        e.stopPropagation();
+    }},{"parent":"Theme","text":"Gray","onclick":    function (e) {
+        yii.easyui.cookie.delete('jeasyui-theme');
+        yii.easyui.cookie.set('jeasyui-theme', 'gray');
+        window.location.reload(false);
+        e.stopPropagation();
+    }},{"parent":"Theme","text":"Metro","onclick":    function (e) {
+        yii.easyui.cookie.delete('jeasyui-theme');
+        yii.easyui.cookie.set('jeasyui-theme', 'metro');
+        window.location.reload(false);
+        e.stopPropagation();
+    }},{"parent":"Theme","text":"Black","onclick":    function (e) {
+        yii.easyui.cookie.delete('jeasyui-theme');
+        yii.easyui.cookie.set('jeasyui-theme', 'black');
+        window.location.reload(false);
+        e.stopPropagation();
+    }},{"parent":"Theme","text":"Bootstrap","onclick":    function (e) {
+        yii.easyui.cookie.delete('jeasyui-theme');
+        yii.easyui.cookie.set('jeasyui-theme', 'bootstrap');
+        window.location.reload(false);
+        e.stopPropagation();
+    }},{"parent":"Theme","separator":1},{"parent":"Theme","text":"Material","onclick":    function (e) {
+        yii.easyui.cookie.delete('jeasyui-theme');
+        yii.easyui.cookie.set('jeasyui-theme', 'material');
+        window.location.reload(false);
+        e.stopPropagation();
+    }},{"parent":"Theme","text":"Material Teal","onclick":    function (e) {
+        yii.easyui.cookie.delete('jeasyui-theme');
+        yii.easyui.cookie.set('jeasyui-theme', 'material-teal');
+        window.location.reload(false);
+        e.stopPropagation();
+    }},{"parent":"Theme","text":"Material Green","onclick":    function (e) {
+        yii.easyui.cookie.delete('jeasyui-theme');
+        yii.easyui.cookie.set('jeasyui-theme', 'material-green');
+        window.location.reload(false);
+        e.stopPropagation();
+    }},{"parent":"Theme","text":"Material Blue","onclick":    function (e) {
+        yii.easyui.cookie.delete('jeasyui-theme');
+        yii.easyui.cookie.set('jeasyui-theme', 'material-blue');
+        window.location.reload(false);
+        e.stopPropagation();
+    }},{"separator":1},{"text":"Logout","iconCls":"icon-door-out","onclick":        function (e) {
+            yii.handleAction($('<a href="../../index.html" data-method="post"></a>'));
+            e.stopPropagation();
+        }}];
+    yii.easyui.setHost('api', '../../demos/data');
+    yii.easyui.setHost('backend', 'backend.html');
+    yii.easyui.setHost('frontend', 'frontend.html');
+    yii.easyui.init();
+});</script>
+    </body>
+
+</html>
+

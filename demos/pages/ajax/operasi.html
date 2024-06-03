@@ -1,0 +1,22 @@
+<link href="../../demos/assets/css/fontawesome.min.css" rel="stylesheet">
+<link href="/simops/assets/9873ce4c/themes/default/easyui.css" rel="stylesheet">
+<link href="/simops/assets/9873ce4c/themes/icon.css" rel="stylesheet">
+<link href="/simops/assets/9873ce4c/themes/color.css" rel="stylesheet">
+<link href="/simops/dist/jeasyui/css/yii.easyui.css" rel="stylesheet">
+<link href="/simops/dist/jeasyui/css/icon.css" rel="stylesheet">
+<link href="/simops/css/jeasyui/app.css" rel="stylesheet">
+<link href="/simops/css/jeasyui/operasi.css" rel="stylesheet">
+<div id="operasi-index" style="min-width: 1154px"></div>
+<script src="/simops/assets/3f7e74b1/jquery.js"></script>
+<script src="/simops/assets/9873ce4c/jquery.easyui.min.js"></script>
+<script src="/simops/assets/e3442d92/datagrid-filter.js"></script>
+<script src="/simops/assets/c3c14c0e/yii.js"></script>
+<script src="/simops/dist/jeasyui/js/yii.easyui.js"></script>
+<script src="/simops/js/jeasyui/app-2022012801.js"></script>
+<script src="/simops/js/jeasyui/operasi-2022111801.js"></script>
+<script>
+    yii.easyui.tabInit = function(){
+        yii.app.operasi.init();
+        yii.easyui.hideMainMask();
+    };
+</script>

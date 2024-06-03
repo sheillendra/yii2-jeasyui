@@ -3,6 +3,8 @@ yii2-jeasyui
 
 Implement jQuery EasyUI GPL Edition on Yii2.
 
+[Static Demo](https://sheillendra.github.io/yii2-jeasyui/)
+
 INSTALLATION
 ---
 The preferred way to install this extension is through composer.
