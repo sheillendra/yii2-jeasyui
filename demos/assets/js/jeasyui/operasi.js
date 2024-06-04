@@ -429,15 +429,12 @@ window.yii.app.operasi = (function ($) {
     var initDg = () => {
         dg = el.find('#operasi-dg');
         dg.datagrid({
-            //demos purpose
-            url: yii.easyui.getHost('api') + '/operasi-ext-satker.json',
-
             // url: yii.easyui.getHost('api'),
-            queryParams: yii.easyui.ajaxAuthToken({
-                r: 'v1/jeasyui/operasi',
-                expand: 'satker',
-                fields: 'id, sandi, satker_id, tanggal_mulai, tanggal_selesai, satker.nama',
-            }),
+            // queryParams: yii.easyui.ajaxAuthToken({
+            //     r: 'v1/jeasyui/operasi',
+            //     expand: 'satker',
+            //     fields: 'id, sandi, satker_id, tanggal_mulai, tanggal_selesai, satker.nama',
+            // }),
             method: 'get',
             fit: true,
             border: false,
@@ -510,24 +507,21 @@ window.yii.app.operasi = (function ($) {
                 dgRow = row;
                 pg.propertygrid('loadData', pgData(row));
                 giatDg.datagrid({
-                    //demo purpose
-                    url: yii.easyui.getHost('api') + '/operasi-giat.json',
-
                     //url: yii.easyui.getHost('api'),
-                    queryParams: yii.easyui.ajaxAuthToken({
-                        r: 'v1/jeasyui/operasi-giat',
-                        operasi_id: row.id
-                    })
+                    // queryParams: yii.easyui.ajaxAuthToken({
+                    //     r: 'v1/jeasyui/operasi-giat',
+                    //     operasi_id: row.id
+                    // })
+
+                    data: opGiat
                 });
                 dokumenDg.datagrid('addFilterRule', { field: 'operasi_id', op: 'equal', value: row.id });
                 dokumenDg.datagrid({
-                    // demo purpose
-                    url: yii.easyui.getHost('api') + '/operasi-dokumen.json',
-
                     //url: yii.easyui.getHost('api'),
-                    queryParams: yii.easyui.ajaxAuthToken({
-                        r: 'v1/jeasyui/operasi-dokumen',
-                    })
+                    // queryParams: yii.easyui.ajaxAuthToken({
+                    //     r: 'v1/jeasyui/operasi-dokumen',
+                    // })
+                    data: opDoc
                 });
             },
             onLoadSuccess: function (data) {
@@ -818,6 +812,8 @@ window.yii.app.operasi = (function ($) {
 
             initGiatDg();
             initDocDg();
+
+            dg.datagrid({data: opSatker})
         },
         dokumenPreview: (data) => {
             return dokumenPreview(data);

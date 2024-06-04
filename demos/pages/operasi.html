@@ -27,6 +27,10 @@
     <script src="../../src/assets/dist/js/yii.easyui.min.js"></script>
     <script src="../../demos/assets/js/jeasyui/app.js"></script>
     <script src="../../demos/assets/js/jeasyui/operasi.js"></script>
+    <script src="../../demos/data/operasi-dokumen.js"></script>
+    <script src="../../demos/data/operasi-ext-satker.js"></script>
+    <script src="../../demos/data/operasi-giat.js"></script>
+    <script src="../../demos/data/ref-satker.js"></script>
 <script>
     yii.easyui.tabInit = function(){
         yii.app.operasi.init();
@@ -112,6 +116,10 @@ jQuery(function ($) {
     yii.easyui.setHost('api', '../../demos/data');
     yii.easyui.setHost('backend', 'backend.html');
     yii.easyui.setHost('frontend', 'frontend.html');
+
+    //demo purpose only
+    window.localStorage.setItem("token", "adsfasdf");
+    
     yii.easyui.init();
 });</script>
     </body>

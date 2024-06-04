@@ -65,7 +65,7 @@ window.yii.app = (($) => {
             //return refAjax(callback, 'satker', { r: 'v1/satker', fields: 'id, nama', 'per-page': 50 }, 'id', 'nama');
             
             //demo purpose
-            return refAjax(callback, 'satker', { r: 'ref-satker.json', fields: 'id, nama', 'per-page': 50 }, 'id', 'nama');
+            return refSatker;
         },
     };
 
