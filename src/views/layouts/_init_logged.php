@@ -13,6 +13,6 @@ $this->params['logoutUrl'] = Url::to(['/site/logout']);
 $this->params['getReferenceUrl'] = Url::to(['/site/reference']);
 $this->params['westTitle'] = 'Menu Utama';
 $this->params['westIcon'] = 'icon-compass';
-$this->params['sidebarPlugin'] = 'tree'; //tree or accordion
+$this->params['sidebarPlugin'] = 'accordion'; //tree or accordion
 
 $this->render('@app/views/layouts/_init_north-user-menu');

@@ -11,6 +11,6 @@ $this->params['loginDialogHeight'] = 290;
 //accomodate login with email
 $this->params['usernameSelector'] = '#loginform-username';
 
-$this->params['loginUrl'] = Url::to(['/site/login']);
+$this->params['loginUrl'] = Url::to(['/jeasyui/login']);
 $this->params['signupUrl'] = Url::to(['/site/signup']);
 $this->params['forgotUrl'] = Url::to(['/site/reset-password']);

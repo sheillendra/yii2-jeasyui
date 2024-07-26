@@ -9,8 +9,12 @@ $this->params['northUserMenu'] = [];
 $profileUrl = Url::to(['/jeasyui/profile']);
 
 $this->params['northUserMenu'][] = [
+    'id' => 'nav-profile',
     'text' => 'Profile',
     'iconCls' => 'icon-profile',
+    'attributes' => [
+        'url' => $profileUrl,
+    ],
     'onclick' => new JsExpression(<<<JS
         function (e) {
             yii.easyui.createTab({

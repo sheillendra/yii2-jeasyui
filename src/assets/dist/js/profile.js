@@ -32,13 +32,13 @@ window.yii.profile = (function ($) {
 
             profileTab.tabs('add', {
                 title: 'Foto',
-                content: '<div style="padding: 10px">Fitur ini belum terbuka</div>',
+                content: '<div style="padding: 10px">On Development</div>',
             });
 
             oldPasswordInput = $('<input id="old-password" name="oldPassword"/>');
             profilePasswordForm.append(oldPasswordInput);
             oldPasswordInput.passwordbox({
-                label: 'Password Saat ini: ',
+                label: 'Current Password: ',
                 labelPosition: 'top',
                 width: 300,
                 required: true
@@ -47,7 +47,7 @@ window.yii.profile = (function ($) {
             newPasswordInput = $('<input id="new-password" name="newPassword"/>');
             profilePasswordForm.append(newPasswordInput);
             newPasswordInput.passwordbox({
-                label: 'Password baru: ',
+                label: 'New Password: ',
                 labelPosition: 'top',
                 width: 300,
                 required: true,
@@ -57,7 +57,7 @@ window.yii.profile = (function ($) {
             repeatPasswordInput = $('<input name="repeatPassword"/>');
             profilePasswordForm.append(repeatPasswordInput);
             repeatPasswordInput.passwordbox({
-                label: 'Ulangi Password baru: ',
+                label: 'Repeat New Password: ',
                 labelPosition: 'top',
                 width: 300,
                 required: true,
@@ -70,7 +70,7 @@ window.yii.profile = (function ($) {
 
             submitProfilePasswordForm.linkbutton({
                 iconCls: 'icon-disk',
-                text: 'Simpan',
+                text: 'Save',
                 onClick: function () {
                     yii.easyui.showMainMask();
                     profilePasswordForm.form('submit');
@@ -88,7 +88,7 @@ window.yii.profile = (function ($) {
                     if(data.success){
                         window.location.reload();
                     } else {
-                        $.messager.alert('Ganti Password', data.message, 'error');
+                        $.messager.alert('Change Password', data.message, 'error');
                     }
                 },
                 onSubmit: function (params) {
