@@ -3,6 +3,7 @@ window.yii.profile = (function ($) {
     var oldPasswordInput;
     var newPasswordInput;
     var repeatPasswordInput;
+    var submitProfilePasswordForm;
 
     return {
         isActive: false,
@@ -79,7 +80,7 @@ window.yii.profile = (function ($) {
 
             profilePasswordForm.form({
                 url: yii.easyui.ajaxAuthToken({
-                    r: 'jeasyui/change-password',
+                    r: 'jeasyui/profile/change-password',
                 }, true),
                 iframe: false,
                 success: function (data) {

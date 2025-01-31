@@ -6,7 +6,7 @@ use yii\helpers\Url;
 
 $this->params['defaultSelectedNav'] = 'nav-dashboard';
 
-return [
+$this->params['navItem'] = [
     [
         'id' => 'nav-dashboard',
         'text' => 'Home',
@@ -42,19 +42,19 @@ return [
                 ]
             ],
             [
-                'id' => 'nav-setting-user',
+                'id' => 'nav-user',
                 'text' => 'Users',
                 'iconCls' => 'icon-group',
                 'attributes' => [
-                    'url' => Url::to(['/jeasyui/setting-user']),
+                    'url' => Url::to(['/jeasyui/user']),
                 ]
             ],
             [
-                'id' => 'nav-setting-rbac',
+                'id' => 'nav-rbac',
                 'text' => 'Access Management',
                 'iconCls' => 'icon-group-gear',
                 'attributes' => [
-                    'url' => Url::to(['/jeasyui/setting-rbac']),
+                    'url' => Url::to(['/jeasyui/rbac']),
                 ]
             ]
         ]

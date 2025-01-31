@@ -11,6 +11,9 @@ UserAsset::register($this);
     <table cellspacing="0" cellpadding="0">
         <tr>
             <td>
+                <div id="user-tb-new"></div>
+            </td>
+            <td>
                 <div id="user-tb-edit"></div>
             </td>
             <td>
@@ -34,8 +37,8 @@ $roles = Json::encode(Yii::$app->user->identity->authItemCanManage);
 $this->registerJs(
     <<<JS
     yii.easyui.tabInit = function(){
-        yii.user.roles = {$roles};
-        yii.user.init();
+        yii.easyui.user.roles = {$roles};
+        yii.easyui.user.init();
         yii.easyui.hideMainMask();
     };
 JS,

@@ -20,6 +20,8 @@ YiiEasyUILoginAsset::register($this);
         <?php $this->head() ?>
     </head>
     <body>
+        <div id="main-mask-overlay" class="main-mask overlay"></div>
+        <div id="main-mask" class="panel-body panel-loading main-mask loader"><?php echo Yii::t('app', 'Please wait ...'); ?></div>
         <div id="error"></div>
         <?php $this->beginBody() ?>
         <div id="login-dialog"></div>
@@ -46,9 +48,6 @@ $this->registerJs(<<<EOD
         yii.easyuiLogin.dialogWidth = {$this->params['loginDialogWidth']};
         yii.easyuiLogin.dialogHeight = {$this->params['loginDialogHeight']};
         yii.easyuiLogin.usernameSelector = '{$this->params['usernameSelector']}';
-        yii.easyuiLogin.url = '{$this->params['loginUrl']}';
-        yii.easyuiLogin.signupurl = '{$this->params['signupUrl']}';
-        yii.easyuiLogin.forgoturl = '{$this->params['forgotUrl']}';
         yii.easyuiLogin.init();
 EOD
 );

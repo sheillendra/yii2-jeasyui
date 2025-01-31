@@ -80,8 +80,7 @@ class SiteController extends Controller
         $req = Yii::$app->getRequest();
         if (!Yii::$app->user->isGuest) {
             if ($req->isAjax) {
-                echo Json::encode(['redirect' => Yii::$app->getHomeUrl()]);
-                return Yii::$app->end();
+                return Json::encode(['redirect' => Yii::$app->getHomeUrl()]);
             } else {
                 return $this->redirect(['/']);
             }
@@ -89,7 +88,7 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load($req->post()) && $model->login()) {
-            echo Json::encode([
+            return Json::encode([
                 'redirect' => Yii::$app->getUser()->getReturnUrl(),
                 'data' => [
                     'token' => $model->user->token,
@@ -98,12 +97,11 @@ class SiteController extends Controller
             ]);
         } else {
             if ($model->hasErrors()) {
-                echo Json::encode(['loginerror' => $model->getFirstErrors()]);
+                return Json::encode(['loginerror' => $model->getFirstErrors()]);
             } else {
                 return $this->render('login', ['model' => $model]);
             }
         }
-        return Yii::$app->end();
     }
 
     /**
@@ -112,31 +110,6 @@ class SiteController extends Controller
      * @return string
      */
     public function actionSignup()
-    {
-        //        if (!Yii::$app->user->isGuest) {
-        //            echo Json::encode(['redirect' => Yii::$app->getHomeUrl()]);
-        //            return Yii::$app->end();
-        //        }
-        //
-        //        $model = new SignupForm();
-        //        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-        //            echo Json::encode(['redirect' => Yii::$app->getUser()->getReturnUrl()]);
-        //        } else {
-        //            if ($model->hasErrors()) {
-        //                echo Json::encode(['loginerror' => $model->getErrors()]);
-        //            } else {
-        //                return $this->render('signup', ['model' => $model]);
-        //            }
-        //        }
-        //        Yii::$app->end();
-    }
-
-    /**
-     * Signup action.
-     *
-     * @return string
-     */
-    public function actionSignupByAdmin()
     {
         //        if (!Yii::$app->user->isGuest) {
         //            echo Json::encode(['redirect' => Yii::$app->getHomeUrl()]);

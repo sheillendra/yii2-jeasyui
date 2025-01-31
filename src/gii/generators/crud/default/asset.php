@@ -2,7 +2,7 @@
 use yii\helpers\StringHelper;
 use yii\helpers\Inflector;
 
-$modelClassName = StringHelper::basename($generator->modelClass);
+$modelClassName = substr($modelClassName, 0, -3);
 $idModelClassName = Inflector::camel2id($modelClassName);
 $varModelClassName = Inflector::variablize($modelClassName);
 
@@ -14,7 +14,7 @@ echo "<?php\n";
  * @license http://www.yiiframework.com/license/
  */
 
-namespace app\assets;
+namespace <?= $generator->appName ?>\themes\jeasyui\assets;
 
 use yii\web\AssetBundle;
 
@@ -22,15 +22,18 @@ use yii\web\AssetBundle;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class <?=$modelClassName?>IndexAsset extends AssetBundle
+class <?=$baseAssetName?> extends AssetBundle
 {
-    public $sourcePath = '@app/views/<?=$idModelClassName?>/assets';
+    public $basePath = '@webroot';
+    public $baseUrl = '@web';
     public $css = [
-        'css/<?=$idModelClassName?>-index.css',
+        'css/jeasyui/<?=$idModelClassName?>.css',
     ];
     public $js = [
-        'js/<?=$idModelClassName?>-index.js'
+        'js/jeasyui/<?=$idModelClassName?>.js'
     ];
-    public $depends = [];
-    public $publishOptions=['forceCopy'=>YII_DEBUG];
+    public $depends = [
+        '<?= $generator->appName ?>\themes\jeasyui\assets\AppAsset',
+        'sheillendra\jeasyui\assets\ExtDgFilterRowAsset',
+    ];
 }

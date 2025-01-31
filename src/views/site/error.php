@@ -1,3 +1,13 @@
 <?php
+/* @var $this \yii\web\View */
 
-echo $this->render('../jeasyui/error', [ 'name' => $name, 'message' => $message]);
+use yii\web\View;
+use yii\helpers\Url;
+use yii\helpers\Html;
+
+if (Yii::$app->user->isGuest) {
+    $this->context->layout = '//login';
+}
+
+$this->params['errorName'] = $name;
+$this->params['errorMessage'] = $message;

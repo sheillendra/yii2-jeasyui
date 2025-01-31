@@ -1,12 +1,21 @@
 <?php
 
-namespace sheillendra\components\web;
+namespace sheillendra\jeasyui\components\web;
 
-use common\models\UserExt;
+
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 
 class Controller extends \yii\web\Controller
 {
-    public $allowRoles = UserExt::ROLE_ADMIN;
+    public $rules = [
+        [
+            'allow' => true,
+            'roles' => ['@'],
+        ],
+    ];
+
+    public $verbActions = [];
 
     /**
      * {@inheritdoc}
@@ -15,19 +24,18 @@ class Controller extends \yii\web\Controller
     {
         return [
             'access' => [
-                'class' => 'yii\filters\AccessControl',
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => [$this->allowRoles],
-                    ],
-                ],
+                'class' => AccessControl::class,
+                'rules' => $this->rules,
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => $this->verbActions,
             ],
         ];
     }
 
     /**
-     * Lists all PegawaiExt models.
+     * Index.
      * @return mixed
      */
     public function actionIndex()

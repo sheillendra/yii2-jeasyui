@@ -44,11 +44,12 @@ $westContent = $this->params['sidebarPlugin'] === 'tree' ? '<ul id="navigation">
 $westTitle = isset($this->params['westTitle']) ? $this->params['westTitle'] : '';
 $westIcon = isset($this->params['westIcon']) ? $this->params['westIcon'] : '';
 
-$navItem = include(Yii::$app->view->theme->applyTo(Yii::getAlias('@app/views/layouts/_nav-item.php')));
+$this->render('@app/views/layouts/_nav-item.php');
+$this->render('@app/views/layouts/_nav-item-map.php');
 
 $errors = '';
 if (isset($this->params['errorName'])) {
-    $errorNav = ArrayHelper::getArrayByKeyValue('id', 'url', Url::to(), $navItem);
+    $errorNav = ArrayHelper::getArrayByKeyValue('id', 'url', Url::to(), $this->params['navItem']);
     if ($errorNav) {
         $this->params['selectedNav'] = $errorNav['id'];
         $this->params['tabOptions'] = [
@@ -74,16 +75,18 @@ JS;
     $this->params['selectedNav'] = isset($this->params['selectedNav']) ? $this->params['selectedNav'] : $this->params['defaultSelectedNav'];
 }
 
-$navItemJson = Json::encode($navItem);
+$navItemJson = Json::encode(array_values($this->params['navItem']));
 
 $tabOptions = isset($this->params['tabOptions']) ? Json::encode($this->params['tabOptions']) : 0;
 
 $northUserMenu = isset($this->params['northUserMenu']) ? Json::encode($this->params['northUserMenu']) : 0;
 $apiUrl = Yii::$app->urlManagerApi->createAbsoluteUrl('', true);
-$backendUrl = isset(Yii::$app->urlManagerBackend) ? Yii::$app->urlManagerBackend->createAbsoluteUrl('', true) : '';
 $frontendUrl = Yii::$app->urlManager->createAbsoluteUrl('', true);
+$backendUrl = isset(Yii::$app->urlManagerBackend) ? Yii::$app->urlManagerBackend->createAbsoluteUrl('', true) : $frontendUrl;
 $this->registerJs(
     <<<JS
+    yii.easyui.locale = 'en-PG';
+    yii.easyui.currency = 'PGK';
     yii.easyui.username = '{$this->params['userName']}';
     yii.easyui.getReferenceUrl = '{$this->params['getReferenceUrl']}';
     yii.easyui.homeUrl = '{$this->params['homeUrl']}';

@@ -10,7 +10,7 @@ echo "<?php\n";
 
 use sheillendra\jeasyui\components\helpers\Regex;
 
-$this->title = '<?= $baseName?>';
+$this->title = '<?= Inflector::titleize($baseName, true)?>';
 
 if (Yii::$app->request->isAjax) {
     $this->context->layout = '//ajax';

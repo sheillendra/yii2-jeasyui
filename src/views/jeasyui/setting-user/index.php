@@ -4,6 +4,8 @@
 
 use sheillendra\jeasyui\components\helpers\Regex;
 
+$this->title = 'User';
+
 if (Yii::$app->request->isAjax) {
     $this->context->layout = '//ajax';
     echo $this->renderAjax('_index');

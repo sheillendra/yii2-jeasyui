@@ -1,7 +1,6 @@
 <?php
 /* @var $this yii\web\View */
 
-use yii\helpers\Url;
 use sheillendra\jeasyui\assets\ProfileAsset;
 
 ProfileAsset::register($this);

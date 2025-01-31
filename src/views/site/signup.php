@@ -4,13 +4,12 @@
  * My standard login page
  * 
  */
-use sheillendra\jeasyui\assets\LoginAsset;
-use yii\helpers\Url;
-use sheillendra\helpers\Regex;
+use sheillendra\jeasyui\assets\YiiEasyUILoginAsset;
+use sheillendra\jeasyui\components\helpers\Regex;
 
 /* @var $this \yii\web\View */
 
-LoginAsset::register($this);
+YiiEasyUILoginAsset::register($this);
 
 $this->title = 'Signup';
 

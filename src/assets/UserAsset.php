@@ -12,27 +12,31 @@
 
 namespace sheillendra\jeasyui\assets;
 
+use Yii;
 use yii\web\AssetBundle;
 
 /**
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class YiiEasyUIMobileAsset extends AssetBundle {
+class UserAsset extends AssetBundle {
 
-    public $sourcePath = '@sheillendra/jeasyui/assets/dist';
-    //public $sourcePath = '@sheillendra/jeasyui/assets/dist/v2.0.0-alpha.3';
+    //public $sourcePath = '@sheillendra/jeasyui/assets/dist';
+    public $basePath = '@webroot/dist/jeasyui';
+    public $baseUrl = '@web/dist/jeasyui';
     public $css = [
-        'css/yii.easyui-mobile.css',
-        'css/icon.css'
+        'css/user.css',
     ];
     public $js = [
-        'js/yii.easyui-mobile.min.js'
+        'js/user.js'
     ];
-    
     public $depends = [
-        'yii\web\YiiAsset',
-        'sheillendra\jeasyui\assets\JEasyUIMobileAsset'
+        'sheillendra\jeasyui\assets\ExtDgFilterRowAsset',
+        'sheillendra\jeasyui\assets\YiiEasyUIAsset'
     ];
+
+    public function init() {
+        parent::init();
+    }
 
 }

@@ -2,7 +2,7 @@
 namespace sheillendra\jeasyui\models;
 
 use yii\base\Model;
-use common\models\User;
+use common\models\UserExt;
 
 /**
  * Signup form
@@ -12,6 +12,7 @@ class SignupForm extends Model
     public $username;
     public $email;
     public $password;
+    public $status;
 
 
     /**
@@ -33,6 +34,8 @@ class SignupForm extends Model
 
             ['password', 'required'],
             ['password', 'string', 'min' => 6],
+
+            ['status', 'integer'],
         ];
     }
 
@@ -47,12 +50,18 @@ class SignupForm extends Model
             return null;
         }
         
-        $user = new User();
+        $user = new UserExt();
         $user->username = $this->username;
         $user->email = $this->email;
         $user->setPassword($this->password);
         $user->generateAuthKey();
+        $user->status = $this->status;
         
         return $user->save() ? $user : null;
+    }
+
+    public function formName()
+    {
+        return '';
     }
 }

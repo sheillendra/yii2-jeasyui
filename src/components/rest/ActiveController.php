@@ -51,8 +51,12 @@ class ActiveController extends \yii\rest\ActiveController
         return $actions;
     }
 
-    public function prepareDataProvider() {
-        $searchModel = new $this->searchModelClass();
-        return $searchModel->search(\Yii::$app->request->queryParams);
+    public function prepareDataProvider()
+    {
+        if ($this->searchModelClass) {
+            $searchModel = new $this->searchModelClass();
+            return $searchModel->search(\Yii::$app->request->queryParams);
+        }
+        return false;
     }
 }

@@ -9,7 +9,7 @@ echo "<?php\n";
 
 /** @var $this yii\web\View */
 
-use backend\themes\jeasyui\assets\<?= $baseName ?>Asset;
+use <?= $generator->appName ?>\themes\jeasyui\assets\<?= $baseName ?>Asset;
 
 <?= $baseName ?>Asset::register($this);
 ?>
@@ -18,7 +18,7 @@ use backend\themes\jeasyui\assets\<?= $baseName ?>Asset;
 $this->registerJs(
     <?="<<<JS\n"?>
     yii.easyui.tabInit = function(){
-        yii.app.<?=$varBaseName?>.init();
+        yii.easyui.<?=$varBaseName?>.init();
         yii.easyui.hideMainMask();
     };
 JS,

@@ -19,11 +19,12 @@ class Generator extends \yii\gii\generators\crud\Generator
     public $controllerClass = 'backend\controllers\SiteController';
     public $apiControllerClass = 'api\modules\v1\controllers\SiteController';
     public $apiJeasyUIControllerClass = 'api\modules\v1\modules\jeasyui\controllers\SiteController';
+    public $extModelClass = 'api\modules\v1\models\ModelExt';
     public $jeasyUiSearchModelClass = 'api\modules\v1\modules\jeasyui\models\ModelSearch';
 
     public function getName()
     {
-        return 'jEasyUI CRUD Generator';
+        return 'Jquery EasyUI CRUD Generator';
     }
 
     /**
@@ -33,7 +34,13 @@ class Generator extends \yii\gii\generators\crud\Generator
     {
         return array_merge(parent::rules(), [
             [['modelClass', 'appName', 'apiName'], 'required'],
-            [['controllerClass', 'modelClass', 'appName', 'apiName', 'searchModelClass', 'baseControllerClass'], 'trim', 'chars' => '\ '],
+            [
+                [
+                    'controllerClass', 'modelClass', 'appName', 'apiName', 'searchModelClass',
+                    'baseControllerClass',
+                    'jeasyUiSearchModelClass'
+                ], 'trim', 'chars' => '\ '
+            ],
         ]);
     }
 
@@ -44,141 +51,85 @@ class Generator extends \yii\gii\generators\crud\Generator
     {
         $modelClassName = StringHelper::basename($this->modelClass);
 
-        $baseControllerName = substr($modelClassName, 0, -3) . 'Controller';
-        $baseSearchModelName = substr($modelClassName, 0, -3) . 'Search';
+        if (substr($modelClassName, -3) === 'Ext') {
+            $baseModelClassName = substr($modelClassName, 0, -3);
+        } else {
+            $baseModelClassName = $modelClassName;
+        }       
+        $baseControllerName = $baseModelClassName . 'Controller';
+        $baseSearchModelName = $baseModelClassName . 'Search';
 
+        //backend/controller
         $this->controllerClass = $this->appName . '\controllers\\' . $baseControllerName;
         $controllerFile = Yii::getAlias('@' . str_replace('\\', '/', ltrim($this->controllerClass, '\\')) . '.php');
 
         $files = [
-            new CodeFile($controllerFile, $this->render('controller.php')),
+            new CodeFile($controllerFile, $this->render('controller.php', [
+                'controllerClass' => $baseControllerName,
+                'modelClassName' => $modelClassName
+            ])),
         ];
 
-        $this->apiControllerClass = $this->apiName . '\controllers\\' . $baseControllerName;
-        $controllerApiFile = Yii::getAlias('@' . str_replace('\\', '/', ltrim($this->apiControllerClass, '\\')) . '.php');
+        //ext model api
+        $this->extModelClass = $this->apiName . '\models\\' . $modelClassName;
+        $extModelClass = Yii::getAlias('@' . str_replace('\\', '/', ltrim($this->extModelClass, '\\') . '.php'));
+        $files[] = new CodeFile($extModelClass, $this->render('model.php'));
 
-        $files[] = new CodeFile($controllerApiFile, $this->render('controller-api.php'));
-
-        $controllerApiFile = Yii::getAlias('@' . str_replace('\\', '/', ltrim($this->apiName . '\modules\jeasyui\\'. $baseControllerName, '\\')) . '.php');
-        $files[] = new CodeFile($controllerApiFile, $this->render('controller-api-jeasyui.php'));
-
-        $this->searchModelClass = $this->apiName . '\models\\'. $baseSearchModelName;
+        //searchmodel api
+        $this->searchModelClass = $this->apiName . '\models\\' . $baseSearchModelName;
         $searchModel = Yii::getAlias('@' . str_replace('\\', '/', ltrim($this->searchModelClass, '\\') . '.php'));
         $files[] = new CodeFile($searchModel, $this->render('search.php'));
 
-        $this->jeasyUiSearchModelClass = $this->apiName . '\modules\jeasyui\models\\'. $baseSearchModelName;
+        //controller api
+        $this->apiControllerClass = $this->apiName . '\controllers\\' . $baseControllerName;
+        $controllerApiFile = Yii::getAlias('@' . str_replace('\\', '/', ltrim($this->apiControllerClass, '\\')) . '.php');
+        $files[] = new CodeFile($controllerApiFile, $this->render('controller-api.php', [
+            'baseSearchModelName' => $baseSearchModelName
+        ]));
+
+        //jeasyui searchmodel
+        $this->jeasyUiSearchModelClass = $this->apiName . '\modules\jeasyui\models\\' . $baseSearchModelName;
         $jeasyUiSearchModel = Yii::getAlias('@' . str_replace('\\', '/', ltrim($this->jeasyUiSearchModelClass, '\\') . '.php'));
         $files[] = new CodeFile($jeasyUiSearchModel, $this->render('search-jeasyui.php'));
 
-        $this->viewPath = '@' . $this->appName . '/themes/jeasyui/views/' . Inflector::camel2id(str_replace('Controller', '',$baseControllerName));
-        $viewPath = $this->getViewPath();
+        $jeasyUiControllerFile = Yii::getAlias('@' . str_replace('\\', '/', ltrim($this->apiName . '\modules\jeasyui\controllers\\' . $baseControllerName, '\\')) . '.php');
+        $files[] = new CodeFile($jeasyUiControllerFile, $this->render('controller-api-jeasyui.php'));
+
+        $viewPath = Yii::getAlias('@' . str_replace('\\', '/', ltrim($this->appName)) . '/themes/jeasyui/views/') . Inflector::camel2id(str_replace('Controller', '', $baseControllerName));
         $templatePath = $this->getTemplatePath() . '/views';
         foreach (scandir($templatePath) as $file) {
-            if (empty($this->searchModelClass) && $file === '_search.php') {
-                continue;
-            }
             if (is_file($templatePath . '/' . $file) && pathinfo($file, PATHINFO_EXTENSION) === 'php') {
                 $files[] = new CodeFile("$viewPath/$file", $this->render("views/$file"));
             }
         }
 
-        return $files;
+        $assetsPath = Yii::getAlias('@'. str_replace('\\', '/', ltrim($this->appName)) .'/themes/jeasyui/assets');
 
-        $assetsPath = Yii::getAlias('@app/assets');
-        $assetsTemplatePath = $this->getTemplatePath() . '/assets';
+        $idModelClassName = Inflector::camel2id($baseModelClassName);
+        $baseAssetName = $baseModelClassName . 'Asset';
 
-        $idModelClassName = Inflector::camel2id($modelClassName);
-        $varModelClassName = Inflector::variablize($modelClassName);
+        $files[] = new CodeFile("$assetsPath/{$baseAssetName}.php", $this->render('asset.php', [
+            'baseAssetName' => $baseAssetName,
+            'modelClassName' => $modelClassName
+        ]));
 
-        foreach (scandir($assetsTemplatePath) as $file) {
-            if (is_file($assetsTemplatePath . '/' . $file) && pathinfo($file, PATHINFO_EXTENSION) === 'php') {
-                $files[] = new CodeFile("$assetsPath/{$modelClassName}$file", $this->render("assets/$file"));
-            }
-        }
-
-        $cssPath = $this->getTemplatePath() . '/views/assets/css';
-        foreach (scandir($cssPath) as $file) {
-            if (is_file($cssPath . '/' . $file) && pathinfo($file, PATHINFO_EXTENSION) === 'php') {
-                $file_path_as = str_replace('.php', '.css', $file);
-                $files[] = new CodeFile("$viewPath/assets/css/{$idModelClassName}$file_path_as", $this->render("views/assets/css/$file"));
-            }
-        }
-
-        $jsPath = $this->getTemplatePath() . '/views/assets/js';
-        foreach (scandir($jsPath) as $file) {
-            if (is_file($jsPath . '/' . $file) && pathinfo($file, PATHINFO_EXTENSION) === 'php') {
-                $file_path_as = str_replace('.php', '.js', $file);
-                $files[] = new CodeFile("$viewPath/assets/js/{$idModelClassName}$file_path_as", $this->render("views/assets/js/$file"));
-            }
-        }
-
-        $layoutsPath = Yii::getAlias('@app/views/layouts');
-        $layoutsTemplatePath = $this->getTemplatePath() . '/views/layouts';
-
-        if (file_exists("$layoutsPath/_nav-item.php")) {
-            require("$layoutsPath/_nav-item.php");
-            $oldFileAsText = file_get_contents("$layoutsPath/_nav-item.php");
+        //PENDING ganti dengan pengecekan ada tanda / atau tidak
+        if($this->appName === 'backend'){
+            $webrootJeasyUIAsset = Yii::getAlias('@webroot');
         } else {
-            foreach (scandir($layoutsTemplatePath) as $file) {
-                if (
-                    is_file($layoutsTemplatePath . '/' . $file) &&
-                    pathinfo($file, PATHINFO_EXTENSION) === 'php' &&
-                    $file !== '_nav-item.php' &&
-                    $file !== '_nav-item-def.php'
-                ) {
-                    $files[] = new CodeFile("$layoutsPath/$file", $this->render("views/layouts/$file"));
-                }
-            }
-            require("$layoutsTemplatePath/_nav-item-def.php");
-            $oldFileAsText = file_get_contents("$layoutsTemplatePath/_nav-item-def.php");
-
-            $webPath = Yii::getAlias('@app/web');
-            $files[] = new CodeFile("$webPath/js/app.js", $this->render("app.js"));
-            $files[] = new CodeFile("$webPath/css/site.css", $this->render("site.css"));
-
-            $controllersPath = Yii::getAlias('@app/controllers');
-            $files[] = new CodeFile("$controllersPath/SiteController.php", $this->render("SiteController.php"));
-
-            $sitePath = Yii::getAlias('@app/views/site');
-            $siteTemplatePath = $this->getTemplatePath() . '/views/site';
-            foreach (scandir($siteTemplatePath) as $file) {
-                if (is_file($siteTemplatePath . '/' . $file)) {
-                    $files[] = new CodeFile("$sitePath/$file", $this->render("views/site/$file"));
-                }
-            }
-
-            foreach (scandir($siteTemplatePath . '/assets') as $file) {
-                if (is_file($siteTemplatePath . '/assets/' . $file)) {
-                    $files[] = new CodeFile("$sitePath/assets/$file", $this->render("views/site/assets/$file"));
-                }
-            }
-
-            foreach (scandir($siteTemplatePath . '/assets/css') as $file) {
-                if (is_file($siteTemplatePath . '/assets/css/' . $file)) {
-                    $files[] = new CodeFile("$sitePath/assets/css/$file", $this->render("views/site/assets/css/$file"));
-                }
-            }
-
-            foreach (scandir($siteTemplatePath . '/assets/js') as $file) {
-                if (is_file($siteTemplatePath . '/assets/js/' . $file)) {
-                    $files[] = new CodeFile("$sitePath/assets/js/$file", $this->render("views/site/assets/js/$file"));
-                }
-            }
-
-            $files[] = new CodeFile("$assetsPath/AppAsset.php", $this->render("AppAsset.php"));
-
-            $componentsPath = Yii::getAlias('@app/components');
-            $files[] = new CodeFile("$componentsPath/helpers/Regex.php", $this->render("Regex.php"));
+            $webrootJeasyUIAsset = Yii::getAlias('@' . str_replace('\\', '/', ltrim($this->appName)) .'/web');
         }
+        
+        $files[] = new CodeFile("{$webrootJeasyUIAsset}/css/jeasyui/{$idModelClassName}.css", $this->render("jeasyui-css.php"));
 
-        $files[] = new CodeFile(
-            "$layoutsPath/_nav-item.php",
-            $this->render("views/layouts/_nav-item.php", [
-                'navItemUrl' => $navItemUrl,
-                'navItem' => $navItem,
-                'oldFileAsText' => $oldFileAsText
-            ])
-        );
+        $files[] = new CodeFile("{$webrootJeasyUIAsset}/js/jeasyui/{$idModelClassName}.js", $this->render("jeasyui-js.php", [
+            'baseModelClassName' => $baseModelClassName,
+        ]));
+
+        $layoutPath = Yii::getAlias('@'. str_replace('\\', '/', ltrim($this->appName)) .'/themes/jeasyui/views/layouts');
+
+        $files[] = new CodeFile("{$layoutPath}/_nav-item.php", $this->render("nav-item.php", ['baseControllerName' => $baseControllerName]));
+
         return $files;
     }
 }
