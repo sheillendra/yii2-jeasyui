@@ -1,0 +1,33 @@
+.swiper {
+  overflow: hidden;
+  position: relative;
+}
+.swiper-inner {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  will-change: transform;
+  transform: translate(0%,0px) translateZ(0px);
+  transition: transform 0.5s linear 0s;
+  transition-duration: 0.5s;
+}
+.swiper-dots {
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  transform: translate(-50%);
+}
+.swiper-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background-color: #bbb;
+}
+.swiper-dot-active {
+  background-color: #444;
+}
+.swiper-dot:last-child {
+  margin-right: 0;
+}

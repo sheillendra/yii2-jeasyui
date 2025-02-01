@@ -1,0 +1,34 @@
+.rate {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+}
+.rate-item {
+  position: relative;
+  display: inline-block;
+}
+.rate-item svg {
+  fill: currentColor;
+}
+.rate-second {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+}
+.rate-first {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  z-index: 9;
+  overflow: hidden;
+  display: none;
+}
+.rate-half .rate-first {
+  display: block;
+}
+.rate-disabled {
+  opacity: 0.5;
+}
