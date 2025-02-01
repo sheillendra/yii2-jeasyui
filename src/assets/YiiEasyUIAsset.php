@@ -34,7 +34,8 @@ class YiiEasyUIAsset extends AssetBundle {
     ];
     public $depends = [
         'yii\web\YiiAsset',
-        'sheillendra\jeasyui\assets\JEasyUIAsset'
+        'sheillendra\jeasyui\assets\JEasyUIAsset',
+        'sheillendra\jeasyui\assets\FontAwesomeAsset'
     ];
 
     public function init() {
