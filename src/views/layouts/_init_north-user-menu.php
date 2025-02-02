@@ -11,16 +11,17 @@ $profileUrl = Url::to(['/jeasyui/profile']);
 $this->params['northUserMenu'][] = [
     'id' => 'nav-profile',
     'text' => 'Profile',
-    'iconCls' => 'icon-profile',
+    'iconCls' => 'fa-solid fa-address-card',
     'attributes' => [
         'url' => $profileUrl,
     ],
-    'onclick' => new JsExpression(<<<JS
+    'onclick' => new JsExpression(
+        <<<JS
         function (e) {
             yii.easyui.createTab({
                 title: 'Profile',
                 href: '{$profileUrl}',
-                iconCls: 'icon-profile'
+                iconCls: 'fa-solid fa-address-card'
             }, 'nav-profile');
             e.stopPropagation();
         }
@@ -31,7 +32,7 @@ JS
 $this->params['northUserMenu'][] = ['separator' => 1];
 $this->params['northUserMenu'][] = [
     'text' => 'Theme',
-    'iconCls' => 'icon-profile',
+    'iconCls' => 'fa-solid fa-palette',
 ];
 
 $templateThemeOnClick = <<<JS
@@ -42,61 +43,24 @@ $templateThemeOnClick = <<<JS
         e.stopPropagation();
     }
 JS;
-$this->params['northUserMenu'][] = [
-    'parent' => 'Theme',
-    'text' => 'Default',
-    'onclick' => new JsExpression(strtr($templateThemeOnClick, ['{thema}' => 'default']))
-];
-$this->params['northUserMenu'][] = [
-    'parent' => 'Theme',
-    'text' => 'Gray',
-    'onclick' => new JsExpression(strtr($templateThemeOnClick, ['{thema}' => 'gray']))
-];
-$this->params['northUserMenu'][] = [
-    'parent' => 'Theme',
-    'text' => 'Metro',
-    'onclick' => new JsExpression(strtr($templateThemeOnClick, ['{thema}' => 'metro']))
-];
-$this->params['northUserMenu'][] = [
-    'parent' => 'Theme',
-    'text' => 'Black',
-    'onclick' => new JsExpression(strtr($templateThemeOnClick, ['{thema}' => 'black']))
-];
-$this->params['northUserMenu'][] = [
-    'parent' => 'Theme',
-    'text' => 'Bootstrap',
-    'onclick' => new JsExpression(strtr($templateThemeOnClick, ['{thema}' => 'bootstrap']))
-];
-$this->params['northUserMenu'][] = [
-    'parent' => 'Theme',
-    'separator' => 1
-];
-$this->params['northUserMenu'][] = [
-    'parent' => 'Theme',
-    'text' => 'Material',
-    'onclick' => new JsExpression(strtr($templateThemeOnClick, ['{thema}' => 'material']))
-];
-$this->params['northUserMenu'][] = [
-    'parent' => 'Theme',
-    'text' => 'Material Teal',
-    'onclick' => new JsExpression(strtr($templateThemeOnClick, ['{thema}' => 'material-teal']))
-];
-$this->params['northUserMenu'][] = [
-    'parent' => 'Theme',
-    'text' => 'Material Green',
-    'onclick' => new JsExpression(strtr($templateThemeOnClick, ['{thema}' => 'material-green']))
-];
-$this->params['northUserMenu'][] = [
-    'parent' => 'Theme',
-    'text' => 'Material Blue',
-    'onclick' => new JsExpression(strtr($templateThemeOnClick, ['{thema}' => 'material-blue']))
-];
+
+$defaultTheme = \sheillendra\jeasyui\components\helpers\AssetHelper::defaultTheme('{theme}');
+foreach (\sheillendra\jeasyui\components\helpers\AssetHelper::THEMES as $k=>$v){
+    $this->params['northUserMenu'][] = [
+        'parent' => 'Theme',
+        'text' => $v,
+        'iconCls' => $defaultTheme == $v? 'fa-solid fa-check':'',
+        'onclick' => new JsExpression(strtr($templateThemeOnClick, ['{thema}' => $v]))
+    ];
+}
+
 $this->params['northUserMenu'][] = ['separator' => 1];
 
 $this->params['northUserMenu'][] = [
     'text' => 'Logout',
-    'iconCls' => 'icon-door-out',
-    'onclick' => new JsExpression(<<<JS
+    'iconCls' => 'fa-solid fa-right-from-bracket',
+    'onclick' => new JsExpression(
+        <<<JS
         function (e) {
             yii.handleAction($('<a href="{$this->params['logoutUrl']}" data-method="post"></a>'));
             e.stopPropagation();

@@ -21,6 +21,17 @@ use yii\helpers\Html;
 $this->registerJs(
     <<<JS
     yii.easyui.navbarInit = function(){
+
+        var layerGroupNavbar = $('<div></div>').menubutton({
+            iconCls: 'fa-solid fa-layer-group',
+            plain: true,
+            size: 'large',
+            text: 'ERP',
+            border: false
+        });
+
+        $('#navbar').prepend(layerGroupNavbar);
+
         $('#ss').searchbox({
             width: '50%',
             searcher:function(value,name){
@@ -29,6 +40,7 @@ $this->registerJs(
             menu:'#mm',
             prompt:'Please Input Value'
         });
+
     }
 JS
 );
