@@ -40,22 +40,24 @@ class JEasyUIAsset extends AssetBundle
 
     public function init()
     {
-        $themeCookies = filter_input(INPUT_COOKIE, 'jeasyui-theme');
-        $themes = [
-            'black',
-            'bootstrap',
-            'default',
-            'gray',
-            'material',
-            'material-blue',
-            'material-teal',
-            'metro',
-        ];
-        if ($themeCookies && in_array($themeCookies, $themes)) {
-            $this->css[0] = "themes/$themeCookies/easyui.css";
-        } else {
-            $this->css[0] = "themes/default/easyui.css";
-        }
+        // $themeCookies = filter_input(INPUT_COOKIE, 'jeasyui-theme');
+        // $themes = [
+        //     'black',
+        //     'bootstrap',
+        //     'default',
+        //     'gray',
+        //     'material',
+        //     'material-blue',
+        //     'material-teal',
+        //     'metro',
+        // ];
+        // if ($themeCookies && in_array($themeCookies, $themes)) {
+        //     $this->css[0] = "themes/$themeCookies/easyui.css";
+        // } else {
+        //     $this->css[0] = "themes/default/easyui.css";
+        // }
+
+        $this->css[0] = \sheillendra\jeasyui\components\helpers\AssetHelper::defaultTheme();
         parent::init();
     }
 }

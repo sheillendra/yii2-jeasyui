@@ -39,6 +39,7 @@ class YiiEasyUIAsset extends AssetBundle {
     ];
 
     public function init() {
+        $this->css[] = \sheillendra\jeasyui\components\helpers\AssetHelper::defaultTheme('css/themes/{theme}/yii.easyui.css');
         parent::init();
     }
 
