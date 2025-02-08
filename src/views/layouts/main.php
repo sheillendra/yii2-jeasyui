@@ -29,6 +29,7 @@ YiiEasyUIAsset::register($this);
     <div id="main-mask-overlay" class="main-mask overlay"></div>
     <div id="main-mask" class="panel-body panel-loading main-mask loader"><?php echo Yii::t('app', 'Please wait ...'); ?></div>
     <div id="global-error"></div>
+    <div id="notification-drawer" style="width:250px"></div>
     <?php $this->beginBody() ?>
     <?php $this->endBody() ?>
 </body>
@@ -36,6 +37,8 @@ YiiEasyUIAsset::register($this);
 </html>
 
 <?php
+$navbarContent = preg_replace(Regex::HTML_MINIFIED, ' ', $this->render('@app/views/layouts/_navbar-content'));
+$leftRailContent = preg_replace(Regex::HTML_MINIFIED, ' ', $this->render('@app/views/layouts/_left-rail-content'));
 $northContent = preg_replace(Regex::HTML_MINIFIED, ' ', $this->render('@app/views/layouts/_north-content'));
 $southContent = preg_replace(Regex::HTML_MINIFIED, ' ', $this->render('@app/views/layouts/_south-content'));
 $centerContent = '<div id="maintab"></div>';
@@ -81,7 +84,7 @@ $tabOptions = isset($this->params['tabOptions']) ? Json::encode($this->params['t
 
 $northUserMenu = isset($this->params['northUserMenu']) ? Json::encode($this->params['northUserMenu']) : 0;
 $apiUrl = Yii::$app->urlManagerApi->createAbsoluteUrl('', true);
-$frontendUrl = Yii::$app->urlManager->createAbsoluteUrl('', true);
+$frontendUrl = Yii::$app->urlManager->baseUrl;
 $backendUrl = isset(Yii::$app->urlManagerBackend) ? Yii::$app->urlManagerBackend->createAbsoluteUrl('', true) : $frontendUrl;
 $this->registerJs(
     <<<JS
@@ -91,6 +94,8 @@ $this->registerJs(
     yii.easyui.getReferenceUrl = '{$this->params['getReferenceUrl']}';
     yii.easyui.homeUrl = '{$this->params['homeUrl']}';
     yii.easyui.logoutUrl = '{$this->params['logoutUrl']}';
+    yii.easyui.navbarContent = '{$navbarContent}';
+    yii.easyui.leftRailContent = '{$leftRailContent}';
     yii.easyui.northContent = '{$northContent}';
     yii.easyui.southContent = '{$southContent}';
     yii.easyui.centerContent = '{$centerContent}';

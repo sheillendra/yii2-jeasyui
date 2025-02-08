@@ -48,7 +48,7 @@ $defaultTheme = \sheillendra\jeasyui\components\helpers\AssetHelper::defaultThem
 foreach (\sheillendra\jeasyui\components\helpers\AssetHelper::THEMES as $k=>$v){
     $this->params['northUserMenu'][] = [
         'parent' => 'Theme',
-        'text' => $v,
+        'text' => ucfirst($v),
         'iconCls' => $defaultTheme == $v? 'fa-solid fa-check':'',
         'onclick' => new JsExpression(strtr($templateThemeOnClick, ['{thema}' => $v]))
     ];

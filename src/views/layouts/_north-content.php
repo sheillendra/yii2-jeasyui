@@ -5,42 +5,94 @@ use yii\helpers\Html;
 /* @var $this \yii\web\View */
 
 ?>
-<div id="navbar">
-    <input id="ss"></input>
-    <div id="mm" style="width:120px">
-        <div data-options="name:\'all\',iconCls:\'icon-ok\'">All News</div>
-        <div data-options="name:\'sports\'">Sports News</div>
-    </div>
-    <div id="north-right-nav">
-        <a id="north-user-menu-btn"></a>
-        <div id="north-user-menu"></div>
-    </div>
+<div style="padding-top: 5px">
+    <div id="toggle-sidebar"></div>
+    <div id="tools"></div>
+    <div id="tools-menu"></div>
 </div>
 
 <?php
 $this->registerJs(
     <<<JS
-    yii.easyui.navbarInit = function(){
+    yii.easyui.afterInit.push(()=>{
 
-        var layerGroupNavbar = $('<div></div>').menubutton({
-            iconCls: 'fa-solid fa-layer-group',
+        $('#toggle-sidebar').linkbutton({
+                iconCls: 'fa-solid fa-bars',
             plain: true,
-            size: 'large',
-            text: 'ERP',
-            border: false
+            // size: 'large',
+            onClick: function () {
+                if (yii.easyui.cookie.get('west-collapsed') == 1) {
+                    yii.easyui.appContainer.layout('expand', 'west');
+                } else {
+                    yii.easyui.appContainer.layout('collapse', 'west');
+                }
+
+            }
         });
 
-        $('#navbar').prepend(layerGroupNavbar);
+        var toolsMenu = $('#tools-menu').menu({});
 
-        $('#ss').searchbox({
-            width: '50%',
-            searcher:function(value,name){
-                alert(value + "," + name)
-            },
-            menu:'#mm',
-            prompt:'Please Input Value'
+        toolsMenu.menu('appendItem', {
+            text: 'Cleans Publish Asset',
+            onclick: function () {
+                yii.easyui.ajax.request({
+                    data: {
+                        r: '/jeasyui/tools/clean-assets',
+                    },
+                    host: 'backend',
+                    type: 'GET',
+                });
+            }
         });
 
-    }
+        toolsMenu.menu('appendItem', {
+            text: 'Clear Schema Cache',
+            onclick: function () {
+                yii.easyui.ajax.request({
+                    data: {
+                        r: '/jeasyui/tools/clear-schema-cache',
+                    },
+                    host: 'backend',
+                    type: 'GET',
+                });
+            }
+        });
+
+        toolsMenu.menu('appendItem', {
+            text: 'Flush Cache',
+            onclick: function () {
+                yii.easyui.ajax.request({
+                    data: {
+                        r: '/jeasyui/tools/flush-cache',
+                    },
+                    host: 'backend',
+                    type: 'GET',
+                });
+            }
+        });
+
+        toolsMenu.menu('appendItem', {
+            text: 'Invalidate Dependency',
+            onclick: function () {
+                yii.easyui.ajax.request({
+                    data: {
+                        r: '/jeasyui/tools/invalidate-dependency',
+                    },
+                    host: 'backend',
+                    type: 'GET',
+                    prompt: 'Please enter tag target',
+                    promptName: 'tag'
+                });
+            }
+        });
+
+        $('#tools').menubutton({
+            //iconCls: 'fa-solid fa-bars',
+            text: 'Tools',
+            plain: true,
+            menu: toolsMenu,
+            showEvent: 'mousedown',
+        });
+    });
 JS
 );
