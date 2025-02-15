@@ -25,7 +25,7 @@ $this->params['navItem'] = [
     '<?=Inflector::variablize($baseName)?>' => [
         'id' => 'nav-<?= $id ?>',
         'text' => '<?= Inflector::camel2words($baseName) ?>',
-        'iconCls' => 'icon-house',
+        'iconCls' => 'fa-solid fa-house',
         'attributes' => [
             'url' => Url::to(['/<?= $id ?>'])
         ]

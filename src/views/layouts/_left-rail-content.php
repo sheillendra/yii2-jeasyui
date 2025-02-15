@@ -12,7 +12,7 @@ use yii\helpers\Html;
 <?php
 $this->registerJs(
     <<<JS
-    yii.easyui.afterInit.push(()=>{
+    yii.easyui.afterInitMainLayout.push(()=>{
         var calendarLeftRail = $('#calendar').linkbutton({
             iconCls: 'fa-solid fa-calendar',
             plain: true,

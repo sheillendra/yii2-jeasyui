@@ -14,7 +14,7 @@ use yii\helpers\Html;
 <?php
 $this->registerJs(
     <<<JS
-    yii.easyui.afterInit.push(()=>{
+    yii.easyui.afterInitAppLayout.push(()=>{
 
         $('#toggle-sidebar').linkbutton({
                 iconCls: 'fa-solid fa-bars',

@@ -1,6 +1,8 @@
 <?php
 
-use yii\helpers\Html;
+use yii\helpers\Json;
+use yii\helpers\Url;
+use yii\web\JsExpression;
 
 /* @var $this \yii\web\View */
 
@@ -29,9 +31,81 @@ use yii\helpers\Html;
 </div>
 
 <?php
+
+$userMenuItem = [];
+
+//custom from here
+$profileUrl = Url::to(['/jeasyui/profile']);
+
+$userMenuItem[] = [
+    'id' => 'nav-profile',
+    'text' => 'Profile',
+    'iconCls' => 'fa-solid fa-address-card',
+    'attributes' => [
+        'url' => $profileUrl,
+    ],
+    'onclick' => new JsExpression(
+        <<<JS
+        function (e) {
+            yii.easyui.createTab({
+                title: 'Profile',
+                href: '{$profileUrl}',
+                iconCls: 'fa-solid fa-address-card'
+            }, 'nav-profile');
+            e.stopPropagation();
+        }
+JS
+    )
+];
+
+$userMenuItem[] = ['separator' => 1];
+$userMenuItem[] = [
+    'text' => 'Theme',
+    'iconCls' => 'fa-solid fa-palette',
+];
+
+$templateThemeOnClick = <<<JS
+    function (e) {
+        yii.easyui.cookie.delete('jeasyui-theme');
+        yii.easyui.cookie.set('jeasyui-theme', '{thema}');
+        window.location.reload(false);
+        e.stopPropagation();
+    }
+JS;
+
+$defaultTheme = \sheillendra\jeasyui\components\helpers\AssetHelper::defaultTheme('{theme}');
+foreach (\sheillendra\jeasyui\components\helpers\AssetHelper::THEMES as $k=>$v){
+    $userMenuItem[] = [
+        'parent' => 'Theme',
+        'text' => ucfirst($v),
+        'iconCls' => $defaultTheme == $v? 'fa-solid fa-check':'',
+        'onclick' => new JsExpression(strtr($templateThemeOnClick, ['{thema}' => $v]))
+    ];
+}
+
+$userMenuItem[] = ['separator' => 1];
+
+$userMenuItem[] = [
+    'text' => 'Logout',
+    'iconCls' => 'fa-solid fa-right-from-bracket',
+    'onclick' => new JsExpression(
+        <<<JS
+        function (e) {
+            yii.handleAction($('<a href="{$this->params['logoutUrl']}" data-method="post"></a>'));
+            e.stopPropagation();
+        }
+JS
+    )
+];
+
+$northUserMenuItem = Json::encode($userMenuItem);
+
+$this->params['baseUrl'] = $_ENV['URL_BASE'];
+
 $this->registerJs(
     <<<JS
-    yii.easyui.afterInit.push(()=>{
+    var northUserMenuItem = {$northUserMenuItem};
+    yii.easyui.afterInitMainLayout.push(()=>{
 
         $('#layer-btn').menubutton({
             iconCls: 'fa-solid fa-layer-group',
@@ -63,13 +137,13 @@ $this->registerJs(
             prompt:'Search'
         });
 
-        northUserMenu = $('#north-user-menu');
-        northUserMenu.menu({});
+        yii.easyui.northUserMenu = $('#north-user-menu').menu({});
         var parentItem = {};
-        $.each(yii.easyui.northUserMenu, function (k, v) {
+        
+        $.each(northUserMenuItem, function (k, v) {
             if (v.parent !== undefined) {
                 if (parentItem[v.parent] === undefined) {
-                    parentItem[v.parent] = northUserMenu.menu('findItem', v.parent);
+                    parentItem[v.parent] = yii.easyui.northUserMenu.menu('findItem', v.parent);
                 }
                 if (parentItem[v.parent]) {
                     v.parent = parentItem[v.parent].target;
@@ -77,13 +151,13 @@ $this->registerJs(
                     return false;
                 }
             }
-            northUserMenu.menu('appendItem', v);
+            yii.easyui.northUserMenu.menu('appendItem', v);
         });
 
         $('#north-user-menu-btn').menubutton({
             text: yii.easyui.username,
             iconCls: 'fa-solid fa-user',
-            menu: northUserMenu,
+            menu: yii.easyui.northUserMenu,
             menuAlign: 'right',
             showEvent: 'mousedown',
             size: 'large',

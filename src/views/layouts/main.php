@@ -81,11 +81,6 @@ JS;
 $navItemJson = Json::encode(array_values($this->params['navItem']));
 
 $tabOptions = isset($this->params['tabOptions']) ? Json::encode($this->params['tabOptions']) : 0;
-
-$northUserMenu = isset($this->params['northUserMenu']) ? Json::encode($this->params['northUserMenu']) : 0;
-$apiUrl = Yii::$app->urlManagerApi->createAbsoluteUrl('', true);
-$frontendUrl = Yii::$app->urlManager->baseUrl;
-$backendUrl = isset(Yii::$app->urlManagerBackend) ? Yii::$app->urlManagerBackend->createAbsoluteUrl('', true) : $frontendUrl;
 $this->registerJs(
     <<<JS
     yii.easyui.locale = 'en-PG';
@@ -107,11 +102,8 @@ $this->registerJs(
     yii.easyui.sidebarPlugin = '{$this->params['sidebarPlugin']}';
     {$errors}
     yii.easyui.tabOptions = {$tabOptions};
-    //yii.easyui.showMainMask();
-    yii.easyui.northUserMenu = {$northUserMenu};
-    yii.easyui.setHost('api', '{$apiUrl}');
-    yii.easyui.setHost('backend', '{$backendUrl}');
-    yii.easyui.setHost('frontend', '{$frontendUrl}');
+
+    yii.easyui.setHost('base', '{$this->params['baseUrl']}');
     yii.easyui.init();
 JS
 );

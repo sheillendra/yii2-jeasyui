@@ -90,7 +90,7 @@ $fungsi = function($column, $comment) use ( &$id, &$haveStatusActive, &$columnTe
                 $columnWords = str_replace(' Id', '', $columnWords);
                 $fieldText .="            {$comment}yii.easyui.refDropdown('{$columnVariablize}', {$columnVariablize}Input, ()=>{}, {editable: false, required: {$required}});\n";
                 $ajaxMapText .="            {$comment}yii.easyui.ajax.map['{$columnVariablize}'] = (callback) => {\n";
-                $ajaxMapText .="            {$comment}    return yii.easyui.ajax.ref(callback, '{$columnVariablize}', { r: 'v1/{$relationTableId}', fields: '{$relations[$column->name]['column']}, name', 'per-page': 50 }, 'id', 'name');\n";
+                $ajaxMapText .="            {$comment}    return yii.easyui.ajax.ref(callback, '{$columnVariablize}', { r: 'api/v1/{$relationTableId}', fields: '{$relations[$column->name]['column']}, name', 'per-page': 50 }, 'id', 'name');\n";
                 $ajaxMapText .="            {$comment}};\n";
                 $ajaxMapText .="            {$comment}yii.easyui.ajax.queueCallback['{$columnVariablize}'] = yii.easyui.ajax.queueCallback['{$columnVariablize}']??[];\n";
                 $ajaxMapText .="            {$comment}yii.easyui.refLabel['{$columnVariablize}'] = '{$columnWords}';\n";
@@ -183,12 +183,12 @@ window.yii.easyui.<?= $variablize?> = (function ($) {
         var url;
         if (row) {
             title = 'Edit <?=$words?>';
-            url = yii.easyui.getHost('api') + yii.easyui.ajaxAuthToken({
-                r: 'v1/<?=$id?>/update',
+            url = yii.easyui.ajaxAuthToken({
+                r: 'api/v1/<?=$id?>/update',
                 id: row.<?=$pk[0]."\n"?>
             }, true);
         } else {
-            url = yii.easyui.getHost('api') + yii.easyui.ajaxAuthToken({ r: 'v1/<?=$id?>/create' }, true);
+            url = yii.easyui.ajaxAuthToken({ r: 'api/v1/<?=$id?>/create' }, true);
         }
 
         if (dlg) {
@@ -245,8 +245,8 @@ window.yii.easyui.<?= $variablize?> = (function ($) {
     var initDg = function(){
         dg = el.find('#<?=$id?>-dg');
         dg.datagrid({
-            url: yii.easyui.getHost('api'),
-            queryParams: yii.easyui.ajaxAuthToken({ r: 'v1/jeasyui/<?=$id?>' }),
+            url: yii.easyui.getHost('base'),
+            queryParams: yii.easyui.ajaxAuthToken({ r: 'api/v1/jeasyui/<?=$id?>' }),
             method: 'get',
             fit: true,
             border: false,
@@ -287,10 +287,11 @@ window.yii.easyui.<?= $variablize?> = (function ($) {
                         if(!dgRow){
                             return $.messager.alert('Edit <?=$words?>', 'Select data to delete.', 'error');
                         }
-                        yii.easyui.ajax.delete({
+                        yii.easyui.ajax.request({
                             id: dgRow.id,
-                            route: 'v1/<?=$id?>/delete',
+                            route: 'api/v1/<?=$id?>/delete',
                             text: '<?=$words?>',
+                            type: 'DELETE',
                             callback: () => {
                                 dg.datagrid('reload');
                             }
