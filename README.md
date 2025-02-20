@@ -83,6 +83,26 @@ if (!YII_ENV_TEST) {
 }
 ```
 
+### Put GII instruction in migration comment field
+```
+[
+    'id' => $this->primaryKey()->comment('width:20'),
+    'pdf_file' => $this->string()->comment('input:file;accept:pdf'),
+]
+```
+#### All
+label:Your label
+width:10
+format:currency|number
+
+#### Filebox
+input:file
+inputName:inputFile
+accept:pdf
+accept:image
+#### Form
+formHide:true
+
 ## yii.easyui.min.js
 ```
 Method :

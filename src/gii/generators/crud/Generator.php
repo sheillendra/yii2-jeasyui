@@ -24,7 +24,7 @@ class Generator extends \yii\gii\generators\crud\Generator
 
     public function getName()
     {
-        return 'Jquery EasyUI CRUD Generator';
+        return 'EasyUI CRUD Generator';
     }
 
     /**

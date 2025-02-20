@@ -17,6 +17,8 @@ $fieldText = "\n";
 $varText = "\n";
 $ajaxMapText = "\n";
 $formText = '<div style="padding: 20px"><form id="' . $id . '-form" method="post"></form></div>';
+$previewPdfText = "\n";
+$previewPdfInit = "\n";
 
 $schema = ($generator->modelClass)::getTableSchema();
 $relations = [];
@@ -30,29 +32,50 @@ foreach($schema->foreignKeys as $k=>$v){
         }
     }    
 }
-        
-$fungsi = function($column, $comment) use ( &$id, &$haveStatusActive, &$columnText, &$fieldText, &$filterText, &$varText, &$ajaxMapText, &$formText, $relations){
-    $columnWords = Inflector::camel2words($column->name);
+
+$_comments = [];
+$collectComment = function ($column) use(&$_comments) {
+    $_comments[$column->name] = [];
+    if ($column->comment) {
+        $split1 = explode(';', $column->comment);
+        foreach ($split1 as $k => $v) {
+            $split2 = explode(':', $v);
+            $_comments[$column->name][$split2[0]] = $split2[1];
+        }
+    }
+};
+
+$getLabel = function ($column) use (&$_comments){
+    if (isset($_comments[$column->name]['label'])) {
+        return $_comments[$column->name]['label'];
+    }
+    return str_replace(' Id', '', Inflector::camel2words($column->name));
+};
+
+$fungsi = function ($column, $comment) use (&$id, &$haveStatusActive, &$columnText, &$fieldText, &$filterText, &$varText, &$ajaxMapText, &$formText, &$previewPdfText, &$previewPdfInit, $relations, &$_comments, $getLabel) {
+    $columnWords = $getLabel($column);
     $columnId = Inflector::camel2id($column->name);
     $columnVariablize = Inflector::variablize($column->name);
     $required = $column->allowNull==1 ? 'false':'true';
     $varText .= "    {$comment}var {$columnVariablize}Input;\n";
     $numberTypes = ['integer', 'smallint', 'double'];
+    $widthGridColumn = isset($_comments[$column->name]['width'])? ', width: ' + $_comments[$column->name]['width'] : '';
+    $validType = isset($_comments[$column->name]['validType'])??'';
         
     if(in_array($column->type, $numberTypes)){
         if($column->name === 'status_active'){
             $haveStatusActive = true;
-            $columnText .= "                    {$comment}{ field: '{$column->name}', title: '{$columnWords}', width: 100, formatter:(value, row, index)=>{return yii.easyui.ref.statusActive[value];} },\n";
+            $columnText .= "                    {$comment}{ field: '{$column->name}', title: '{$columnWords}'{$widthGridColumn}, formatter:(value, row, index)=>{return yii.easyui.ref.statusActive[value];} },\n";
             $filterText .= "            {$comment}yii.easyui.filter.ref(dg, '{$column->name}', 'statusActive', {editable: false}),\n";
         } else {
             if(isset($relations[$column->name])){
-                $columnText .= "                    {$comment}{ field: '{$column->name}', title: '{$columnWords}', width: 100, formatter:(value, row, index)=>{return yii.easyui.ref.{$columnVariablize} === undefined ? yii.easyui.ajax.map['{$columnVariablize}'](()=>{dg.datagrid('reload');dg.datagrid('getFilterComponent', '{$column->name}').combobox({'textField': 'name'}).combobox('loadData', yii.easyui.refResult['{$columnVariablize}']);}) : yii.easyui.ref.{$columnVariablize}[value];} },\n";
+                $columnText .= "                    {$comment}{ field: '{$column->name}', title: '{$columnWords}'{$widthGridColumn}, formatter:(value, row, index)=>{return yii.easyui.ref.{$columnVariablize} === undefined ? yii.easyui.ajax.map['{$columnVariablize}'](()=>{dg.datagrid('reload');dg.datagrid('getFilterComponent', '{$column->name}').combobox({'textField': 'name'}).combobox('loadData', yii.easyui.refResult['{$columnVariablize}']);}) : yii.easyui.ref.{$columnVariablize}[value];} },\n";
                 $filterText .= "            {$comment}yii.easyui.filter.ref(dg, '{$column->name}', '{$columnVariablize}', {editable: false}),\n";
             }else{
                 if(strpos($column->comment, 'format:currency') !== false){
-                    $columnText .= "                    {$comment}{ field: '{$column->name}', title: '{$columnWords}', width: 100, align: 'right', formatter: yii.easyui.filter.currency },\n";
+                    $columnText .= "                    {$comment}{ field: '{$column->name}', title: '{$columnWords}'{$widthGridColumn}, align: 'right', formatter: yii.easyui.filter.currency },\n";
                 }else{
-                    $columnText .= "                    {$comment}{ field: '{$column->name}', title: '{$columnWords}', width: 100, align: 'right' },\n";
+                    $columnText .= "                    {$comment}{ field: '{$column->name}', title: '{$columnWords}'{$widthGridColumn}, align: 'right' },\n";
                 }
                 $filterText .= "            {$comment}yii.easyui.filter.customize(dg, '{$column->name}', 'equal', false, 'numberbox'),\n";
             }
@@ -60,26 +83,53 @@ $fungsi = function($column, $comment) use ( &$id, &$haveStatusActive, &$columnTe
         
     }elseif($column->type == 'boolean'){
         $filterText .= "            {$comment}yii.easyui.filter.ref(dg, '{$column->name}', 'boolean', {editable: false}),\n";
-        $columnText .= "                    {$comment}{ field: '{$column->name}', title: '{$columnWords}', width: 100, formatter:(value, row, index)=>{return yii.easyui.ref.boolean[~~value];} },\n";
+        $columnText .= "                    {$comment}{ field: '{$column->name}', title: '{$columnWords}'{$widthGridColumn}, formatter:(value, row, index)=>{return yii.easyui.ref.boolean[~~value];} },\n";
+    }elseif(strpos($column->comment, 'accept:pdf') !== false){
+        $previewPdfText .="    var pdfPreviewDlg;\n";
+        $previewPdfText .="    var pdfPreview = function (src) {\n";
+        $previewPdfText .="        var title = 'PDF Preview';\n";
+        $previewPdfText .="        if (pdfPreviewDlg) {\n";
+        $previewPdfText .="            pdfPreviewDlg.dialog('open');\n";
+        $previewPdfText .="        } else {\n";
+        $previewPdfText .="            pdfPreviewDlg = $('<div></div>').dialog({\n";
+        $previewPdfText .="                title: title,\n";
+        $previewPdfText .="                modal: true,\n";
+        $previewPdfText .="                height: '80%',\n";
+        $previewPdfText .="                width: '80%'\n";
+        $previewPdfText .="            });\n";
+        $previewPdfText .="        }\n";
+        $previewPdfText .="        pdfPreviewDlg.dialog({\n";
+        $previewPdfText .="            content: '<iframe src=\"' + src + '\" style=\"width:100%;height:100%;border:none;\"></iframe>'\n";
+        $previewPdfText .="        });\n";
+        $previewPdfText .="    };\n";
+
+        $previewPdfInit .= "        pdfPreview: (url) => {\n";
+        $previewPdfInit .= "            return pdfPreview(url);\n";
+        $previewPdfInit .= "        },\n";
+        $columnText .= "                    {$comment}{ field: '{$column->name}', title: '{$columnWords}'{$widthGridColumn}, formatter: (value, row, index) => {if(value){return '<a href=\"javascript:void(0);\" onclick=\"yii.easyui.wifiVoucher.pdfPreview(\'' + yii.easyui.getHost('base') + '?r=pdf&name=' +encodeURIComponent(row.filename) + '\')\">' + row.filename + '</a>';}} },\n";
+        $filterText .= "            {$comment}yii.easyui.filter.customize(dg, '{$column->name}', 'contains', true),\n";
     }else{
-        $columnText .= "                    {$comment}{ field: '{$column->name}', title: '{$columnWords}', width: 100 },\n";
+        $columnText .= "                    {$comment}{ field: '{$column->name}', title: '{$columnWords}'{$widthGridColumn} },\n";
         $filterText .= "            {$comment}yii.easyui.filter.customize(dg, '{$column->name}', 'contains', true),\n";
     }
 
-    if($column->isPrimaryKey == 1){
+    if($column->isPrimaryKey == 1 || (isset($_comments[$column->name]['formHide']) && $_comments[$column->name]['formHide'] == 'true')){
         return;
     }
 
+    //element input
     if(strpos($column->comment, 'input:file') !== false){
+        $inputFile = isset($_comments[$column->name]['inputName'])?$_comments[$column->name]['inputName']:'inputFile';
         if(strpos($column->comment, 'accept:image') !== false){
-            $fieldText .="            {$comment}var {$columnVariablize}Input = $('<input name=\"imageFile\" style=\"border: none\"/>');\n";
+            $fieldText .="            {$comment}var {$columnVariablize}Input = $('<input name=\"{$inputFile}\" style=\"border: none\"/>');\n";
         }elseif(strpos($column->comment, 'accept:pdf') !== false){
-            $fieldText .="            {$comment}var {$columnVariablize}Input = $('<input name=\"pdfFile\" style=\"border: none\"/>');\n";
+            $fieldText .="            {$comment}var {$columnVariablize}Input = $('<input name=\"{$inputFile}\" style=\"border: none\"/>');\n";
         }
     }else{
         $fieldText .="            {$comment}var {$columnVariablize}Input = $('<input name=\"{$column->name}\" style=\"border: none\"/>');\n";
     }
 
+    //easyui field
     $fieldText .="            {$comment}frm.append({$columnVariablize}Input);\n";
     if(in_array($column->type, $numberTypes)){
         if($column->name === 'status_active'){
@@ -87,7 +137,7 @@ $fungsi = function($column, $comment) use ( &$id, &$haveStatusActive, &$columnTe
         } else {
             if(isset($relations[$column->name])){
                 $relationTableId = Inflector::camel2id($relations[$column->name]['table']);
-                $columnWords = str_replace(' Id', '', $columnWords);
+                //$columnWords = str_replace(' Id', '', $columnWords);
                 $fieldText .="            {$comment}yii.easyui.refDropdown('{$columnVariablize}', {$columnVariablize}Input, ()=>{}, {editable: false, required: {$required}});\n";
                 $ajaxMapText .="            {$comment}yii.easyui.ajax.map['{$columnVariablize}'] = (callback) => {\n";
                 $ajaxMapText .="            {$comment}    return yii.easyui.ajax.ref(callback, '{$columnVariablize}', { r: 'api/v1/{$relationTableId}', fields: '{$relations[$column->name]['column']}, name', 'per-page': 50 }, 'id', 'name');\n";
@@ -121,17 +171,32 @@ $fungsi = function($column, $comment) use ( &$id, &$haveStatusActive, &$columnTe
         $fieldText .="            {$comment}        },\n";
         $fieldText .="            {$comment}    }],\n";
         if(strpos($column->comment, 'accept:image') !== false){
-            $fieldText .="            {$comment}    label: 'Image File',\n";
+            $fieldText .="            {$comment}    label: '{$columnWords}',\n";
             $fieldText .="            {$comment}    accept: 'image/*',\n";
             $fieldText .="            {$comment}    buttonText: 'Image File',\n";
-        }elseif(strpos($column->comment, 'accept:image') !== false){
-            $fieldText .="            {$comment}    label: 'PDF File',\n";
+        }elseif(strpos($column->comment, 'accept:pdf') !== false){
+            $fieldText .="            {$comment}    label: '{$columnWords}',\n";
             $fieldText .="            {$comment}    accept: 'pdf/*',\n";
             $fieldText .="            {$comment}    buttonText: 'PDF File',\n";
         }else{
             $fieldText .="            {$comment}    label: '{$columnWords}',\n";
         }
         $fieldText .="            {$comment}    required: {$required}\n";
+        $fieldText .="            {$comment}});\n";
+    }elseif($column->type == 'date'){
+        $fieldText .="            {$comment}{$columnVariablize}Input.date({\n";
+        $fieldText .="            {$comment}    label: '{$columnWords}',\n";
+        $fieldText .="            {$comment}    labelPosition: 'top',\n";
+        $fieldText .="            {$comment}    width: 300,\n";
+        $fieldText .="            {$comment}    required: {$required},\n";
+        $fieldText .="            {$comment}    validType: [{$validType}],\n";
+        $fieldText .="            {$comment}});\n";
+    }elseif($column->type == 'datetime'){
+        $fieldText .="            {$comment}{$columnVariablize}Input.datetimebox({\n";
+        $fieldText .="            {$comment}    label: '{$columnWords}',\n";
+        $fieldText .="            {$comment}    labelPosition: 'top',\n";
+        $fieldText .="            {$comment}    width: 300,\n";
+        $fieldText .="            {$comment}    required: {$required},\n";
         $fieldText .="            {$comment}});\n";
     }else{
         $fieldText .="            {$comment}{$columnVariablize}Input.textbox({\n";
@@ -161,6 +226,7 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
     }
 } else {
     foreach ($tableSchema->columns as $column) {
+        $collectComment($column);
         if(in_array($column->name, ['created_at', 'created_by', 'updated_at', 'updated_by'])) continue;
         //if (++$count < 6) {
             $fungsi($column, '');
@@ -249,6 +315,7 @@ window.yii.easyui.<?= $variablize?> = (function ($) {
             queryParams: yii.easyui.ajaxAuthToken({ r: 'api/v1/jeasyui/<?=$id?>' }),
             method: 'get',
             fit: true,
+            fitColumns: true,
             border: false,
             striped: true,
             checkOnSelect: false,
@@ -317,8 +384,9 @@ window.yii.easyui.<?= $variablize?> = (function ($) {
                 });
             }
         }).datagrid('enableFilter', [<?=$filterText?>
-        ]);
+        ]).datagrid('columnPriority');
     }
+<?=$previewPdfText?>
 
     return {
         init: function(){
@@ -342,6 +410,6 @@ window.yii.easyui.<?= $variablize?> = (function ($) {
             <?=$ajaxMapText?>
 
             initDg();
-        }
+        },<?=$previewPdfInit?>
     }
 })(jQuery);
