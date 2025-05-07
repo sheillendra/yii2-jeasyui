@@ -11,9 +11,10 @@
     ],
     "require": {
         "yiisoft/yii2": "*",
-        "bower-asset/font-awesome": "*",
-        "bower-asset/c3": "v0.4.18",
-        "mobiledetect/mobiledetectlib": "^4.8"
+        "bower-asset/fontawesome": "*",
+        "bower-asset/c3": "*",
+	"firebase/php-jwt": "*",
+	"phpoffice/phpspreadsheet": "*"
     },
     "autoload": {
         "psr-4": {

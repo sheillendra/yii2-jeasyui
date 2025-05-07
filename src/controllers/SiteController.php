@@ -92,7 +92,7 @@ class SiteController extends Controller
                 'redirect' => Yii::$app->getUser()->getReturnUrl(),
                 'data' => [
                     'token' => $model->user->token,
-                    'level' => $model->user->maxLevel,
+                    'level' => $model->user->authMaxLevel,
                 ]
             ]);
         } else {

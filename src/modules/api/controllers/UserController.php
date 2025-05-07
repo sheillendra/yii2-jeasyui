@@ -5,13 +5,13 @@ namespace sheillendra\jeasyui\modules\api\controllers;
 use Yii;
 use yii\web\ServerErrorHttpException;
 use sheillendra\jeasyui\components\rest\ActiveController;
-use common\models\UserExt;
+use sheillendra\jeasyui\models\UserExt;
 use sheillendra\jeasyui\models\SignupForm;
 
 class UserController extends ActiveController
 {
 
-    public $modelClass = 'common\models\UserExt';
+    public $modelClass = 'sheillendra\jeasyui\models\UserExt';
 
     public function actionResetPassword($id)
     {
@@ -45,8 +45,8 @@ class UserController extends ActiveController
         }
 
         if (
-            !Yii::$app->user->can(UserExt::ROLE_SUPERADMIN) &&
-            $model->maxLevel <= Yii::$app->user->identity->maxLevel
+            !Yii::$app->user->can(UserExt::SUPERADMIN_ROLE) &&
+            $model->authMaxLevel <= Yii::$app->user->identity->authMaxLevel
         ) {
             $result['message'] = 'Anda tidak bisa mengatur user dengan level yang lebih tinggi';
             return $result;

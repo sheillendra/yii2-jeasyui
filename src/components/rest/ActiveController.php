@@ -8,23 +8,27 @@ use yii\web\Response;
 class ActiveController extends \yii\rest\ActiveController
 {
 
-    public $allowRoles = '@';
+    public $rules = [
+        [
+            'allow' => true,
+            'roles' => ['@'],
+        ],
+    ];
+
+    public $only = [];
+
     public $searchModelClass;
+
     public function behaviors()
     {
-
         return array_merge(parent::behaviors(), [
             'authenticator' => [
                 'class' => \yii\filters\auth\QueryParamAuth::class,
             ],
             'access' => [
                 'class' => \yii\filters\AccessControl::class,
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => [$this->allowRoles],
-                    ],
-                ]
+                'only'=> $this->only,
+                'rules' => $this->rules
             ],
             'corsFilter' => \yii\filters\Cors::class,
             'contentNegotiator' => [

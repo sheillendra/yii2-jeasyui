@@ -14,7 +14,7 @@ use yii\web\JsExpression;
         <div data-options="name:\'app2\'">APP 2</div>
         <div data-options="name:\'app3\'">APP 3</div>
     </div>
-    <div class="panel-title" style="display: inline;margin-right: 100px;height:45px">CORPORATE</div>
+    <div class="panel-title" style="display: inline;margin-right: 100px;height:45px">YII2-JEASYUI</div>
     <div style="display: inline;width: 300px;"><input id="navbar-search-box" style="display: none;"></input></div>
     <div id="north-right-nav">
         <div id="mm" style="width:120px;display:none;">

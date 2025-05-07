@@ -83,25 +83,36 @@ if (!YII_ENV_TEST) {
 }
 ```
 
-### Put GII instruction in migration comment field
+### Put GII instruction in modelExt (extended)
 ```
-[
-    'id' => $this->primaryKey()->comment('width:20'),
-    'pdf_file' => $this->string()->comment('input:file;accept:pdf'),
-]
+    /**
+     * For generate EasyUI
+     */
+    public function getEasyuiAttributes()
+    {
+        return [
+            '_' => [
+                'formDialogHeight' => 500
+            ],
+            'id' => [
+                'width' => 60,
+            ],
+            'fix_price' => [
+                'formHide' => true,
+                'format' => 'currency'
+            ],
+            'pdf_file' => [
+                'input' => 'file',
+                'accept' => 'pdf',
+                'inputName' => 'inputFile',
+            ],
+            'date' => [
+                'validType' => "'validDate','dateLessEqual[]'"
+            ]
+        ];
+    }
 ```
-#### All
-label:Your label
-width:10
-format:currency|number
 
-#### Filebox
-input:file
-inputName:inputFile
-accept:pdf
-accept:image
-#### Form
-formHide:true
 
 ## yii.easyui.min.js
 ```

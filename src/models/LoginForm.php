@@ -2,7 +2,6 @@
 
 namespace sheillendra\jeasyui\models;
 
-use common\models\UserExt;
 use Yii;
 
 class LoginForm extends \common\models\LoginForm {
@@ -21,7 +20,7 @@ class LoginForm extends \common\models\LoginForm {
     public function getUser()
     {
         if ($this->_user === null) {
-            $this->_user = UserExt::findByUsername($this->username);
+            $this->_user = (Yii::$app->user->identityClass)::findByUsername($this->username);
         }
         
         return $this->_user;

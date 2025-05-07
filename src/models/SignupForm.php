@@ -2,7 +2,6 @@
 namespace sheillendra\jeasyui\models;
 
 use yii\base\Model;
-use common\models\UserExt;
 
 /**
  * Signup form

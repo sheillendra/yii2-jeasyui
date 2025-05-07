@@ -1,5 +1,6 @@
 <?php
 
+use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
 
 echo "<?php\n";
@@ -7,6 +8,7 @@ echo "<?php\n";
 
 namespace <?= StringHelper::dirname(ltrim($generator->controllerClass, '\\')) ?>;
 
+use <?=$appName?>\models\User;
 use sheillendra\jeasyui\components\web\Controller;
 
 /**
@@ -14,5 +16,11 @@ use sheillendra\jeasyui\components\web\Controller;
  */
 class <?=$controllerClass?> extends Controller
 {
- 
+    public $rules = [
+        [
+            'actions' => ['index'],
+            'allow' => true,
+            'roles' => [User::READ_<?=strtoupper(Inflector::camel2id($baseModelClassName, '_'))?>_PERMISSION],
+        ],
+    ];
 }

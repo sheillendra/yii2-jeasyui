@@ -38,6 +38,7 @@ $this->registerJs(
     <<<JS
     yii.easyui.tabInit = function(){
         yii.easyui.user.roles = {$roles};
+        yii.easyui.user.apiRoute = 'api/v1'
         yii.easyui.user.init();
         yii.easyui.hideMainMask();
     };

@@ -2,11 +2,9 @@
 
 namespace sheillendra\jeasyui\modules\api\models;
 
+use sheillendra\jeasyui\components\helpers\UserTrait;
 
-class UserExt extends \common\models\UserExt
+class UserExt extends \sheillendra\jeasyui\models\UserExt
 {
-    // public function extraFields()
-    // {
-    //     return ['roles'];
-    // }
+    use UserTrait;
 }

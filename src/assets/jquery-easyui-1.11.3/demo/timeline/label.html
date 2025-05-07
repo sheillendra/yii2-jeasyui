@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>TimeLine Label - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../demo.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+</head>
+<body>
+	<h2>TimeLine Label</h2>
+	<div style="margin:20px 0;"></div>
+	<div class="easyui-panel" style="padding:10px;">
+		<div class="easyui-timeline" data-options="data:data"></div>
+	</div>
+	<script>
+		var data = [
+			{content:'Create the application',label:'May 15,2024'},
+			{content:'Solve some questions',label:'Jun 22,2024'},
+			{content:'Update API document',label:'Jul 23,2024'},
+			{content:'Change the styles',label:'Aug 14,2024'},
+		]
+	</script>
+</body>
+</html>

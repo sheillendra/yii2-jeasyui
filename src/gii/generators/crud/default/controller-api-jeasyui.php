@@ -9,7 +9,7 @@ echo "<?php\n";
 
 namespace <?= StringHelper::dirname(ltrim($generator->apiName, '\\'). '\modules\jeasyui\controllers\\' . $controllerClass) ?>;
 
-use yii\rest\Serializer;
+use sheillendra\jeasyui\components\rest\Serializer;
 use <?= $generator->jeasyUiSearchModelClass ?>;
 
 /**

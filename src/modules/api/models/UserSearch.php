@@ -80,18 +80,18 @@ class UserSearch extends UserExt
             // ->leftJoin('{{%personel}} t2', 't2.user_id=t0.id')
         ;
 
-        if (Yii::$app->user->can($this::ROLE_SUPERADMIN)) {
+        if (Yii::$app->user->can($this::SUPERADMIN_ROLE)) {
             if (Yii::$app->user->id > 1) {
                 $query->where(['>', 't0.id', 2]);
             }
         } else {
-            $query->where(['>', 't1.max_level', Yii::$app->user->identity->maxLevel])
+            $query->where(['>', 't1.max_level', Yii::$app->user->identity->authMaxLevel])
                 ->orWhere(['t1.roles' => null]);
         }
 
-        if (Yii::$app->user->can($this::ROLE_ADMIN)) {
+        if (Yii::$app->user->can($this::ADMIN_ROLE)) {
         } else {
-            // if (Yii::$app->user->can($this::ROLE_ADMIN_OPD)) {
+            // if (Yii::$app->user->can($this::ADMIN_ROLE_OPD)) {
             //     $query->andWhere(['t2.opd_id' => Yii::$app->user->identity->opdAdmin]);
             // }
         }

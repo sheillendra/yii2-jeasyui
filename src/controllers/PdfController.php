@@ -8,12 +8,13 @@ use yii\web\Controller;
 /**
  * Feedback controller
  */
-class PdfController extends Controller
+class PdfController extends \sheillendra\jeasyui\components\web\Controller
 {
 
     public $layout = '//blank';
+    public $defaultAction = 'view';
 
-    public function actionIndex($name)
+    public function actionView($name)
     {
         $pdfFullPath = Yii::getAlias('@uploads/' . $name);
         $info = pathinfo($pdfFullPath);

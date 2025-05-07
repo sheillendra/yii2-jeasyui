@@ -14,5 +14,3 @@ $this->params['getReferenceUrl'] = Url::to(['/site/reference']);
 $this->params['westTitle'] = 'Menu Utama';
 $this->params['westIcon'] = 'icon-compass';
 $this->params['sidebarPlugin'] = 'tree'; //tree or accordion
-
-$this->render('@app/views/layouts/_init_north-user-menu');

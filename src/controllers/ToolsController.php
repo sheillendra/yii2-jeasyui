@@ -35,7 +35,7 @@ class ToolsController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => [UserExt::ROLE_SUPERADMIN],
+                        'roles' => [UserExt::SUPERADMIN_ROLE],
                     ],
                 ],
             ],

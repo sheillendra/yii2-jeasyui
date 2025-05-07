@@ -15,7 +15,7 @@ use yii\helpers\StringHelper;
 class Generator extends \yii\gii\generators\crud\Generator
 {
     public $appName = 'backend';
-    public $apiName = 'api\modules\v1';
+    public $apiName = 'backend\modules\api\modules\v1';
     public $controllerClass = 'backend\controllers\SiteController';
     public $apiControllerClass = 'api\modules\v1\controllers\SiteController';
     public $apiJeasyUIControllerClass = 'api\modules\v1\modules\jeasyui\controllers\SiteController';
@@ -65,8 +65,10 @@ class Generator extends \yii\gii\generators\crud\Generator
 
         $files = [
             new CodeFile($controllerFile, $this->render('controller.php', [
+                'appName' => $this->appName,
                 'controllerClass' => $baseControllerName,
-                'modelClassName' => $modelClassName
+                'modelClassName' => $modelClassName,
+                'baseModelClassName' => $baseModelClassName
             ])),
         ];
 
@@ -129,6 +131,9 @@ class Generator extends \yii\gii\generators\crud\Generator
         $layoutPath = Yii::getAlias('@'. str_replace('\\', '/', ltrim($this->appName)) .'/themes/jeasyui/views/layouts');
 
         $files[] = new CodeFile("{$layoutPath}/_nav-item.php", $this->render("nav-item.php", ['baseControllerName' => $baseControllerName]));
+
+        $modelPath = Yii::getAlias('@'. str_replace('\\', '/', ltrim($this->appName)) .'/models');
+        $files[] = new CodeFile("{$modelPath}/user.php", $this->render("user.php", ['baseControllerName' => $baseControllerName]));
 
         return $files;
     }
