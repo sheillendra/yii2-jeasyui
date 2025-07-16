@@ -104,6 +104,7 @@ $this->registerJs(
     yii.easyui.tabOptions = {$tabOptions};
 
     yii.easyui.setHost('base', '{$this->params['baseUrl']}');
+    yii.easyui.setHost('app', '{$this->params['appUrl']}');
     yii.easyui.init();
 JS
 );

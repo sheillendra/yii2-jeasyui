@@ -5,11 +5,11 @@ use yii\helpers\StringHelper;
 
 echo "<?php\n" ?>
 
-namespace <?= StringHelper::dirname(ltrim($generator->modelClass, '\\')) ?>;
+namespace <?= $generator->appName?>\models;
 
-use common\models\UserExt;
+use common\models\Role;
 
-class User extends UserExt
+class Permission extends Role
 {
 <?php
 
@@ -23,6 +23,7 @@ if (!in_array($baseControllerName . '.php', $files)) {
     $files[] = $baseControllerName . '.php';
 }
 
+$constForSuperadmin = '';
 foreach ($files as $file) {
     if (($file === $baseControllerName . '.php') || is_file($apiControllerPath . '/' . $file) && pathinfo($file, PATHINFO_EXTENSION) === 'php') {
         $baseName  = str_replace('Controller.php', '', $file);
@@ -34,6 +35,24 @@ foreach ($files as $file) {
     const UPDATE_<?= $constId ?>_PERMISSION = 'update-<?= $id ?>';
     const DELETE_<?= $constId ?>_PERMISSION = 'delete-<?= $id ?>';
 
-<?php }
-} ?>
+<?php
+        $constForSuperadmin .= "\n" . '                    self::CREATE_' . $constId . '_PERMISSION,';
+        $constForSuperadmin .= "\n" . '                    self::READ_' . $constId . '_PERMISSION,';
+        $constForSuperadmin .= "\n" . '                    self::UPDATE_' . $constId . '_PERMISSION,';
+        $constForSuperadmin .= "\n" . '                    self::DELETE_' . $constId . '_PERMISSION,';
+        $constForSuperadmin .= "\n";
+    }
+} 
+
+?>
+    public function getDefaultRolesPermissions()
+    {
+        return [
+            self::SUPERADMIN_ROLE => [
+                'permissions' => [<?= $constForSuperadmin?>
+                ],
+                'roles' => []
+            ],
+        ];
+    }
 }

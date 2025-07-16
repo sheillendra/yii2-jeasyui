@@ -53,9 +53,27 @@ class DataFilterHelper
         $rules = Json::decode($params['filterRules']);
         foreach ($rules as $rule) {
             if ($rule['value'] !== '') {
-                //some database like oracle in "like" operator cannot insensitive 
-                if (isset($rule['insensitive']) && $rule['insensitive']) {
-                    $provider->query->andFilterWhere([self::OP_ADAPTER[$rule['op']], 'lower(' . $rule['field'] . ')', strtolower($rule['value'])]);
+                if ($rule['op'] === 'contains') {
+                    $autoInfix = true;
+                    $value = $rule['value'];
+                    $field = $rule['field'];
+
+                    if (isset($rule['percent'])) {
+                        if ($rule['percent'] === 'suffix') {
+                            $value = $value . '%';
+                            $autoInfix = false;
+                        }elseif ($rule['percent'] === 'prefix') {
+                            $value = '%' . $value;
+                            $autoInfix = false;
+                        }
+                    }
+                    //some database like oracle in "like" operator cannot insensitive 
+                    if (isset($rule['insensitive']) && $rule['insensitive']) {
+                        $value = strtolower($value);
+                        $field = 'lower(' . $field . ')';
+                    }
+
+                    $provider->query->andFilterWhere([self::OP_ADAPTER['contains'], $field, $value, $autoInfix]);
                 } elseif (isset($rule['is_date']) && $rule['is_date']) {
                     $provider->query->andFilterWhere([self::OP_ADAPTER[$rule['op']], 'TRUNC(' . $rule['field'] . ')', $rule['value']]);
                 } elseif (isset($rule['is_datetime']) && $rule['is_datetime']) {

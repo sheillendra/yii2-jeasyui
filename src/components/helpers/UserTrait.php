@@ -410,7 +410,7 @@ SQL;
         return $result;
     }
 
-    public function resetRbac($appName = 'Corporate')
+    public function resetRbac($appName = 'Application')
     {
         $result = [
             'success' => 1,

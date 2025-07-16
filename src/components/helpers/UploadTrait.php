@@ -19,6 +19,11 @@ trait UploadTrait
     }
 
     /**
+     * public function beforeValidate() {
+     *     $this->upload('pdf_file', 'pdf_name');
+     *     return parent::beforeValidate();
+     * }
+     * 
      * 
      * @return array
      */

@@ -2,10 +2,9 @@
 
 namespace sheillendra\jeasyui\models;
 
-use sheillendra\jeasyui\components\helpers\ExtModelTrait;
 use sheillendra\jeasyui\components\helpers\UserTrait;
 
-class UserExt extends \common\models\UserExt
+class User extends \backend\models\User
 {
     use UserTrait;
 }

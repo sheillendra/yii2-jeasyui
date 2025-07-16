@@ -5,8 +5,8 @@ namespace sheillendra\jeasyui\modules\api\controllers;
 use Yii;
 use yii\web\ServerErrorHttpException;
 use sheillendra\jeasyui\components\rest\ActiveController;
-use sheillendra\jeasyui\models\UserExt;
 use sheillendra\jeasyui\models\SignupForm;
+use sheillendra\jeasyui\models\User;
 
 class UserController extends ActiveController
 {
@@ -45,7 +45,7 @@ class UserController extends ActiveController
         }
 
         if (
-            !Yii::$app->user->can(UserExt::SUPERADMIN_ROLE) &&
+            !Yii::$app->user->can('superadmin') &&
             $model->authMaxLevel <= Yii::$app->user->identity->authMaxLevel
         ) {
             $result['message'] = 'Anda tidak bisa mengatur user dengan level yang lebih tinggi';
@@ -118,5 +118,10 @@ class UserController extends ActiveController
             $result['message'] = $model->getFirstErrors();
         }
         return $result;
+    }
+
+    public function actionResetRbac(){
+        $model = new User();
+        return $model->resetRbac(Yii::$app->name);
     }
 }

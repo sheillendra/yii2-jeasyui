@@ -6,6 +6,12 @@ trait ExtModelTrait
 {
 
     /**
+     * This is flag this model call from SearchModel, 
+     * Sometime we create beforeValidation but only for model as form
+     */
+    public $fromSearch = false;
+
+    /**
      * 
      * @return type
      */

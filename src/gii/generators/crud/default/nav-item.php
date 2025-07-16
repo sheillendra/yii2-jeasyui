@@ -28,13 +28,29 @@ $this->params['navItem'] = [
         if (($file === $baseControllerName . '.php') || is_file($apiControllerPath . '/' . $file) && pathinfo($file, PATHINFO_EXTENSION) === 'php') {
             $baseName  = str_replace('Controller.php', '', $file);
             $id = Inflector::camel2id($baseName);
-            $modelPath = Yii::getAlias('@' . $generator->appName . '/models') . DIRECTORY_SEPARATOR . $baseName . 'Ext.php'; 
+            
+            $modelPath = Yii::getAlias('@' . $generator->appName . '/models') . DIRECTORY_SEPARATOR . $baseName . '.php'; 
+            $useExtMode = true;
             if(file_exists($modelPath)){
-                $model = new ('\\' . $generator->appName . '\models\\'. $baseName . 'Ext');
+                $useExtMode=false;
+                $model = new ('\\' . $generator->appName . '\models\\'. $baseName );
                 if(method_exists($model, 'getEasyuiAttributes')){
                     $easyuiAttribute = $model->easyuiAttributes;
                     if(isset($easyuiAttribute['_']) && isset($easyuiAttribute['_']['iconCls'])){
                         $iconCls = $easyuiAttribute['_']['iconCls'];
+                    }
+                }
+            }
+
+            if($useExtMode){
+                $modelPath = Yii::getAlias('@' . $generator->appName . '/models') . DIRECTORY_SEPARATOR . $baseName . 'Ext.php'; 
+                if(file_exists($modelPath)){
+                    $model = new ('\\' . $generator->appName . '\models\\'. $baseName . 'Ext');
+                    if(method_exists($model, 'getEasyuiAttributes')){
+                        $easyuiAttribute = $model->easyuiAttributes;
+                        if(isset($easyuiAttribute['_']) && isset($easyuiAttribute['_']['iconCls'])){
+                            $iconCls = $easyuiAttribute['_']['iconCls'];
+                        }
                     }
                 }
             }

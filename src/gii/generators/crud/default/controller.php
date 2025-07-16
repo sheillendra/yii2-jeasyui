@@ -8,7 +8,7 @@ echo "<?php\n";
 
 namespace <?= StringHelper::dirname(ltrim($generator->controllerClass, '\\')) ?>;
 
-use <?=$appName?>\models\User;
+use <?=$appName?>\models\Permission;
 use sheillendra\jeasyui\components\web\Controller;
 
 /**
@@ -20,7 +20,7 @@ class <?=$controllerClass?> extends Controller
         [
             'actions' => ['index'],
             'allow' => true,
-            'roles' => [User::READ_<?=strtoupper(Inflector::camel2id($baseModelClassName, '_'))?>_PERMISSION],
+            'roles' => [Permission::READ_<?=strtoupper(Inflector::camel2id($baseModelClassName, '_'))?>_PERMISSION],
         ],
     ];
 }

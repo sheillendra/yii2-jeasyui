@@ -9,6 +9,8 @@ use yii\helpers\Html;
     <div id="toggle-sidebar"></div>
     <div id="tools"></div>
     <div id="tools-menu"></div>
+    <div id="rbac"></div>
+    <div id="rbac-menu"></div>
 </div>
 
 <?php

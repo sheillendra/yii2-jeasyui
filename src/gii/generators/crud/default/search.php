@@ -19,6 +19,22 @@ $labels = $generator->generateSearchLabels();
 $searchAttributes = $generator->getSearchAttributes();
 $searchConditions = $generator->generateSearchConditions();
 
+$model = new ($generator->modelClass);
+$labels = $model->attributeLabels();
+if(method_exists($model, 'getEasyuiAttributes')){
+    $easyuiAttributes = $model->easyuiAttributes;
+} else {
+    $easyuiAttributes = [];
+}
+
+$noPagination = '';
+if(isset($easyuiAttributes['_']['noPagination']) && $easyuiAttributes['_']['noPagination']){
+    $noPagination = '        if(isset($params[\'per-page\']) && $params[\'per-page\'] === \'false\'){' . "\n";
+    $noPagination .= '            $dataProvider->pagination = false;' . "\n";
+    $noPagination .= "        }\n";
+}
+$noPagination .= '        $this->fromSearch = true;' . "\n";
+
 echo "<?php\n";
 ?>
 
@@ -71,6 +87,7 @@ class <?= $searchModelClass ?> extends <?= isset($modelAlias) ? $modelAlias : $m
 
         $this->load($params);
 
+<?=$noPagination?>
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');

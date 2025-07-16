@@ -1,8 +1,9 @@
 <?php
-use yii\helpers\StringHelper;
 use yii\helpers\Inflector;
 
-$modelClassName = substr($modelClassName, 0, -3);
+if(substr($modelClassName, -3, 3) === 'Ext'){
+    $modelClassName = substr($modelClassName, 0, -3);
+}
 $idModelClassName = Inflector::camel2id($modelClassName);
 $varModelClassName = Inflector::variablize($modelClassName);
 
