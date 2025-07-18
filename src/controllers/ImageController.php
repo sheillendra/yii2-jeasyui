@@ -2,6 +2,7 @@
 
 namespace sheillendra\jeasyui\controllers;
 
+use sheillendra\jeasyui\assets\YiiEasyUIAsset;
 use Yii;
 use yii\web\Controller;
 
@@ -16,6 +17,11 @@ class ImageController extends Controller
     public function actionIndex($name)
     {
         $imgFullPath = Yii::getAlias('@uploads/' . $name);
+        if(empty($name) || !file_exists($imgFullPath)){
+            $asset = YiiEasyUIAsset::register($this->view);
+            $imgFullPath = Yii::$app->assetManager->getPublishedPath($asset->sourcePath) . '/img/no-photo-available-vector.avif';
+        }
+        
         $size = getimagesize($imgFullPath);
         if(isset($size['mime'])){
             return $this->response($imgFullPath, $size);

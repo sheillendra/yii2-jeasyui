@@ -8,10 +8,10 @@
 
 namespace sheillendra\jeasyui\controllers;
 
+use common\models\Role;
 use Yii;
 use yii\filters\AccessControl;
 use yii\rest\Controller;
-use common\models\UserExt;
 use Exception;
 use yii\helpers\FileHelper;
 use yii\caching\TagDependency;
@@ -35,7 +35,7 @@ class ToolsController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => [UserExt::SUPERADMIN_ROLE],
+                        'roles' => [Role::SUPERADMIN_ROLE],
                     ],
                 ],
             ],

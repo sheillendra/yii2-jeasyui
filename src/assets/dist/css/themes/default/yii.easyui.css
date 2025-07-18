@@ -1,0 +1,40 @@
+
+#navigation .tree-node {
+    box-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8) inset, 0 5px 10px -5px rgba(255, 255, 255, 0.7) inset;
+    border-bottom: 1px solid #95B8E7;
+    background-color: #eaf2ff;
+}
+
+#navigation .tree-node:hover {
+    background-color: #ffffff;
+    color: #0E2D5F;
+    background: -webkit-linear-gradient(top,#EFF5FF 0,#ffffff 100%);
+    background: -moz-linear-gradient(top,#EFF5FF 0,#ffffff 100%);
+    background: -o-linear-gradient(top,#EFF5FF 0,#ffffff 100%);
+    background: linear-gradient(to bottom,#EFF5FF 60%,#ffffff 100%);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#EFF5FF,endColorstr=#ffffff,GradientType=0);
+}
+
+/* #navigation .tree-node-selected {
+    font-weight: bold;
+    background-color: #ffe48d;
+    color: #0E2D5F;
+    background: -webkit-linear-gradient(top,#EFF5FF 0,#ffe48d 100%);
+    background: -moz-linear-gradient(top,#EFF5FF 0,#ffe48d 100%);
+    background: -o-linear-gradient(top,#EFF5FF 0,#ffe48d 100%);
+    background: linear-gradient(to bottom,#EFF5FF 60%,#ffe48d 100%);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#EFF5FF,endColorstr=#ffe48d,GradientType=0);
+} */
+
+#navbar {
+    background-color: #E0ECFF;
+}
+
+#navbar .l-btn:hover,
+#navbar .m-btn-plain-active,
+#navbar .s-btn-plain-active {
+    background-color: #b7d2ff;
+}
+

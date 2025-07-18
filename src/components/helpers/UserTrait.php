@@ -218,7 +218,7 @@ trait UserTrait
     public function getToken()
     {
         //return JWT::encode($this->toArray(), Yii::$app->params['jwtKey']);
-        return  JWT::encode(['id' => $this->id, 'createdTime' => time()], Yii::$app->params['jwtKey'], 'HS256');
+        return  JWT::encode(['id' => $this->id, 'createdTime' => time(), 'exp' => time() + (60 * 24) ], Yii::$app->params['jwtKey'], 'HS256');
     }
 
     /**

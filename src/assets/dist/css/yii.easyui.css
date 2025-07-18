@@ -11,20 +11,6 @@ body {
     line-height: 1.42857;
 }
 
-#north-right-nav {
-    float:right;
-}
-
-.nav-btn {
-    display: block !important;
-    border-radius:0 !important;
-    border-left :0 !important;
-    border-right :0 !important;
-    margin: 1px 0 !important;
-    text-align: left !important;
-    padding-left: 20px !important;
-}
-
 #maintab > .tabs-panels > .panel {
     padding: 5px;
 }
@@ -76,15 +62,64 @@ body {
     margin-top: 21px;
 }
 
-.logo {
+/* .logo {
     float: left;
     margin-left: 5px;
     font-size: 18px;
     height: 38px;
     line-height: 38px;
+} */
+
+.l-btn-icon,
+.menu-icon {
+    font-size: 14px;
+}
+
+#navbar .l-btn:hover,
+#navbar .m-btn-plain-active,
+#navbar .s-btn-plain-active {
+    border: none;
+}
+
+#navbar .l-btn-plain {
+    padding: 0;
+}
+
+#navbar .l-btn {
+    border-radius: 0;
 }
 
 #north-right-nav {
-    height: 38px;
-    line-height: 38px;
+    float:right;
+    text-align: right;
+    width:fit-content;
+}
+
+/* .nav-btn {
+    display: block !important;
+    border-radius:0 !important;
+    border-left :0 !important;
+    border-right :0 !important;
+    margin: 1px 0 !important;
+    text-align: left !important;
+    padding-left: 20px !important;
+} */
+
+#navigation .tree-file,
+#navigation .tree-folder,
+#navigation .tree-folder-open
+{
+    background: none;
+}
+
+#navigation .tree-icon{
+    height: unset;
+}
+
+#navigation .tree-node-selected{
+    font-weight: bold;
+}
+
+.layout-expand-west .panel-body {
+    border-width: 0 1px 0 0;
 }

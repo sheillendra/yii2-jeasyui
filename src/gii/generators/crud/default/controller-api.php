@@ -20,28 +20,41 @@ if(method_exists($model, 'getEasyuiAttributes')){
 $treeDataAction = '';
 $treeDataRole = '';
 $useTreeData = '';
-if(isset($easyuiAttributes['_']['asTreeData']) && $easyuiAttributes['_']['asTreeData']){
-    
-    $useTreeData = "use yii\helpers\ArrayHelper;\n";
+$extraAction = '';
+if(isset($easyuiAttributes['_'])){
+    if(isset($easyuiAttributes['_']['asTreeData']) && $easyuiAttributes['_']['asTreeData']){
+        
+        $useTreeData = "use yii\helpers\ArrayHelper;\n";
 
-    $treeDataAction = "    public function actionTreeData(\$id = null)\n";
-    $treeDataAction .= "    {\n";
-    $treeDataAction .= "        \$data = \$this->modelClass::find()->select(['id', 'name as text', 'code'])->where(['parent_id' => \$id])->asArray()->all();\n";
-    $treeDataAction .= "        foreach (\$data as \$k => \$v) {\n";
-    $treeDataAction .= "            if (strlen(\$v['code']) < 9) {\n";
-    $treeDataAction .= "               \$data[\$k]['state'] = 'closed';\n";
-    $treeDataAction .= "           }\n";
-    $treeDataAction .= "       }\n";
-    $treeDataAction .= "       ArrayHelper::multisort(\$data, 'text');\n";
-    $treeDataAction .= "       return \$data;\n";
-    $treeDataAction .= "   }\n";
+        $treeDataAction = "    public function actionTreeData(\$id = null)\n";
+        $treeDataAction .= "    {\n";
+        $treeDataAction .= "        \$data = \$this->modelClass::find()->select(['id', 'name as text', 'code'])->where(['parent_id' => \$id])->asArray()->all();\n";
+        $treeDataAction .= "        foreach (\$data as \$k => \$v) {\n";
+        $treeDataAction .= "            if (strlen(\$v['code']) < 9) {\n";
+        $treeDataAction .= "               \$data[\$k]['state'] = 'closed';\n";
+        $treeDataAction .= "           }\n";
+        $treeDataAction .= "       }\n";
+        $treeDataAction .= "       ArrayHelper::multisort(\$data, 'text');\n";
+        $treeDataAction .= "       return \$data;\n";
+        $treeDataAction .= "   }\n";
 
-    $treeDataRole = "        [\n";
-    $treeDataRole .= "            'actions' => ['tree-data'],\n";
-    $treeDataRole .= "            'allow' => true,\n";
-    $treeDataRole .= "            'roles' => ['@'],\n";
-    $treeDataRole .= "        ],\n";
+        $treeDataRole = "        [\n";
+        $treeDataRole .= "            'actions' => ['tree-data'],\n";
+        $treeDataRole .= "            'allow' => true,\n";
+        $treeDataRole .= "            'roles' => ['@'],\n";
+        $treeDataRole .= "        ],\n";
+    }
+
+    if(isset($easyuiAttributes['_']['extraAction']) && is_array($easyuiAttributes['_']['extraAction'])){
+
+        foreach($easyuiAttributes['_']['extraAction'] as $k => $v){
+            $extraAction .= "    public function {$k}({$v['params']}){\n";
+            $extraAction .= "        {$v['return']}\n";
+            $extraAction .= "    }\n";
+        }
+    }
 }
+
 echo "<?php\n";
 ?>
 
@@ -85,5 +98,6 @@ class <?=$controllerClass?> extends ActiveController
     public $searchModelClass = <?=$baseSearchModelName?>::class;
 
 <?=$treeDataAction?>
+<?=$extraAction?>
 
 }
