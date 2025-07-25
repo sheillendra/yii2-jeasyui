@@ -59,12 +59,11 @@ class DataFilterHelper
                     $field = $rule['field'];
 
                     if (isset($rule['percent'])) {
+                        $autoInfix = false;
                         if ($rule['percent'] === 'suffix') {
                             $value = $value . '%';
-                            $autoInfix = false;
-                        }elseif ($rule['percent'] === 'prefix') {
+                        } elseif ($rule['percent'] === 'prefix') {
                             $value = '%' . $value;
-                            $autoInfix = false;
                         }
                     }
                     //some database like oracle in "like" operator cannot insensitive 
@@ -73,7 +72,11 @@ class DataFilterHelper
                         $field = 'lower(' . $field . ')';
                     }
 
-                    $provider->query->andFilterWhere([self::OP_ADAPTER['contains'], $field, $value, $autoInfix]);
+                    if ($autoInfix) {
+                        $provider->query->andFilterWhere([self::OP_ADAPTER['contains'], $field, $value]);
+                    } else {
+                        $provider->query->andFilterWhere([self::OP_ADAPTER['contains'], $field, $value, $autoInfix]);
+                    }
                 } elseif (isset($rule['is_date']) && $rule['is_date']) {
                     $provider->query->andFilterWhere([self::OP_ADAPTER[$rule['op']], 'TRUNC(' . $rule['field'] . ')', $rule['value']]);
                 } elseif (isset($rule['is_datetime']) && $rule['is_datetime']) {

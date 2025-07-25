@@ -111,7 +111,7 @@ $fungsi = function ($column, $comment) use (
     $columnId = Inflector::camel2id($column->name);
     $columnVariablize = Inflector::variablize($column->name);
     $required = $column->allowNull==1 ? 'false':'true';
-    $numberTypes = ['integer', 'smallint', 'double'];
+    $numberTypes = ['integer', 'smallint', 'double', 'float'];
 
     $validType = '';
     $widthGridColumn = '';
@@ -129,8 +129,16 @@ $fungsi = function ($column, $comment) use (
         $defaultValue = $column->defaultValue !==null ? ", value: '$column->defaultValue'" : '';
         $defaultValueNewLine = $column->defaultValue !==null? "            {$comment}    value: '$column->defaultValue',\n" : '';
     }elseif(in_array($column->type, ['boolean'])){
-        $defaultValue = $column->defaultValue !==null ? ", value: $column->defaultValue" : '';
-        $defaultValueNewLine = $column->defaultValue !==null? "            {$comment}    value: $column->defaultValue,\n" : '';
+        if($column->defaultValue == true){
+            $defaultValue = ", value: 1";
+            $defaultValueNewLine = "            {$comment}    value: true,\n";
+        }elseif($column->defaultValue == false){
+            $defaultValue = ", value: 0";
+            $defaultValueNewLine = "            {$comment}    value: false,\n";
+        }else{
+            $defaultValue = '';
+            $defaultValueNewLine = '';    
+        }
     }else{
         $defaultValue = $column->defaultValue !==null? ', value: ' . $column->defaultValue : '';
         $defaultValueNewLine = $column->defaultValue !==null? "            {$comment}    value: $column->defaultValue,\n" : '';
@@ -294,6 +302,9 @@ $fungsi = function ($column, $comment) use (
                 $fieldText .="            {$comment}    labelPosition: 'top',\n";
                 $fieldText .="            {$comment}    width: 300,\n";
                 $fieldText .="            {$comment}    required: {$required},\n$defaultValueNewLine";
+                if($column->dbType === 'float8'){
+                    $fieldText .="            {$comment}    precision: 2,\n";
+                }
                 if($isCurrenctyFormat){
                     $fieldText .="            {$comment}    formatter: yii.easyui.formatter.currency,\n";
                     $fieldText .="            {$comment}    parser: yii.easyui.parser.currency,\n";
@@ -399,6 +410,7 @@ $detail = '';
 $treeNavigation = '';
 $treeNavigationInit = '';
 $treeNavigationInitVar = '';
+$treeNavDlgCondition = '';
 $treeNavDlgCondition1 = '';
 $treeNavDlgCondition2 = '';
 $afterSubmitForm1 = "                    dg.datagrid('reload');\n";
@@ -445,15 +457,24 @@ if(isset($easyuiAttributes['_'])){
 
         $varText .= "    var treeNav;\n";
         $varText .= "    var selectedTreeNav;\n";
+        $varText .= "    var treeData = {};\n";
 
-        $treeNavDlgCondition1 = "        if (!selectedTreeNav) {\n";
-        $treeNavDlgCondition1 .= "            $.messager.alert('Product Form', 'Please select {$dataTextHumanize} first!', 'warning');\n";
-        $treeNavDlgCondition1 .= "            return;\n";
-        $treeNavDlgCondition1 .= "        }\n";
-        $treeNavDlgCondition1 .= "        if (selectedTreeNav.code.length < 9) {\n";
-        $treeNavDlgCondition1 .= "            $.messager.alert('Product Form', 'Please select more detail {$dataTextHumanize}!', 'warning');\n";
-        $treeNavDlgCondition1 .= "            return;\n";
-        $treeNavDlgCondition1 .= "        }\n";
+        $treeNavDlgCondition = "            if (treeData[row.category_id]) {\n";
+        $treeNavDlgCondition .= "                selectedTreeNav = treeData[row.category_id];\n";
+        $treeNavDlgCondition .= "            } else {\n";
+        $treeNavDlgCondition .= "                selectedTreeNav = {\n";
+        $treeNavDlgCondition .= "                    id: row.category_id,\n";
+        $treeNavDlgCondition .= "                    text: 'Category Name for ID ' + row.category_id\n";
+        $treeNavDlgCondition .= "                };\n";
+        $treeNavDlgCondition .= "            }\n";
+        $treeNavDlgCondition1 = "            if (!selectedTreeNav) {\n";
+        $treeNavDlgCondition1 .= "                $.messager.alert('Product Form', 'Please select {$dataTextHumanize} first!', 'warning');\n";
+        $treeNavDlgCondition1 .= "                return;\n";
+        $treeNavDlgCondition1 .= "            }\n";
+        $treeNavDlgCondition1 .= "            if (selectedTreeNav.code === undefined || selectedTreeNav.code.length < 9) {\n";
+        $treeNavDlgCondition1 .= "                $.messager.alert('Product Form', 'Please select more detail {$dataTextHumanize}!', 'warning');\n";
+        $treeNavDlgCondition1 .= "                return;\n";
+        $treeNavDlgCondition1 .= "            }\n";
         
         $treeNavDlgCondition2 = "            row.category_id = selectedTreeNav.id;\n";
         $treeNavDlgCondition2 .= "            row.category_name = selectedTreeNav.text;\n";
@@ -471,13 +492,17 @@ if(isset($easyuiAttributes['_'])){
         $treeNavigationInit = '            initTreeNav();' . "\n";
 
         $treeNavigationInitVar = "    var treeNavReloadDg = function (node) {\n";
-        $treeNavigationInitVar .= "        dg.datagrid('addFilterRule', {\n";
-        $treeNavigationInitVar .= "            field: '{$treeNavigationFilterField}',\n";
-        $treeNavigationInitVar .= "            op: 'contains',\n";
-        $treeNavigationInitVar .= "            value: node.{$treeNavigationTreeCode},\n";
-        $treeNavigationInitVar .= "            percent: 'suffix'\n";
-        $treeNavigationInitVar .= "        });\n";
-        $treeNavigationInitVar .= "        dg.datagrid('doFilter');\n";
+        $treeNavigationInitVar .= "        if (node.code) {\n";
+        $treeNavigationInitVar .= "            dg.datagrid('addFilterRule', {\n";
+        $treeNavigationInitVar .= "                field: '{$treeNavigationFilterField}',\n";
+        $treeNavigationInitVar .= "                op: 'contains',\n";
+        $treeNavigationInitVar .= "                value: node.{$treeNavigationTreeCode},\n";
+        $treeNavigationInitVar .= "                percent: 'suffix'\n";
+        $treeNavigationInitVar .= "            });\n";
+        $treeNavigationInitVar .= "            dg.datagrid('doFilter');\n";
+        $treeNavigationInitVar .= "        } else {\n";
+        $treeNavigationInitVar .= "            dg.datagrid('reload');\n";
+        $treeNavigationInitVar .= "        }\n";
         $treeNavigationInitVar .= "    };\n";
         $treeNavigationInitVar .= "\n";
         $treeNavigationInitVar .= "    var initTreeNav = function () {\n";
@@ -492,6 +517,11 @@ if(isset($easyuiAttributes['_'])){
         $treeNavigationInitVar .= "                treeNav.tree('expand', node.target);\n"; 
         $treeNavigationInitVar .= "                treeNavReloadDg(node);\n";
         $treeNavigationInitVar .= "            },\n";
+        $treeNavigationInitVar .= "            onLoadSuccess: function (node, data) {\n"; 
+        $treeNavigationInitVar .= "                data.forEach((category) => {\n"; 
+        $treeNavigationInitVar .= "                    treeData[category.id] = category;\n";
+        $treeNavigationInitVar .= "                });\n";
+        $treeNavigationInitVar .= "            }\n";
         $treeNavigationInitVar .= "        });\n";
         $treeNavigationInitVar .= "    }\n";
     }
@@ -506,7 +536,6 @@ window.yii.easyui.<?= $variablize?> = (function ($) {
     var frm;<?=$varText?>
 
     var frmDlg = function (row) {
-<?=$treeNavDlgCondition1?>
         var title = 'New <?=$words?>';
         var url;
         if (row) {
@@ -515,8 +544,10 @@ window.yii.easyui.<?= $variablize?> = (function ($) {
                 r: 'api/v1/<?=$id?>/update',
                 id: row.<?=$pk[0]."\n"?>
             }, true);
+<?=$treeNavDlgCondition?>
         } else {
             url = yii.easyui.ajaxAuthToken({ r: 'api/v1/<?=$id?>/create' }, true);
+<?=$treeNavDlgCondition1?>
         }
 
         if (dlg) {

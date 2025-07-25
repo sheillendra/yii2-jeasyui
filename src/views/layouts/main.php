@@ -81,6 +81,11 @@ JS;
 $navItemJson = Json::encode(array_values($this->params['navItem']));
 
 $tabOptions = isset($this->params['tabOptions']) ? Json::encode($this->params['tabOptions']) : 0;
+
+$flashMessage = Json::encode(Yii::$app->session->getAllFlashes());
+if ($flashMessage === '[]') {
+    $flashMessage = '{}';
+}
 $this->registerJs(
     <<<JS
     yii.easyui.locale = 'en-PG';
@@ -105,6 +110,7 @@ $this->registerJs(
 
     yii.easyui.setHost('base', '{$this->params['baseUrl']}');
     yii.easyui.setHost('app', '{$this->params['appUrl']}');
+    yii.easyui.flashMessage = {$flashMessage};
     yii.easyui.init();
 JS
 );

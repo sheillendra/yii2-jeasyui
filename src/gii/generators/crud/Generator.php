@@ -133,7 +133,7 @@ class Generator extends \yii\gii\generators\crud\Generator
         $files[] = new CodeFile("{$layoutPath}/_nav-item.php", $this->render("nav-item.php", ['baseControllerName' => $baseControllerName]));
 
         $modelPath = Yii::getAlias('@'. str_replace('\\', '/', ltrim($this->appName)) .'/models');
-        $files[] = new CodeFile("{$modelPath}/permission.php", $this->render("permission.php", ['baseControllerName' => $baseControllerName]));
+        $files[] = new CodeFile("{$modelPath}/Permission.php", $this->render("permission.php", ['baseControllerName' => $baseControllerName]));
 
         return $files;
     }

@@ -21,10 +21,12 @@ $treeDataAction = '';
 $treeDataRole = '';
 $useTreeData = '';
 $extraAction = '';
+$extraActionRole = '';
 if(isset($easyuiAttributes['_'])){
     if(isset($easyuiAttributes['_']['asTreeData']) && $easyuiAttributes['_']['asTreeData']){
         
         $useTreeData = "use yii\helpers\ArrayHelper;\n";
+        $treeDataRole = "\n";
 
         $treeDataAction = "    public function actionTreeData(\$id = null)\n";
         $treeDataAction .= "    {\n";
@@ -38,7 +40,7 @@ if(isset($easyuiAttributes['_'])){
         $treeDataAction .= "       return \$data;\n";
         $treeDataAction .= "   }\n";
 
-        $treeDataRole = "        [\n";
+        $treeDataRole .= "        [\n";
         $treeDataRole .= "            'actions' => ['tree-data'],\n";
         $treeDataRole .= "            'allow' => true,\n";
         $treeDataRole .= "            'roles' => ['@'],\n";
@@ -47,10 +49,18 @@ if(isset($easyuiAttributes['_'])){
 
     if(isset($easyuiAttributes['_']['extraAction']) && is_array($easyuiAttributes['_']['extraAction'])){
 
+        $extraActionRole = "\n";
         foreach($easyuiAttributes['_']['extraAction'] as $k => $v){
             $extraAction .= "    public function {$k}({$v['params']}){\n";
             $extraAction .= "        {$v['return']}\n";
             $extraAction .= "    }\n";
+
+            $baseActionName = Inflector::variablize(str_replace('action', '', $k));
+            $extraActionRole .= "        [\n";
+            $extraActionRole .= "            'actions' => ['{$baseActionName}'],\n";
+            $extraActionRole .= "            'allow' => true,\n";
+            $extraActionRole .= "            'roles' => ['@'],\n";
+            $extraActionRole .= "        ],\n";
         }
     }
 }
@@ -91,8 +101,7 @@ class <?=$controllerClass?> extends ActiveController
             'actions' => ['delete'], 
             'allow' => true, 
             'roles' => [Permission::DELETE_<?=$constId?>_PERMISSION], 
-        ],
-<?=$treeDataRole?>
+        ],<?=$treeDataRole?><?=$extraActionRole?>
     ]; 
     public $modelClass = <?=$modelClass?>::class;
     public $searchModelClass = <?=$baseSearchModelName?>::class;
