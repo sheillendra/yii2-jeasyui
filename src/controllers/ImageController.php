@@ -18,8 +18,9 @@ class ImageController extends Controller
     {
         $imgFullPath = Yii::getAlias('@uploads/' . $name);
         if(empty($name) || !file_exists($imgFullPath)){
-            $asset = YiiEasyUIAsset::register($this->view);
-            $imgFullPath = Yii::$app->assetManager->getPublishedPath($asset->sourcePath) . '/img/no-photo-available-vector.avif';
+            //$asset = YiiEasyUIAsset::register($this->view);
+            //$imgFullPath = Yii::$app->assetManager->getPublishedPath($asset->sourcePath) . '/img/no-photo-available-vector.avif';
+            $imgFullPath = Yii::getAlias('@webroot/img/no-image.jpg');
         }
         
         $size = getimagesize($imgFullPath);

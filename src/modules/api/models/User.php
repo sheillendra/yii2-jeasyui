@@ -4,7 +4,7 @@ namespace sheillendra\jeasyui\modules\api\models;
 
 use sheillendra\jeasyui\components\helpers\UserTrait;
 
-class UserExt extends \sheillendra\jeasyui\models\UserExt
+class User extends \sheillendra\jeasyui\models\User
 {
     use UserTrait;
 }

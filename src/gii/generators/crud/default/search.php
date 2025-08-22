@@ -27,11 +27,31 @@ if(method_exists($model, 'getEasyuiAttributes')){
     $easyuiAttributes = [];
 }
 
+$varText='';
+$attributeMap = '';
 $noPagination = '';
-if(isset($easyuiAttributes['_']['noPagination']) && $easyuiAttributes['_']['noPagination']){
-    $noPagination = '        if(isset($params[\'per-page\']) && $params[\'per-page\'] === \'false\'){' . "\n";
-    $noPagination .= '            $dataProvider->pagination = false;' . "\n";
-    $noPagination .= "        }\n";
+$joinWith = '';
+if(isset($easyuiAttributes['_'])){
+    if(isset($easyuiAttributes['_']['noPagination']) && $easyuiAttributes['_']['noPagination']){
+        $noPagination = '        if(isset($params[\'per-page\']) && $params[\'per-page\'] === \'false\'){' . "\n";
+        $noPagination .= '            $dataProvider->pagination = false;' . "\n";
+        $noPagination .= "        }\n";
+    }
+
+    if(isset($easyuiAttributes['_']['filterRelations'])){
+        $attributeMap .= "            'attributeMap' => [\n";
+        $relationRules = [];
+        foreach($easyuiAttributes['_']['filterRelations'] as $k=>$v){
+            $joinWith .= "->joinWith('{$k}')"; 
+            foreach($v as $kk => $vv){
+                $relationRules[] = $vv;
+                $varText .= "    public \${$vv};\n";
+                $attributeMap .= "                '{$vv}' => '{{{$kk}}}.$vv',\n";
+            }
+        }
+        $rules[] = '[[\''. implode('\', \'', $relationRules). "'], 'safe']";
+        $attributeMap .= "            ],\n";
+    }
 }
 $noPagination .= '        $this->fromSearch = true;' . "\n";
 
@@ -40,7 +60,9 @@ echo "<?php\n";
 
 namespace <?= StringHelper::dirname(ltrim($generator->searchModelClass, '\\')) ?>;
 
+use Yii;
 use yii\base\Model;
+use yii\data\ActiveDataFilter;
 use yii\data\ActiveDataProvider;
 
 /**
@@ -49,6 +71,7 @@ use yii\data\ActiveDataProvider;
 class <?= $searchModelClass ?> extends <?= isset($modelAlias) ? $modelAlias : $modelClass ?>
 
 {
+<?=$varText?>
     /**
      * {@inheritdoc}
      */
@@ -77,25 +100,32 @@ class <?= $searchModelClass ?> extends <?= isset($modelAlias) ? $modelAlias : $m
      */
     public function search($params)
     {
-        $query = <?= isset($modelAlias) ? $modelAlias : $modelClass ?>::find();
 
-        // add conditions that should always apply here
+        $filter = new ActiveDataFilter([
+            'searchModel' => $this,
+<?=$attributeMap?>
+        ]);
+
+        $filterCondition = null;
+
+        if ($filter->load(Yii::$app->request->get())) {
+            $filterCondition = $filter->build();
+            if ($filterCondition === false) {
+                return $filter;
+            }
+        }
+
+        $query = <?= isset($modelAlias) ? $modelAlias : $modelClass ?>::find()<?=$joinWith?>;
+
+        if ($filterCondition !== null) {
+            $query->andWhere($filterCondition);
+        }
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
 
-        $this->load($params);
-
 <?=$noPagination?>
-        if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
-            return $dataProvider;
-        }
-
-        // grid filtering conditions
-        <?= implode("\n        ", $searchConditions) ?>
 
         return $dataProvider;
     }

@@ -17,50 +17,25 @@ if(method_exists($model, 'getEasyuiAttributes')){
     $easyuiAttributes = [];
 }
 
-$treeDataAction = '';
-$treeDataRole = '';
-$useTreeData = '';
+$rules = '';
 $extraAction = '';
-$extraActionRole = '';
+$rules = '';
 if(isset($easyuiAttributes['_'])){
-    if(isset($easyuiAttributes['_']['asTreeData']) && $easyuiAttributes['_']['asTreeData']){
-        
-        $useTreeData = "use yii\helpers\ArrayHelper;\n";
-        $treeDataRole = "\n";
-
-        $treeDataAction = "    public function actionTreeData(\$id = null)\n";
-        $treeDataAction .= "    {\n";
-        $treeDataAction .= "        \$data = \$this->modelClass::find()->select(['id', 'name as text', 'code'])->where(['parent_id' => \$id])->asArray()->all();\n";
-        $treeDataAction .= "        foreach (\$data as \$k => \$v) {\n";
-        $treeDataAction .= "            if (strlen(\$v['code']) < 9) {\n";
-        $treeDataAction .= "               \$data[\$k]['state'] = 'closed';\n";
-        $treeDataAction .= "           }\n";
-        $treeDataAction .= "       }\n";
-        $treeDataAction .= "       ArrayHelper::multisort(\$data, 'text');\n";
-        $treeDataAction .= "       return \$data;\n";
-        $treeDataAction .= "   }\n";
-
-        $treeDataRole .= "        [\n";
-        $treeDataRole .= "            'actions' => ['tree-data'],\n";
-        $treeDataRole .= "            'allow' => true,\n";
-        $treeDataRole .= "            'roles' => ['@'],\n";
-        $treeDataRole .= "        ],\n";
-    }
 
     if(isset($easyuiAttributes['_']['extraAction']) && is_array($easyuiAttributes['_']['extraAction'])){
 
-        $extraActionRole = "\n";
+        $rules .= "\n";
         foreach($easyuiAttributes['_']['extraAction'] as $k => $v){
             $extraAction .= "    public function {$k}({$v['params']}){\n";
             $extraAction .= "        {$v['return']}\n";
             $extraAction .= "    }\n";
 
-            $baseActionName = Inflector::variablize(str_replace('action', '', $k));
-            $extraActionRole .= "        [\n";
-            $extraActionRole .= "            'actions' => ['{$baseActionName}'],\n";
-            $extraActionRole .= "            'allow' => true,\n";
-            $extraActionRole .= "            'roles' => ['@'],\n";
-            $extraActionRole .= "        ],\n";
+            $baseActionName = Inflector::camel2id(str_replace('action', '', $k));
+            $rules .= "        [\n";
+            $rules .= "            'actions' => ['{$baseActionName}'],\n";
+            $rules .= "            'allow' => true,\n";
+            $rules .= "            'roles' => ['@'],\n";
+            $rules .= "        ],\n";
         }
     }
 }
@@ -74,7 +49,6 @@ use sheillendra\jeasyui\components\rest\ActiveController;
 use <?=$generator->appName?>\models\Permission;
 use <?=$generator->apiName?>\models\<?=$modelClass?>;
 use <?=$generator->searchModelClass?>;
-<?=$useTreeData?>
 
 /**
  * <?=$controllerClass?> only implements the jEasyUI get asset and page for <?=$modelClass?> model.
@@ -101,12 +75,12 @@ class <?=$controllerClass?> extends ActiveController
             'actions' => ['delete'], 
             'allow' => true, 
             'roles' => [Permission::DELETE_<?=$constId?>_PERMISSION], 
-        ],<?=$treeDataRole?><?=$extraActionRole?>
+        ],
+<?=$rules?>
     ]; 
     public $modelClass = <?=$modelClass?>::class;
     public $searchModelClass = <?=$baseSearchModelName?>::class;
 
-<?=$treeDataAction?>
 <?=$extraAction?>
 
 }

@@ -49,7 +49,7 @@ class SignupForm extends Model
             return null;
         }
         
-        $user = new UserExt();
+        $user = new User();
         $user->username = $this->username;
         $user->email = $this->email;
         $user->setPassword($this->password);

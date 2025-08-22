@@ -24,10 +24,12 @@ $this->params['navItem'] = [
     //print_r($files);exit;
 
     foreach ($files as $file) {
-        $iconCls = 'fa-solid fa-house';
+        $text = '';
+        $iconCls = '';
         if (($file === $baseControllerName . '.php') || is_file($apiControllerPath . '/' . $file) && pathinfo($file, PATHINFO_EXTENSION) === 'php') {
             $baseName  = str_replace('Controller.php', '', $file);
             $id = Inflector::camel2id($baseName);
+            $text = Inflector::camel2words($baseName);
             
             $modelPath = Yii::getAlias('@' . $generator->appName . '/models') . DIRECTORY_SEPARATOR . $baseName . '.php'; 
             $useExtMode = true;
@@ -36,8 +38,12 @@ $this->params['navItem'] = [
                 $model = new ('\\' . $generator->appName . '\models\\'. $baseName );
                 if(method_exists($model, 'getEasyuiAttributes')){
                     $easyuiAttribute = $model->easyuiAttributes;
+                    if(isset($easyuiAttribute['_']) && isset($easyuiAttribute['_']['title'])){
+                        $text = $easyuiAttribute['_']['title'];
+                    }
+
                     if(isset($easyuiAttribute['_']) && isset($easyuiAttribute['_']['iconCls'])){
-                        $iconCls = $easyuiAttribute['_']['iconCls'];
+                        $iconCls = "        'iconCls' => '" .$easyuiAttribute['_']['iconCls'] . "',\n";
                     }
                 }
             }
@@ -57,8 +63,8 @@ $this->params['navItem'] = [
     ?>
     '<?=Inflector::variablize($baseName)?>' => [
         'id' => 'nav-<?= $id ?>',
-        'text' => '<?= Inflector::camel2words($baseName) ?>',
-        'iconCls' => '<?=$iconCls?>',
+        'text' => '<?=$text?>',
+<?=$iconCls?>
         'attributes' => [
             'url' => Url::to(['/<?= $id ?>'])
         ]

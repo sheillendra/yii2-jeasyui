@@ -9,7 +9,7 @@ use yii\data\ActiveDataProvider;
 /**
  * UserSearch represents the model behind the search form of `common\models\UserExt`.
  */
-class UserSearch extends UserExt
+class UserSearch extends User
 {
 
     public $roles;

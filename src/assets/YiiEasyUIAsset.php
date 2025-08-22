@@ -21,16 +21,16 @@ use yii\web\AssetBundle;
  */
 class YiiEasyUIAsset extends AssetBundle {
 
-    public $sourcePath = '@sheillendra/jeasyui/assets/dist';
-    // public $basePath = '@webroot/dist/jeasyui';
-    // public $baseUrl = '@web/dist/jeasyui';
+    // public $sourcePath = '@sheillendra/jeasyui/assets/dist';
+    public $basePath = '@webroot/dist/jeasyui';
+    public $baseUrl = '@web/dist/jeasyui';
     public $css = [
         'css/yii.easyui.css',
         'css/icon.css'
     ];
     public $js = [
-        'js/yii.easyui.min.js'
-        //'js/yii.easyui.js'
+        // 'js/yii.easyui.min.js'
+        'js/yii.easyui.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',

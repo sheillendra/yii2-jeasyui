@@ -106,7 +106,7 @@ $this->registerJs(
         var rbacMenu = $('#rbac-menu').menu({});
 
         rbacMenu.menu('appendItem', {
-            text: 'Reset Default RBAC For Office',
+            text: 'Reset Default RBAC',
             onclick: function () {
                 yii.easyui.ajax.request({
                     data: {
@@ -114,6 +114,9 @@ $this->registerJs(
                     },
                     host: 'it',
                     type: 'GET',
+                    callback: function(){
+                        window.location.reload();
+                    }
                 });
             }
         });

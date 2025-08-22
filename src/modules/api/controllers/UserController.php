@@ -11,7 +11,7 @@ use sheillendra\jeasyui\models\User;
 class UserController extends ActiveController
 {
 
-    public $modelClass = 'sheillendra\jeasyui\models\UserExt';
+    public $modelClass = 'sheillendra\jeasyui\models\User';
 
     public function actionResetPassword($id)
     {

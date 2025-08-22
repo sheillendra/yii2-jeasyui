@@ -405,12 +405,12 @@ SQL;
             )->queryAll();
         }
 
-        foreach ($result as $k => $v) {
-            $roleName = 'self::' . strtoupper(Inflector::camel2id(Inflector::id2camel($v['name']), '_')) . '_ROLE';
-            if (!defined($roleName)) {
-                unset($result[$k]);
-            }
-        }
+        // foreach ($result as $k => $v) {
+        //     $roleName = 'self::' . strtoupper(Inflector::camel2id(Inflector::id2camel($v['name']), '_')) . '_ROLE';
+        //     //if (!defined($roleName)) {
+        //     //    unset($result[$k]);
+        //     //}
+        // }
         return $result;
     }
 
@@ -420,54 +420,69 @@ SQL;
             'success' => 1,
             'message' => "Reset RBAC {$appName} is success"
         ];
-        $authManager = Yii::$app->authManager;
-        $roles = [];
-        $permissions = [];
-        foreach ($this->defaultRolesPermissions as $roleName => $v) {
-            if (!isset($roles[$roleName])) {
-                $roles[$roleName] = $authManager->getRole($roleName);
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            $authManager = Yii::$app->authManager;
+            $authManager->removeAll();
+            $roles = [];
+            $permissions = [];
+            foreach ($this->defaultRolesPermissions as $roleName => $v) {
                 if (!isset($roles[$roleName])) {
-                    $roles[$roleName] = $authManager->createRole($roleName);
-                    $roles[$roleName]->description = ucwords($roleName);
-                    $roles[$roleName]->data = ['level' => $this->getRoleLevel($roleName)];
-                    $authManager->add($roles[$roleName]);
+                    $roles[$roleName] = $authManager->getRole($roleName);
+                    if (!isset($roles[$roleName])) {
+                        $roles[$roleName] = $authManager->createRole($roleName);
+                        $roles[$roleName]->description = ucwords($roleName);
+                        $roles[$roleName]->data = ['level' => $this->getRoleLevel($roleName)];
+                        $authManager->add($roles[$roleName]);
+                    }
                 }
-            }
 
-            if (isset($v['permissions'])) {
-                foreach ($v['permissions'] as $permissionName) {
-                    if (!isset($permissions[$permissionName])) {
-                        $permissions[$permissionName] = $authManager->getPermission($permissionName);
+                if (isset($v['permissions'])) {
+                    foreach ($v['permissions'] as $permissionName) {
                         if (!isset($permissions[$permissionName])) {
-                            $permissions[$permissionName] = $authManager->createPermission($permissionName);
-                            $authManager->add($permissions[$permissionName]);
+                            $permissions[$permissionName] = $authManager->getPermission($permissionName);
+                            if (!isset($permissions[$permissionName])) {
+                                $permissions[$permissionName] = $authManager->createPermission($permissionName);
+                                $authManager->add($permissions[$permissionName]);
+                            }
+                        }
+
+                        $permissionAsRoleChild = $authManager->getPermissionsByRole($roleName);
+                        if (!isset($permissionAsRoleChild[$permissionName])) {
+                            $authManager->addChild($roles[$roleName], $permissions[$permissionName]);
                         }
                     }
-
-                    $permissionAsRoleChild = $authManager->getPermissionsByRole($roleName);
-                    if (!isset($permissionAsRoleChild[$permissionName])) {
-                        $authManager->addChild($roles[$roleName], $permissions[$permissionName]);
-                    }
                 }
-            }
 
-            if (isset($v['roles'])) {
-                foreach ($v['roles'] as $childRoleName) {
-                    if (!isset($roles[$childRoleName])) {
-                        $roles[$childRoleName] = $authManager->getRole($childRoleName);
+                if (isset($v['roles'])) {
+                    foreach ($v['roles'] as $childRoleName) {
                         if (!isset($roles[$childRoleName])) {
-                            $roles[$childRoleName] = $authManager->createRole($childRoleName);
-                            $roles[$childRoleName]->description = ucwords($childRoleName);
-                            $roles[$childRoleName]->data = ['level' => $this->getRoleLevel($childRoleName)];
-                            $authManager->add($roles[$childRoleName]);
+                            $roles[$childRoleName] = $authManager->getRole($childRoleName);
+                            if (!isset($roles[$childRoleName])) {
+                                $roles[$childRoleName] = $authManager->createRole($childRoleName);
+                                $roles[$childRoleName]->description = ucwords($childRoleName);
+                                $roles[$childRoleName]->data = ['level' => $this->getRoleLevel($childRoleName)];
+                                $authManager->add($roles[$childRoleName]);
+                            }
+                        }
+
+                        if ($authManager->hasChild($roles[$roleName], $roles[$childRoleName]) === false) {
+                            $authManager->addChild($roles[$roleName], $roles[$childRoleName]);
                         }
                     }
+                }
 
-                    if ($authManager->hasChild($roles[$roleName], $roles[$childRoleName]) === false) {
-                        $authManager->addChild($roles[$roleName], $roles[$childRoleName]);
+                if (isset($v['assigns'])) {
+                    foreach ($v['assigns'] as $userId) {
+                        $authManager->assign($roles[$roleName], $userId);
                     }
                 }
             }
+            $transaction->commit();
+        } catch (\Exception $e) {
+            $result['success'] = 0;
+            $result['message'] = $e->getMessage();
+            $transaction->rollBack();
         }
         return $result;
     }
