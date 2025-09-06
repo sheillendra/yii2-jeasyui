@@ -29,6 +29,9 @@ UserAsset::register($this);
                 <div id="user-tb-assignment"></div>
                 <div id="user-tb-assignment-mm" style="width:150px;"></div>
             </td>
+            <td>
+                <div id="user-tb-print-label"></div>
+            </td>
         </tr>
     </table>
 </div>

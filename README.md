@@ -23,44 +23,71 @@ USAGE
 ---
 In this case used advanced template and backend
 
-Change ```backend/config/main.php``` like this :
-
+1. common\config\bootstrap.php
 ```
-    'bootstrap' => ['log', 'devicedetect'],
-    //remove jeasyui controller map if you have understand and want unwatch the default simulation
-    //keep it to use login default
-    'controllerMap' => [
-        'jeasyui' => 'sheillendra\jeasyui\controllers\JeasyuiController'
-    ],
-    'components' =>[
-        #... other 
-        'user' => [
-            #... other
-            //change the line below if you understand the UserModel login action in jeasyui controller
-            'identityClass' => 
-            'urlLogin' => ['/jeasyui/login']
+Yii::setAlias('@uploads', dirname(dirname(__DIR__)) . '/uploads');
+Yii::setAlias('@sheillendra/jeasyui', dirname(__DIR__) . '/extensions/sheillendra/yii2-jeasyui/src');
+```
+
+2. Change ```backend/config/main.php``` like this :
+```
+    'modules' => [
+        'api' => [
+            'class' => 'backend\modules\api\Module',
+            'modules' => [
+                'v1' => [
+                    'class' => 'backend\modules\api\modules\v1\Module',
+                    'modules' => [
+                        'jeasyui' => [
+                            'class' => 'backend\modules\api\modules\v1\modules\jeasyui\Module',
+                        ]    
+                    ]
+                ]    
+            ]
         ],
+        'jeasyui' => [
+            'basePath' => '@sheillendra/jeasyui',
+            'class' => 'sheillendra\jeasyui\Module',
+            'modules' => [
+                'api' => [
+                    'basePath' => '@sheillendra/jeasyui/modules/api',
+                    'class' => 'sheillendra\jeasyui\modules\api\Module',
+                    'modules' => [
+                        'jeasyui' => [
+                            'basePath' => '@sheillendra/jeasyui/modules/api/modules/jeasyui',
+                            'class' => 'sheillendra\jeasyui\modules\api\modules\jeasyui\Module',
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ],
+
+    'components' => [
+        ...
         'view' => [
             'theme' => [
                 'pathMap' => [
                     '@app/views' => [
                         '@app/themes/jeasyui/views',
+                        '@common/themes/jeasyui/views',
                         '@sheillendra/jeasyui/views',
+                        '@app/themes/basic/views'
                     ],
                     '@app/modules' => [
                         '@app/themes/jeasyui/modules',
-                        '@sheillendra/jeasyui/modules',
+                        '@sheillendra/jeasyui/views',
+                        '@app/themes/basic/modules',
                     ],
                     '@app/widgets' => [
                         '@app/themes/jeasyui/widgets',
-                        '@sheillendra/jeasyui/widgets',
+                        '@sheillendra/jeasyui/views',
+                        '@app/themes/basic/widgets',
                     ]
                 ],
             ],
         ],
-        'devicedetect' => [
-            'class' => 'sheillendra\jeasyui\components\devicedetect\DeviceDetect'
-        ],
+        ...
     ]
 ```
 

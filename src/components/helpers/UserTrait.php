@@ -192,6 +192,8 @@ trait UserTrait
         self::STATUS_ACTIVE => 'Active',
     ];
 
+    private $_allRoles;
+
     /**
      * {@inheritdoc}
      */
@@ -423,6 +425,12 @@ SQL;
         $transaction = Yii::$app->db->beginTransaction();
         try {
             $authManager = Yii::$app->authManager;
+            $users = $this::find()->select('id')->column();
+            $rolesById = [];
+            foreach($users as $userId){
+                $rolesById[$userId] = $authManager->getRolesByUser($userId);
+            }
+
             $authManager->removeAll();
             $roles = [];
             $permissions = [];
@@ -477,6 +485,10 @@ SQL;
                         $authManager->assign($roles[$roleName], $userId);
                     }
                 }
+            }
+
+            foreach($rolesById as $userId => $role){
+                $authManager->assign($role, $userId);
             }
             $transaction->commit();
         } catch (\Exception $e) {

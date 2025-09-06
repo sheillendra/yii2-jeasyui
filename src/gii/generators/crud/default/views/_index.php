@@ -123,14 +123,12 @@ JS;
                         iconCls: 'icon-remove',
                         plain: true,
                         onClick: function () {
-                            if(!yii.easyui.<?=$varBaseName?>.dgRow){
-                                return $.messager.alert('Delete <?=$humanizeBaseName?>', 'Select data to delete.', 'error');
-                            }
-                            yii.easyui.ajax.request({
-                                id: yii.easyui.<?=$varBaseName?>.dgRow.id,
-                                route: 'api/v1/<?=$id?>/delete',
+                            yii.easyui.ajax.delete({
+                                data: {
+                                    id: yii.easyui.<?=$varBaseName?>.dgRow.id,
+                                    r: 'api/v1/<?=$id?>/delete',
+                                },
                                 text: '<?=$humanizeBaseName?>',
-                                type: 'DELETE',
                                 callback: () => {
                                     yii.easyui.<?=$varBaseName?>.dg.datagrid('reload');
                                 }

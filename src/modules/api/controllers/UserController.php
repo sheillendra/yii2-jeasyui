@@ -2,6 +2,7 @@
 
 namespace sheillendra\jeasyui\modules\api\controllers;
 
+use sheillendra\jeasyui\components\helpers\printer\TscUserLabelPrinter;
 use Yii;
 use yii\web\ServerErrorHttpException;
 use sheillendra\jeasyui\components\rest\ActiveController;
@@ -120,8 +121,34 @@ class UserController extends ActiveController
         return $result;
     }
 
-    public function actionResetRbac(){
+    public function actionResetRbac()
+    {
         $model = new User();
         return $model->resetRbac(Yii::$app->name);
+    }
+
+    public function actionPrintLabel($id)
+    {
+        $result = [
+            'success' => 0,
+            'message' => 'No Label Printer Configuration'
+        ];
+
+        if (!isset($_ENV['LABEL_PRINTER_CLASS'])) {
+            return $result;
+        }
+
+        try {
+            $model = $this->modelClass::findOne($id);
+            if ($model) {
+                $printer = new TscUserLabelPrinter();
+                $printer->twoColumn($model);
+                $result['success'] = 1;
+                $result['message'] = 'Print Label Done!';
+            }
+        } catch (\Exception $e) {
+            $result['message'] = $e->getMessage();
+        }
+        return $result;
     }
 }

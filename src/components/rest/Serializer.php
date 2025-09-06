@@ -15,9 +15,6 @@ class Serializer extends \yii\rest\Serializer
      */
     protected function serializePagination($pagination)
     {
-        $csrfParam = $this->request->csrfParam;
-        $csrfToken = $this->request->csrfToken;
-
         return [
             $this->linksEnvelope => Link::serialize($pagination->getLinks(true)),
             $this->metaEnvelope => [
@@ -25,7 +22,6 @@ class Serializer extends \yii\rest\Serializer
                 'pageCount' => $pagination->getPageCount(),
                 'currentPage' => $pagination->getPage() + 1,
                 'perPage' => $pagination->getPageSize(),
-                $csrfParam => $csrfToken,
             ],
         ];
     }

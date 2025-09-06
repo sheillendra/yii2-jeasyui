@@ -61,6 +61,7 @@
 /** @var yii\web\View $this */
 /** @var sheillendra\jeasyui\gii\generators\crud\Generator $generator */
 
+use sheillendra\jeasyui\components\helpers\ArrayHelper;
 use yii\helpers\Inflector;
 
 $id = Inflector::camel2id($baseModelClassName);
@@ -73,7 +74,7 @@ $filterText = "\n";
 $fieldText = "\n";
 $varText = "\n";
 $ajaxMapText = "\n";
-$formText = '<div style="padding: 20px"><form id="' . $id . '-form" method="post"></form></div>';
+$formText = '$(\'<form id="' . $id . '-form" method="post" style="padding: 20px"></form>\')';
 $privateFunction = "\n";
 $sortGrid = "\n";
 $resetSort = "\n";
@@ -356,7 +357,7 @@ $fungsi = function ($column, $comment) use (
     }elseif($column->type == 'boolean'){
         $fieldText .="            {$comment}yii.easyui.booleanDropdown({$columnVariablize}Input, { label: '{$label}', required: {$required}$defaultValue });\n";
     }elseif($isFileInput){
-        $formText = '<div style="padding: 20px"><form id="' . $id . '-form" method="post" enctype="multipart/form-data"></form></div>';
+        $formText = '$(\'<form id="' . $id . '-form" method="post" enctype="multipart/form-data" style="padding: 20px"></form>\')';
         $fieldText .="            {$comment}{$columnVariablize}Input.filebox({\n";
         $fieldText .="            {$comment}    labelPosition: 'top',\n";
         $fieldText .="            {$comment}    width: 300,\n";
@@ -429,7 +430,13 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
         }
     }
 } else {
-    foreach ($tableSchema->columns as $column) {
+    
+    $columns = $tableSchema->columns;
+    if(isset($easyuiAttributes['_']) && isset($easyuiAttributes['_']['orderColumn'])){
+        $columns = ArrayHelper::indexSort($tableSchema->columns, $easyuiAttributes['_']['orderColumn']);
+    }
+
+    foreach ($columns as $column) {
         if(in_array($column->name, ['created_at', 'created_by', 'updated_at', 'updated_by'])) continue;
         //if (++$count < 6) {
             $fungsi($column, '');
@@ -699,8 +706,8 @@ window.yii.easyui.<?= $variablize?> = (function ($) {
 <?php if($showFrmDlg):?>
 
     var frmDlg = function (row) {
-        var title = 'New <?=$words?>';
-        var url;
+        let title = 'New <?=$words?>';
+        let url;
         if (row) {
             title = 'Edit <?=$words?>';
             url = yii.easyui.ajaxAuthToken({
@@ -726,6 +733,7 @@ window.yii.easyui.<?= $variablize?> = (function ($) {
             frm.form('load', row);
         } else {
             row = row || {};
+            frm = <?=$formText?>;
 <?=$treeNavDlgCondition2?>
             dlg = $('<div></div>').dialog({
                 title: title,
@@ -746,10 +754,8 @@ window.yii.easyui.<?= $variablize?> = (function ($) {
                         }
                     }
                 ],
-                content: '<?=$formText?>'
+                content: frm
             });
-
-            frm = dlg.find('#<?=$id?>-form');
 <?=$fieldText?>
 
             frm.form({
@@ -783,6 +789,7 @@ window.yii.easyui.<?= $variablize?> = (function ($) {
 
     var initDg = function () {
         dg = el.find('#<?=$id?>-dg');
+        yii.easyui.<?= $variablize?>.dg = dg;
         dg.datagrid({
             url: yii.easyui.getHost('app'),
             queryParams: yii.easyui.ajaxAuthToken({ r: 'api/v1/jeasyui/<?=$id?>' }),
@@ -856,7 +863,7 @@ window.yii.easyui.<?= $variablize?> = (function ($) {
 <?php if($showFrmDlg):?>
         frmDlg: frmDlg,
 <?php endif;?>
-        dg: dg,
+        dg: null,
         dgRow: null,
 <?=$publicVar?>
     }

@@ -31,4 +31,24 @@ class ArrayHelper extends \yii\helpers\ArrayHelper {
         return self::$_parent_array;
     }
 
+    /**
+     * Menyortir index $array sesuai dengan susunan array $sortaArray
+     * contoh penggunaan yaitu untuk menyortir susunan column di satu table
+     * karena postgresql tidak ada fitur after atau before column
+     * jadi gii menggenarate field nya tidak sesuai urutan yang kita mau
+     * 
+     * @param array $array
+     * @param array $sortArray 
+     * @return array
+     */
+    public static function indexSort(array $array, array $sortArray){
+        $newArray = [];
+        foreach($sortArray as $k){
+            if(isset($array[$k])){
+                $newArray[$k] = $array[$k];
+            }
+        }
+        return $newArray;
+    }
+
 }
