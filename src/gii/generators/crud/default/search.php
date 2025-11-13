@@ -32,11 +32,11 @@ $attributeMap = '';
 $noPagination = '';
 $joinWith = '';
 if(isset($easyuiAttributes['_'])){
-    if(isset($easyuiAttributes['_']['noPagination']) && $easyuiAttributes['_']['noPagination']){
-        $noPagination = '        if(isset($params[\'per-page\']) && $params[\'per-page\'] === \'false\'){' . "\n";
-        $noPagination .= '            $dataProvider->pagination = false;' . "\n";
-        $noPagination .= "        }\n";
-    }
+    // if(isset($easyuiAttributes['_']['noPagination']) && $easyuiAttributes['_']['noPagination']){
+    //     $noPagination = '        if(isset($params[\'per-page\']) && $params[\'per-page\'] === \'false\'){' . "\n";
+    //     $noPagination .= '            $dataProvider->pagination = false;' . "\n";
+    //     $noPagination .= "        }\n";
+    // }
 
     if(isset($easyuiAttributes['_']['filterRelations'])){
         $attributeMap .= "            'attributeMap' => [\n";
@@ -102,6 +102,11 @@ class <?= $searchModelClass ?> extends <?= isset($modelAlias) ? $modelAlias : $m
     {
 
         $filter = new ActiveDataFilter([
+            'conditionBuilders' => [
+                'LIKE' => function ($operator, $condition, $attribute) {
+                    return ['LIKE', "lower($attribute)", '%' . $condition . '%', false];
+                }
+            ],
             'searchModel' => $this,
 <?=$attributeMap?>
         ]);

@@ -35,6 +35,12 @@
  *               'width' => 60,
  *               'hideFromGrid' => true,
  *           ],
+ *           'category_id' => [
+ *               'fieldAsText' => 'reff_no', //default is 'name'
+ *               'filterAjaxMap' => [
+ *                  'status_active' => 1
+ *               ]
+ *           ],
  *           'fix_price' => [
  *               'hideFromForm' => true,
  *               'hideFromGrid' => true,
@@ -65,6 +71,7 @@ use sheillendra\jeasyui\components\helpers\ArrayHelper;
 use yii\helpers\Inflector;
 
 $id = Inflector::camel2id($baseModelClassName);
+$varDbMode = Inflector::camel2id($baseModelClassName, '_');
 $variablize = Inflector::variablize($baseModelClassName);
 $words = Inflector::camel2words($baseModelClassName);
 
@@ -104,7 +111,20 @@ if(method_exists($model, 'getEasyuiAttributes')){
 }
 
 $showFrmDlg = true;
+$tableController = 'datagrid';
+$dgPagination = "            pagination: true,\n            pageSize: 50,\n";
+$dgExtraParams = '';
 if(isset($easyuiAttributes['_'])){
+    
+    if(isset($easyuiAttributes['_']['tableController'])){
+        $tableController = $easyuiAttributes['_']['tableController']['controller'];
+    }
+
+    if(isset($easyuiAttributes['_']['dgPagination']) && $easyuiAttributes['_']['dgPagination'] === false){
+        $dgPagination = '';
+        $dgExtraParams = ", 'per-page': 0";
+    }
+
     if(isset($easyuiAttributes['_']['dgToolbar']) && isset($easyuiAttributes['_']['dgToolbar']['create']) && $easyuiAttributes['_']['dgToolbar']['create'] === false && 
     isset($easyuiAttributes['_']['dgToolbar']['update']) && $easyuiAttributes['_']['dgToolbar']['update'] === false){
             $showFrmDlg = false;
@@ -134,7 +154,8 @@ $fungsi = function ($column, $comment) use (
     $labels, 
     $easyuiAttributes,
     $variablize,
-    $showFrmDlg
+    $showFrmDlg,
+    $tableController
     ) {
 
     $label = isset($labels[$column->name])?$labels[$column->name]:Inflector::humanize($column->name);
@@ -229,15 +250,33 @@ $fungsi = function ($column, $comment) use (
 
             $perPage = ", 'per-page': 50";
             if(isset($relationEasyuiAttributes['_'])){
-                if(isset($relationEasyuiAttributes['_']['noPagination']) && $relationEasyuiAttributes['_']['noPagination']){
+                if(isset($relationEasyuiAttributes['_']['asReffNoPagination']) && $relationEasyuiAttributes['_']['asReffNoPagination']){
                     $perPage = ", 'per-page': false";
                 }
             }
 
             $fieldAsText = isset($easyuiAttribute['fieldAsText']) ? $easyuiAttribute['fieldAsText'] : 'name';
+            $filterAjaxMap = '';
+            if(isset($easyuiAttribute['filterAjaxMap'])){
+                $tmpText = [];
+                foreach($easyuiAttribute['filterAjaxMap'] as $field => $value){
+                    $tmpText[] = $field . ': ' . $value;
+                }
+                $filterAjaxMap = ', filter: { '. implode(', ', $tmpText).' }';
+            }
+
+            $expandAjaxMap = '';
+            if(isset($easyuiAttribute['expandAjaxMap'])){
+                $expandAjaxMap = ", expand: '{$easyuiAttribute['expandAjaxMap']}'";
+            }
+
+            $extraFieldAjaxMap = '';
+            if(isset($easyuiAttribute['extraFieldAjaxMap'])){
+                $extraFieldAjaxMap = ", {$easyuiAttribute['extraFieldAjaxMap']}";
+            }
 
             $ajaxMapText .="            {$comment}yii.easyui.ajax.map['{$columnVariablize}'] = (callback) => {\n";
-            $ajaxMapText .="            {$comment}    return yii.easyui.ajax.ref(callback, '{$columnVariablize}', { r: 'api/v1/{$relationTableId}', fields: '{$relations[$column->name]['column']}, {$fieldAsText}'{$perPage} }, '{$relations[$column->name]['column']}', '{$fieldAsText}');\n";
+            $ajaxMapText .="            {$comment}    return yii.easyui.ajax.ref(callback, '{$columnVariablize}', { r: 'api/v1/{$relationTableId}', fields: '{$relations[$column->name]['column']}, {$fieldAsText}{$extraFieldAjaxMap}'{$expandAjaxMap}{$perPage}{$filterAjaxMap} }, '{$relations[$column->name]['column']}', '{$fieldAsText}');\n";
             $ajaxMapText .="            {$comment}};\n";
             $ajaxMapText .="            {$comment}yii.easyui.ajax.queueCallback['{$columnVariablize}'] = yii.easyui.ajax.queueCallback['{$columnVariablize}'] ?? [];\n";
             $ajaxMapText .="            {$comment}yii.easyui.refLabel['{$columnVariablize}'] = '{$label}';\n";
@@ -247,8 +286,12 @@ $fungsi = function ($column, $comment) use (
     //grid
     if($hideFromGrid === false){
         $fileName = "row.{$column->name}";
+        $previewUrl = "yii.easyui.getHost('base') + '?r=pdf&name=' +encodeURIComponent(row.{$column->name})";
         if(isset($easyuiAttribute['fileName'])){
             $fileName = "(row.{$easyuiAttribute['fileName']} || row.{$column->name})";
+        }else if(isset($easyuiAttribute['generate'])){
+            $previewUrl = $easyuiAttribute['generate']['url'];
+            $fileName = $easyuiAttribute['generate']['label'];
         }
 
         if(in_array($column->type, $numberTypes)){
@@ -261,7 +304,11 @@ $fungsi = function ($column, $comment) use (
                 $columnText .= "                    {$comment}{ field: '{$column->name}', title: '{$label}'{$widthGridColumn}{$sortable}, formatter: (value, row, index) => { return yii.easyui.ref.boolean[~~value]; } },\n";
             } else {
                 if(isset($relations[$column->name])){
-                    $columnText .= "                    {$comment}{ field: '{$column->name}', title: '{$label}'{$widthGridColumn}{$sortable}, formatter: (value, row, index) => { return yii.easyui.ref.{$columnVariablize} === undefined ? yii.easyui.ajax.map['{$columnVariablize}'](() => { dg.datagrid('reload'); dg.datagrid('getFilterComponent', '{$column->name}').combobox({ 'textField': 'name' }).combobox('loadData', yii.easyui.refResult['{$columnVariablize}']); }) : yii.easyui.ref.{$columnVariablize}[value]; } },\n";
+                    if(isset($easyuiAttribute['relationColumnFormatter'])){
+                        $columnText .= "                    {$comment}{ field: '{$column->name}', title: '{$label}'{$widthGridColumn}{$sortable}, formatter: (value, row, index) => { return row.{$easyuiAttribute['relationColumnFormatter']} } },\n";
+                    }else{
+                        $columnText .= "                    {$comment}{ field: '{$column->name}', title: '{$label}'{$widthGridColumn}{$sortable}, formatter: (value, row, index) => { return yii.easyui.ref.{$columnVariablize} === undefined ? yii.easyui.ajax.map['{$columnVariablize}'](() => { dg.{$tableController}('reload'); dg.datagrid('getFilterComponent', '{$column->name}').combobox({ 'textField': 'name' }).combobox('loadData', yii.easyui.refResult['{$columnVariablize}']); }) : yii.easyui.ref.{$columnVariablize}[value]; } },\n";
+                    }
                     $filterText .= "            {$comment}yii.easyui.filter.ref(dg, '{$column->name}', '{$columnVariablize}', { editable: false }),\n";
                 }else{
                     if($isCurrenctyFormat){
@@ -277,7 +324,7 @@ $fungsi = function ($column, $comment) use (
             $filterText .= "            {$comment}yii.easyui.filter.ref(dg, '{$column->name}', 'boolean', { editable: false }),\n";
             $columnText .= "                    {$comment}{ field: '{$column->name}', title: '{$label}'{$widthGridColumn}{$sortable}, formatter: (value, row, index) => { return yii.easyui.ref.boolean[~~value]; } },\n";
         }elseif($acceptFileInput === 'pdf'){
-            $columnText .= "                    {$comment}{ field: '{$column->name}', title: '{$label}'{$widthGridColumn}{$sortable}, formatter: (value, row, index) => { if(value){return '<a href=\"javascript:void(0);\" onclick=\"yii.easyui.wifiVoucher.pdfPreview(\'' + yii.easyui.getHost('base') + '?r=pdf&name=' +encodeURIComponent(row.{$column->name}) + '\')\">' + {$fileName} + '</a>';}} },\n";
+            $columnText .= "                    {$comment}{ field: '{$column->name}', title: '{$label}'{$widthGridColumn}{$sortable}, formatter: (value, row, index) => { if(value){return '<a href=\"javascript:void(0);\" onclick=\"yii.easyui.{$variablize}.pdfPreview(\'' + {$previewUrl} + '\')\">' + {$fileName} + '</a>';}} },\n";
             $filterText .= "            {$comment}yii.easyui.filter.customize(dg, '{$column->name}', 'contains', true),\n";
         }elseif($column->type == 'date'){
             $columnText .= "                    {$comment}{ field: '{$column->name}', title: '{$label}'{$widthGridColumn}{$sortable} },\n";
@@ -333,9 +380,11 @@ $fungsi = function ($column, $comment) use (
             $fieldText .="            {$comment}yii.easyui.refDropdown('statusActive', {$columnVariablize}Input, () => { }, { editable: false$defaultValue, required: {$required} });\n";
         } else {
             if(isset($relations[$column->name])){
-                $fieldText .="            {$comment}yii.easyui.refDropdown('{$columnVariablize}', yii.easyui.{$variablize}.{$columnVariablize}Input, () => { }, { editable: true, validType: ['inList[yii.easyui.{$variablize}.{$columnVariablize}Input]'], required: {$required}{$defaultValue}{$panelHeight} });\n";
-                
-                
+                $fieldFormatter = '';
+                if(isset($easyuiAttribute['fieldFormatter'])){
+                    $fieldFormatter = ", formatter: {$easyuiAttribute['fieldFormatter']}";
+                }
+                $fieldText .="            {$comment}yii.easyui.refDropdown('{$columnVariablize}', yii.easyui.{$variablize}.{$columnVariablize}Input, () => { }, { editable: true{$fieldFormatter}, validType: ['inList[yii.easyui.{$variablize}.{$columnVariablize}Input]'], required: {$required}{$defaultValue}{$panelHeight} });\n";
             } elseif($boolean){
                 $fieldText .="            {$comment}yii.easyui.booleanDropdown({$columnVariablize}Input, { label: '{$label}', required: {$required}$defaultValue });\n";
             } else {
@@ -452,7 +501,7 @@ if($haveSortable){
     $resetSort .= "                    text: 'Reset Sort',\n";
     $resetSort .= "                    iconCls: 'fa-solid fa-filter-circle-xmark',\n";
     $resetSort .= "                    handler: function () {\n";
-    $resetSort .= "                        dg.datagrid('resetSort');\n";
+    $resetSort .= "                        dg.{$tableController}('resetSort');\n";
     $resetSort .= "                    }\n";
     $resetSort .= "                }\n";
 }
@@ -461,19 +510,18 @@ $formDialogHeight = 450;
 $detailLayout = '';
 $treeNavigation = '';
 $initAfterLayout = '';
-$privateFunction = '';
 $treeNavDlgCondition = '';
 $treeNavDlgCondition1 = '';
 $treeNavDlgCondition2 = '';
-$afterSubmitForm1 = "                    dg.datagrid('reload');\n";
+$afterSubmitForm1 = "                    dg.{$tableController}('reload');\n";
 $masterSelected = '';
 
 $sortGridFunction = function($easyuiAttributes){
     if(!isset($easyuiAttributes['_']['sortName'])){
         return "";
     }
-    $textSort = "\n";
-    $textSort .= "            sortName: '{$easyuiAttributes['_']['sortName']}',\n";
+   // $textSort = "\n";
+    $textSort = "            sortName: '{$easyuiAttributes['_']['sortName']}',\n";
 
     if(isset($easyuiAttributes['_']['sortOrder'])){
         $textSort .= "            sortOrder: '{$easyuiAttributes['_']['sortOrder']}',\n";
@@ -490,11 +538,38 @@ $sortGridFunction = function($easyuiAttributes){
     return $textSort;
 };
 
+$treegreedOptions = '';
+$tableControllerOnSelectParams = 'index, row';
 if(isset($easyuiAttributes['_'])){
     if($showFrmDlg) {
         $formDialogHeight = isset($easyuiAttributes['_']['formDialogHeight'])?$easyuiAttributes['_']['formDialogHeight']:$formDialogHeight;
     }
     $sortGrid = $sortGridFunction($easyuiAttributes);
+
+    if(isset($easyuiAttributes['_']['dgUrlExpand'])){
+        $dgExtraParams .= ", expand: '{$easyuiAttributes['_']['dgUrlExpand']}'";
+    }
+
+    if(isset($easyuiAttributes['_']['tableController'])){
+
+        if($tableController == 'treegrid'){
+            
+            $tableControllerOnSelectParams = 'row';
+
+            $idField = 'id';
+            $treeField = 'name';
+            $dgExtraParams .= ", treegrid: '$varDbMode'";
+            if(isset($easyuiAttributes['_']['tableController']['idField'])){
+                $idField = $easyuiAttributes['_']['tableController']['idField'];
+            }
+            if(isset($easyuiAttributes['_']['tableController']['treeField'])){
+                $treeField = $easyuiAttributes['_']['tableController']['treeField'];
+            }
+
+            $treegreedOptions = "            idField: '{$idField}',\n";
+            $treegreedOptions .= "            treeField: '{$treeField}',\n";
+        }
+    }
 
     if(isset($easyuiAttributes['_']['detail'])){
         $detailWidth = isset($easyuiAttributes['_']['detail']['width']) ? $easyuiAttributes['_']['detail']['width'] : "'40%'";
@@ -790,9 +865,9 @@ window.yii.easyui.<?= $variablize?> = (function ($) {
     var initDg = function () {
         dg = el.find('#<?=$id?>-dg');
         yii.easyui.<?= $variablize?>.dg = dg;
-        dg.datagrid({
+        dg.<?=$tableController?>({
             url: yii.easyui.getHost('app'),
-            queryParams: yii.easyui.ajaxAuthToken({ r: 'api/v1/jeasyui/<?=$id?>' }),
+            queryParams: yii.easyui.ajaxAuthToken({ r: 'api/v1/jeasyui/<?=$id?>'<?=$dgExtraParams?> }),
             method: 'get',
             fit: true,
             border: false,
@@ -801,16 +876,16 @@ window.yii.easyui.<?= $variablize?> = (function ($) {
             singleSelect: true,
             emptyMsg: 'No Records Found.',
             rownumbers: true,
-            pagination: true,
-            pageSize: 50,
+<?= $dgPagination?>
             remoteFilter: true,
 <?= $sortGrid?>
+<?= $treegreedOptions?>
             columns: [
                 [<?= $columnText?>
                 ]
             ],
             toolbar: '#<?=$id?>-tb',
-            onSelect: function (index, row) {
+            onSelect: function (<?= $tableControllerOnSelectParams?>) {
                 yii.easyui.<?= $variablize?>.dgRow = row;
 <?= $masterSelected ?>
             },
@@ -823,8 +898,7 @@ window.yii.easyui.<?= $variablize?> = (function ($) {
             },
             onLoadSuccess: function (data) {
                 dgOnLoading = false;
-                $(this).datagrid('selectRow', 0);
-                yii.easyui.setCsrfToken(data._meta);
+                $(this).<?=$tableController?>('selectRow', 0);
             },
             loadFilter: function (data) {
                 data.total = data._meta.totalCount;
@@ -834,12 +908,12 @@ window.yii.easyui.<?= $variablize?> = (function ($) {
                 dgOnLoading = false;
                 yii.easyui.ajaxError(xhr, function (r) {
                     if (r) {
-                        dg.datagrid('reload');
+                        dg.<?=$tableController?>('reload');
                     }
                 });
             }
-        }).datagrid('enableFilter', [<?=$filterText?>
-        ]).datagrid('columnPriority');
+        }).<?=$tableController?>('enableFilter', [<?=$filterText?>
+        ]).<?=$tableController?>('columnPriority');
     }
 <?=$privateFunction?>
 

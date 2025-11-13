@@ -2,11 +2,15 @@
 
 namespace sheillendra\jeasyui\components\helpers;
 
+use Firebase\JWT\BeforeValidException;
+use Firebase\JWT\ExpiredException;
 use Yii;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use Firebase\JWT\SignatureInvalidException;
 use yii\behaviors\TimestampBehavior;
 use yii\helpers\Inflector;
+use yii\web\UnauthorizedHttpException;
 
 trait UserTrait
 {
@@ -233,12 +237,23 @@ trait UserTrait
     public static function findIdentityByAccessToken($token, $type = null)
     {
         $key = new Key(Yii::$app->params['jwtKey'], 'HS256');
-        $data = JWT::decode($token, $key);
-        if (!isset($data->id) && $data->id) {
-            return null;
+        try {
+            $data = JWT::decode($token, $key);
+
+            if (!isset($data->id) && $data->id) {
+                return null;
+            }
+            return static::findOne(['id' => $data->id, 'status' => self::STATUS_ACTIVE]);
+            //return static::findOne(['access_token' => $token, 'status' => self::STATUS_ACTIVE]);
+        } catch (ExpiredException $e) {
+            throw new UnauthorizedHttpException('Token has expired.');
+        } catch (SignatureInvalidException $e) {
+            throw new UnauthorizedHttpException('Invalid token signature.');
+        } catch (BeforeValidException $e) {
+            throw new UnauthorizedHttpException('Token is not yet valid.');
+        } catch (\Exception $e) {
+            throw new UnauthorizedHttpException('Invalid token.');
         }
-        return static::findOne(['id' => $data->id, 'status' => self::STATUS_ACTIVE]);
-        //return static::findOne(['access_token' => $token, 'status' => self::STATUS_ACTIVE]);
     }
 
     public function assign($roleName)
@@ -426,9 +441,14 @@ SQL;
         try {
             $authManager = Yii::$app->authManager;
             $users = $this::find()->select('id')->column();
-            $rolesById = [];
-            foreach($users as $userId){
-                $rolesById[$userId] = $authManager->getRolesByUser($userId);
+            $idsByRole = [];
+            foreach ($users as $userId) {
+                foreach ($authManager->getRolesByUser($userId) as $k => $v) {
+                    if (!isset($idsByRole[$k])) {
+                        $idsByRole[$k] = [];
+                    }
+                    $idsByRole[$k][] = $userId;
+                }
             }
 
             $authManager->removeAll();
@@ -480,16 +500,13 @@ SQL;
                     }
                 }
 
-                if (isset($v['assigns'])) {
-                    foreach ($v['assigns'] as $userId) {
+                if (isset($idsByRole[$roleName])) {
+                    foreach ($idsByRole[$roleName] as $userId) {
                         $authManager->assign($roles[$roleName], $userId);
                     }
                 }
             }
 
-            foreach($rolesById as $userId => $role){
-                $authManager->assign($role, $userId);
-            }
             $transaction->commit();
         } catch (\Exception $e) {
             $result['success'] = 0;

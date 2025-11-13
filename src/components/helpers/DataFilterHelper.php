@@ -89,6 +89,40 @@ class DataFilterHelper
             }
         }
 
+        /**
+         * dalam treegrid, ketika filter, setelah data didapat maka data parent juga harus ikut
+         * kalau tidak data tidak akan muncul
+         */
+        if (isset($params['treegrid'])) {
+            /** @var \yii\db\ActiveQuery $query */
+            $query = $provider->query;
+            $filteredSql = $query->createCommand()->getRawSql();
+
+            $provider->query = $provider->query->modelClass::findBySql(<<<SQL
+WITH RECURSIVE 
+	filtered AS (
+		$filteredSql
+	),
+	parents AS (
+       	SELECT pc.*
+	   	FROM {$params['treegrid']} pc
+      	JOIN filtered f ON f."_parentId" = pc.id
+        
+		UNION ALL
+		
+      	SELECT pc.*
+      	FROM {$params['treegrid']} pc
+       	JOIN parents p ON p."_parentId" = pc.id
+  	)
+	  
+SELECT * FROM (
+	SELECT DISTINCT filtered.* FROM filtered
+   	UNION
+	SELECT parents.* FROM parents
+)
+ORDER BY id
+SQL);
+        }
         return $provider;
     }
 }

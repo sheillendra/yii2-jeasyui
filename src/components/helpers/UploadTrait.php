@@ -7,16 +7,16 @@ use yii\web\UploadedFile;
 
 trait UploadTrait
 {
-    public function getUploadPath()
-    {
-        $path1 = Yii::getAlias('@uploads') . DIRECTORY_SEPARATOR . date('Y') . DIRECTORY_SEPARATOR . date('m');
+    // public function getUploadPath()
+    // {
+    //     $path1 = Yii::getAlias('@uploads') . DIRECTORY_SEPARATOR . date('Y') . DIRECTORY_SEPARATOR . date('m');
 
-        if (!is_dir($path1)) {
-            mkdir($path1, 0777, true);
-        }
+    //     if (!is_dir($path1)) {
+    //         mkdir($path1, 0777, true);
+    //     }
 
-        return $path1;
-    }
+    //     return $path1;
+    // }
 
     /**
      * public function beforeValidate() {

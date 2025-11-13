@@ -2,6 +2,8 @@
 
 namespace sheillendra\jeasyui\controllers;
 
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Yii;
 use yii\web\Controller;
 
@@ -18,7 +20,7 @@ class PdfController extends \sheillendra\jeasyui\components\web\Controller
     {
         $pdfFullPath = Yii::getAlias('@uploads/' . $name);
         $info = pathinfo($pdfFullPath);
-        if($info['extension'] === 'pdf'){
+        if ($info['extension'] === 'pdf') {
             return $this->response($pdfFullPath, $info);
         }
         return 'File is not PDF';
@@ -28,7 +30,7 @@ class PdfController extends \sheillendra\jeasyui\components\web\Controller
     {
         $response = Yii::$app->getResponse();
         $response->headers->set('Content-Type', 'application/pdf');
-        $response->headers->set('Content-Disposition', 'inline;filename="'. $info['filename'] .'"');
+        $response->headers->set('Content-Disposition', 'inline;filename="' . $info['filename'] . '"');
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Content-Length', filesize($pdfFullPath));
         $response->headers->set('Accept-Ranges', 'bytes');
@@ -44,4 +46,19 @@ class PdfController extends \sheillendra\jeasyui\components\web\Controller
         return $response->send();
     }
 
+    protected function generatePdf($view, $params, $path)
+    {
+        try {
+            $options = new Options();
+            $options->set(['isRemoteEnabled' => true]);
+            $pdf = new Dompdf($options);
+            $pdf->loadHtml($this->renderPartial($view, $params));
+            $pdf->render();
+            file_put_contents($path, $pdf->output());
+            return true;
+        } catch (\Exception $ex) {
+            Yii::error($ex->getMessage());
+        }
+        return false;
+    }
 }

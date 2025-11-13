@@ -18,6 +18,7 @@
 		<div class="easyui-panel" style="width:100%;max-width:400px;padding:10px;margin-top: 10px;">
 			<div class="easyui-radiogroup" data-options="name:'radio2',data:groupData,dir:'v'"></div>
 		</div>
+		<div id="radio3"></div>
 	</form>
 	<script>
 		var groupData = [{
@@ -36,7 +37,9 @@
 		},{
 			value:'5',
 			label:'Item5'
-		}]
+		}];
+
+		$('#radio3').radiogroup({name: 'radio4', data: groupData});
 	</script>
 </body>
 </html>
